@@ -29,13 +29,14 @@ public class CommandController {
         try {
             objOutputStream.writeObject(command);
             command = (Command) objInputStream.readObject();
-            Handler(objInputStream, objOutputStream, command);
+            if(command!=null){
+                //Auth Operations
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         } catch (ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
         return true;
-
     }
 }
