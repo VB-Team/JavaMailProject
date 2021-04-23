@@ -1,6 +1,6 @@
 package com.vbteam.views;
 
-
+import com.vbteam.services.socket.ConnectionService;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,21 +10,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
 /**
  *
  * @author BatuPC
  */
 public class FrmAuth extends javax.swing.JFrame {
 
-    //public MainClient mClient;
-    //private DBFunctions dbFunc;
     CardLayout cardLayout;
-    int pX, pY;
+    private int pX, pY;
+    private ConnectionService conService;
 
     public FrmAuth() {
+        //Remove Title Bar
         setUndecorated(true);
         initComponents();
+
+        //Server Connection Credintials
+        conService = new ConnectionService("localhost");
 
         //Lacivert Arkaplan Renk Kodu 
         pnl_auth.setBackground(new Color(221, 119, 23));
@@ -32,10 +34,15 @@ public class FrmAuth extends javax.swing.JFrame {
         centerLocation();
         //setLocationRelativeTo(null);
 
+        //Card layout
         cardLayout = (CardLayout) pnl_cardLayout.getLayout();
 
+        //Özelleştirilmiş kapatma butonu
         btn_close.addActionListener(new CloseListener());
 
+        /*
+        Özelleştirilmiş Title Barının hareket kabiliyeti
+         */
         pnl_titlebar.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 pX = e.getX();
@@ -61,6 +68,9 @@ public class FrmAuth extends javax.swing.JFrame {
         this.setLocation(x, y);
     }
 
+    /**
+     * Uygulamayı Kapatma metodu
+     */
     private class CloseListener implements ActionListener {
 
         @Override
@@ -435,11 +445,22 @@ public class FrmAuth extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_cardMenuActionPerformed
 
     private void btn_authActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_authActionPerformed
-        cardLayout.show(pnl_cardLayout, "register");
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    conService.connectServer();
+                }catch(Exception ex){
+                    System.out.println(ex.getMessage());
+                }
+            }
+        }.start();
+        if(conService.checkConnection())
+            cardLayout.show(pnl_cardLayout, "register");
     }//GEN-LAST:event_btn_authActionPerformed
 
     private void btn_registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registerActionPerformed
-      
+
     }//GEN-LAST:event_btn_registerActionPerformed
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed

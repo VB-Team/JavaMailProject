@@ -22,16 +22,13 @@ public class ConnectionService {
 
     private String hostName, userName, hashedPassword;
     private Socket clientSocket;
-    private int socketPort;
+    private int socketPort = 1443;
     private ObjectOutputStream objOutStream;
     private ObjectInputStream objInStream;
     private User user;
 
-    public ConnectionService(String hostName, String userName, String hashedPassword, int socketPort) {
+    public ConnectionService(String hostName) {
         this.hostName = hostName;
-        this.userName = userName;
-        this.hashedPassword = hashedPassword;
-        this.socketPort = socketPort;
     }
 
     public void connectServer() {
@@ -42,7 +39,6 @@ public class ConnectionService {
 
             objOutStream = new ObjectOutputStream(outputStream);
             objInStream = new ObjectInputStream(inputStream);
-            System.out.println("Server connected");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -50,7 +46,7 @@ public class ConnectionService {
 
     public void Auth(String authType) {
         try {
-            if (clientSocket != null && clientSocket.isConnected() == false) {
+            if (clientSocket == null && clientSocket.isConnected() == false) {
                 return;
             } else {
                 Date date = new Date();
@@ -62,9 +58,20 @@ public class ConnectionService {
         }
     }
 
+    public Boolean checkConnection() {
+        Boolean control = false;
+        if (clientSocket == null || clientSocket.isConnected() == false) {
+            control = false;
+        }else{
+            control = true;
+        }
+        System.out.println(control);
+        return control;
+    }
+
     public static void main(String[] args) {
         try {
-            ConnectionService conService = new ConnectionService("localhost", "batuhan", "test", 1443);
+            ConnectionService conService = new ConnectionService("localhost");
             conService.Auth("auth-login");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
