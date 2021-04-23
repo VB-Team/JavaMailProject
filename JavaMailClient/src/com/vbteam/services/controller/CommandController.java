@@ -17,10 +17,12 @@ import java.io.ObjectOutputStream;
 public class CommandController {
 
     public static void Handler(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, Command command) {
+        System.out.println("handler");
         if (command.getType().equals("auth-echo")) {
             System.out.println("Echo : " + command.getReturnValue());
         }
-        if (command.getType().equals("auth-register") && command.getType().equals("auth-login")) {
+        if (command.getType().equals("auth-register") || command.getType().equals("auth-login")) {
+            System.out.println("auth");
             Auth(command, objOutputStream, objInputStream);
         }
     }
@@ -29,7 +31,7 @@ public class CommandController {
         try {
             objOutputStream.writeObject(command);
             command = (Command) objInputStream.readObject();
-            if(command!=null){
+            if (command != null) {
                 //Auth Operations
             }
         } catch (IOException ex) {

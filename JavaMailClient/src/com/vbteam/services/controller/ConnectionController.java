@@ -26,16 +26,17 @@ public class ConnectionController implements Runnable {
     private User user;
     private Command command;
 
-    public ConnectionController(String authType, ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, ConnectionService conService) {
+    public ConnectionController(String authType, ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, ConnectionService conService, User user) {
         this.authType = authType;
         this.objInputStream = objInputStream;
         this.objOutputStream = objOutputStream;
         this.conService = conService;
+        this.user = user;
     }
 
     @Override
     public void run() {
-        try {
+        try {            
             isConnected = CommandController.Auth(new Command(this.authType, user), objOutputStream, objInputStream);        
             if (isConnected) {
                 while (true) {

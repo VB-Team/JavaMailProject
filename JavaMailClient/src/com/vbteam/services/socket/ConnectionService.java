@@ -5,12 +5,14 @@
  */
 package com.vbteam.services.socket;
 
+import com.vbteam.models.User;
 import com.vbteam.services.controller.ConnectionController;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Date;
 
 /**
  *
@@ -23,6 +25,7 @@ public class ConnectionService {
     private int socketPort;
     private ObjectOutputStream objOutStream;
     private ObjectInputStream objInStream;
+    private User user;
 
     public ConnectionService(String hostName, String userName, String hashedPassword, int socketPort) {
         this.hostName = hostName;
@@ -39,7 +42,7 @@ public class ConnectionService {
 
             objOutStream = new ObjectOutputStream(outputStream);
             objInStream = new ObjectInputStream(inputStream);
-
+            System.out.println("Server connected");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -50,16 +53,22 @@ public class ConnectionService {
             if (clientSocket != null && clientSocket.isConnected() == false) {
                 return;
             } else {
-                new Thread(new ConnectionController(authType, objInStream, objOutStream, this));
+                Date date = new Date();
+                user = new User(userName, hashedPassword, 0, date, date, "BATU", "San");
+                new Thread(new ConnectionController(authType, objInStream, objOutStream, this, user)).start();
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-
     public static void main(String[] args) {
-        ConnectionService conService = new ConnectionService("localhost", "batuhan", "test", 1443);
-        conService.Auth("auth-login");
+        try {
+            ConnectionService conService = new ConnectionService("localhost", "batuhan", "test", 1443);
+            conService.Auth("auth-login");
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
     }
 }
