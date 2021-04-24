@@ -79,6 +79,8 @@ public class FrmMail extends javax.swing.JFrame {
         btn_minimize = new javax.swing.JButton();
         pnl_btnmaximize = new javax.swing.JPanel();
         btn_maximize = new javax.swing.JButton();
+        pnl_email_text = new javax.swing.JPanel();
+        email_text = new javax.swing.JLabel();
         pnl_sidebar_menus = new javax.swing.JPanel();
         pnl_sidebar_text = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -94,6 +96,29 @@ public class FrmMail extends javax.swing.JFrame {
         giden_text = new javax.swing.JLabel();
         pnl_main = new javax.swing.JPanel();
         pnl_main_titlebar = new javax.swing.JPanel();
+        pnl_main_mails = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel13 = new javax.swing.JPanel();
+        jPanel14 = new javax.swing.JPanel();
+        jPanel15 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
+        jPanel16 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel18 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel17 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        jPanel11 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        pnl_main_details = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -103,7 +128,7 @@ public class FrmMail extends javax.swing.JFrame {
         pnl_sidebar.setLayout(new java.awt.BorderLayout());
 
         pnl_titlebuttons.setBackground(new java.awt.Color(43, 49, 68));
-        pnl_titlebuttons.setPreferredSize(new java.awt.Dimension(200, 30));
+        pnl_titlebuttons.setPreferredSize(new java.awt.Dimension(200, 50));
         pnl_titlebuttons.setLayout(new java.awt.BorderLayout());
 
         pnl_btnclose.setBackground(new java.awt.Color(37, 40, 44));
@@ -178,6 +203,19 @@ public class FrmMail extends javax.swing.JFrame {
         pnl_titlebuttons.add(pnl_btnmaximize, java.awt.BorderLayout.CENTER);
 
         pnl_sidebar.add(pnl_titlebuttons, java.awt.BorderLayout.PAGE_START);
+
+        pnl_email_text.setBackground(new java.awt.Color(37, 40, 44));
+        pnl_email_text.setPreferredSize(new java.awt.Dimension(33, 50));
+        pnl_email_text.setLayout(new java.awt.BorderLayout());
+
+        email_text.setBackground(new java.awt.Color(37, 40, 44));
+        email_text.setFont(new java.awt.Font("Dialog", 0, 9)); // NOI18N
+        email_text.setForeground(new java.awt.Color(102, 102, 102));
+        email_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        email_text.setText("batuhansann@vbteam.com");
+        pnl_email_text.add(email_text, java.awt.BorderLayout.CENTER);
+
+        pnl_sidebar.add(pnl_email_text, java.awt.BorderLayout.PAGE_END);
 
         pnl_sidebar_menus.setBackground(new java.awt.Color(37, 40, 44));
         pnl_sidebar_menus.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -260,7 +298,7 @@ public class FrmMail extends javax.swing.JFrame {
         pnl_main.setLayout(new java.awt.BorderLayout());
 
         pnl_main_titlebar.setBackground(new java.awt.Color(37, 40, 44));
-        pnl_main_titlebar.setPreferredSize(new java.awt.Dimension(0, 30));
+        pnl_main_titlebar.setPreferredSize(new java.awt.Dimension(0, 50));
 
         javax.swing.GroupLayout pnl_main_titlebarLayout = new javax.swing.GroupLayout(pnl_main_titlebar);
         pnl_main_titlebar.setLayout(pnl_main_titlebarLayout);
@@ -274,6 +312,226 @@ public class FrmMail extends javax.swing.JFrame {
         );
 
         pnl_main.add(pnl_main_titlebar, java.awt.BorderLayout.PAGE_START);
+
+        pnl_main_mails.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_main_mails.setPreferredSize(new java.awt.Dimension(750, 750));
+        pnl_main_mails.setLayout(new java.awt.GridLayout(10, 0, 10, 0));
+
+        jPanel10.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel10.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        jPanel10.add(jPanel2, java.awt.BorderLayout.LINE_END);
+
+        jPanel13.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel13.setLayout(new java.awt.BorderLayout());
+
+        jPanel14.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel14.setPreferredSize(new java.awt.Dimension(40, 40));
+        jPanel14.setLayout(new java.awt.BorderLayout());
+
+        jPanel15.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel15.setPreferredSize(new java.awt.Dimension(60, 60));
+        jPanel15.setLayout(new java.awt.BorderLayout());
+
+        jButton2.setBackground(new java.awt.Color(45, 48, 53));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/profile.png"))); // NOI18N
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jPanel15.add(jButton2, java.awt.BorderLayout.CENTER);
+
+        jPanel14.add(jPanel15, java.awt.BorderLayout.LINE_START);
+
+        jPanel16.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel16.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setBackground(new java.awt.Color(45, 48, 53));
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Batuhan San");
+        jPanel16.add(jLabel1, java.awt.BorderLayout.CENTER);
+
+        jPanel18.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel18.setPreferredSize(new java.awt.Dimension(65, 65));
+        jPanel18.setLayout(new java.awt.BorderLayout());
+
+        jLabel3.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel3.setText("24 Temmuz");
+        jLabel3.setPreferredSize(new java.awt.Dimension(65, 65));
+        jPanel18.add(jLabel3, java.awt.BorderLayout.CENTER);
+
+        jPanel16.add(jPanel18, java.awt.BorderLayout.LINE_END);
+
+        jPanel14.add(jPanel16, java.awt.BorderLayout.CENTER);
+
+        jPanel13.add(jPanel14, java.awt.BorderLayout.NORTH);
+
+        jPanel17.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel17.setLayout(new java.awt.BorderLayout());
+
+        jLabel2.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel2.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non turpis a eros gravida.  ");
+        jLabel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(9, 9, 9, 9));
+        jPanel17.add(jLabel2, java.awt.BorderLayout.CENTER);
+
+        jPanel13.add(jPanel17, java.awt.BorderLayout.CENTER);
+
+        jPanel10.add(jPanel13, java.awt.BorderLayout.CENTER);
+
+        pnl_main_mails.add(jPanel10);
+
+        jPanel4.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel4.setLayout(new java.awt.BorderLayout());
+        pnl_main_mails.add(jPanel4);
+
+        jPanel8.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel8);
+
+        jPanel5.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel5);
+
+        jPanel9.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel9);
+
+        jPanel7.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel7);
+
+        jPanel12.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel12);
+
+        jPanel11.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel11);
+
+        jPanel6.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel6);
+
+        jPanel3.setBackground(new java.awt.Color(45, 48, 53));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 750, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 71, Short.MAX_VALUE)
+        );
+
+        pnl_main_mails.add(jPanel3);
+
+        pnl_main.add(pnl_main_mails, java.awt.BorderLayout.LINE_START);
+
+        pnl_main_details.setBackground(new java.awt.Color(69, 73, 69));
+
+        javax.swing.GroupLayout pnl_main_detailsLayout = new javax.swing.GroupLayout(pnl_main_details);
+        pnl_main_details.setLayout(pnl_main_detailsLayout);
+        pnl_main_detailsLayout.setHorizontalGroup(
+            pnl_main_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 480, Short.MAX_VALUE)
+        );
+        pnl_main_detailsLayout.setVerticalGroup(
+            pnl_main_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 718, Short.MAX_VALUE)
+        );
+
+        pnl_main.add(pnl_main_details, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(pnl_main, java.awt.BorderLayout.CENTER);
 
@@ -368,19 +626,44 @@ public class FrmMail extends javax.swing.JFrame {
     private javax.swing.JButton btn_close;
     private javax.swing.JButton btn_maximize;
     private javax.swing.JButton btn_minimize;
+    private javax.swing.JLabel email_text;
     private javax.swing.JButton gelen_icon;
     private javax.swing.JLabel gelen_text;
     private javax.swing.JButton giden_icon;
     private javax.swing.JLabel giden_text;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel pnl_btnclose;
     private javax.swing.JPanel pnl_btnmaximize;
     private javax.swing.JPanel pnl_btnminimize;
+    private javax.swing.JPanel pnl_email_text;
     private javax.swing.JPanel pnl_gelen_icon;
     private javax.swing.JPanel pnl_gelen_text;
     private javax.swing.JPanel pnl_giden_icon;
     private javax.swing.JPanel pnl_giden_text;
     private javax.swing.JPanel pnl_main;
+    private javax.swing.JPanel pnl_main_details;
+    private javax.swing.JPanel pnl_main_mails;
     private javax.swing.JPanel pnl_main_titlebar;
     private javax.swing.JPanel pnl_sidebar;
     private javax.swing.JPanel pnl_sidebar_gelen;
