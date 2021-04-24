@@ -65,7 +65,6 @@ public class ConnectionService {
         }else{
             control = true;
         }
-        System.out.println(control);
         return control;
     }
 

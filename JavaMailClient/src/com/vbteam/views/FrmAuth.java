@@ -31,8 +31,8 @@ public class FrmAuth extends javax.swing.JFrame {
         //Lacivert Arkaplan Renk Kodu 
         pnl_auth.setBackground(new Color(221, 119, 23));
 
-        centerLocation();
-        //setLocationRelativeTo(null);
+        //centerLocation();
+        setLocationRelativeTo(null);
 
         //Card layout
         cardLayout = (CardLayout) pnl_cardLayout.getLayout();
@@ -444,19 +444,31 @@ public class FrmAuth extends javax.swing.JFrame {
         cardLayout.show(pnl_cardLayout, "welcome");
     }//GEN-LAST:event_btn_cardMenuActionPerformed
 
+    
+    
+    /**
+     * Sunucu ile bağlantı kurarak giriş yap - kayıt ol ekranına geçişi kontrol eder.
+     * Eğer sunucu ile bağlantı kurulamıyorsa geçiş gerçekleşmez.
+     * @param evt 
+     */
     private void btn_authActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_authActionPerformed
-        new Thread(){
+        new Thread() {
             @Override
-            public void run(){
-                try{
+            public void run() {
+                try {
+                    btn_auth.setEnabled(false);
                     conService.connectServer();
-                }catch(Exception ex){
+                    if (conService.checkConnection()) {
+                        cardLayout.show(pnl_cardLayout, "register");
+                    }
+                } catch (Exception ex) {
                     System.out.println(ex.getMessage());
+                    btn_auth.setEnabled(true);
+                } finally {
+                    btn_auth.setEnabled(true);
                 }
             }
         }.start();
-        if(conService.checkConnection())
-            cardLayout.show(pnl_cardLayout, "register");
     }//GEN-LAST:event_btn_authActionPerformed
 
     private void btn_registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registerActionPerformed
