@@ -2,18 +2,23 @@
  * TODO :
  *
  * Mail menü butonlarını buttondan labele geçir.
+ * Resize Adapter bellek kullanımını azalt veya geçici çözüm bul
+ *
  */
 package com.vbteam.views;
 
 import com.vbteam.models.Mail;
+import com.vbteam.utils.CustomScrollBarUI;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.util.List;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,10 +28,10 @@ import javax.swing.JPanel;
  *
  * @author BatuPC
  */
-public class FrmMail extends javax.swing.JFrame implements MouseListener {
+public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
 
     boolean maxCheck = true;
-    private int pX, pY, pageNumber = 1;
+    private int mouseX1, mouseX2, mouseY1, mouseY2, pX, pY, pageNumber = 1;
     ArrayList<JPanel> mailPanelList = new ArrayList<>();
     private List<Mail> mailList = new ArrayList<Mail>();
 
@@ -34,13 +39,16 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         initGui();
         initComponents();
         centerLocationAndSetSize();
+        jTextArea2.setText("Mail sistemi hakkında , Aenean euismod maximus pharetra. Nunc a urna commodo, egestas sem ac");
+        jTextArea3.setText("Aenean euismod maximus pharetra. Nunc a urna commodo, egestas sem ac, condimentum erat. Sed facilisis ipsum in ipsum vehicula, eu blandit dui porta. Etiam diam justo, facilisis id vestibulum ac, rhoncus vitae magna. Cras bibendum condimentum mollis. Praesent dui erat, semper sed convallis ut, imperdiet at mi. Suspendisse nec leo efficitur tellus rutrum rhoncus vel ac risus. Vestibulum ultricies euismod nisi, eu pulvinar ligula pretium in. Nunc fringilla nibh vel ex egestas consequat.\n" +
+"\n" +
+"Vivamus consectetur pretium felis et viverra. Suspendisse sagittis ultricies malesuada. Praesent fermentum metus sit amet massa vulputate, sit amet vehicula metus efficitur. Aenean vulputate nulla leo, a consectetur enim venenatis vel. Quisque a nibh non lectus sodales dictum in sit amet elit. Nam sapien felis, viverra ac eros et, malesuada tempus nulla. Suspendisse potenti. Mauris at sapien nec erat rhoncus sodales. Phasellus elementum tempus ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce vel elit mauris. Etiam sit amet erat consectetur, feugiat sapien nec, convallis sem. Quisque felis elit, viverra id convallis et, interdum sed mauris.");
         moveTitlebar();
         setMouseListeners();
-
         mailList.add(new Mail("Batuhan", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Veysel", "12 Temmuz", "Test maili"));
-        mailList.add(new Mail("Mahmut", "12 Temmuz", "Test maili"));
-        mailList.add(new Mail("Selami", "12 Temmuz", "Test maili"));
+        mailList.add(new Mail("Mahmut", "12 Temmuz", "Nunc a urna commodo"));
+        mailList.add(new Mail("Selami", "12 Temmuz", "uspendisse sagittis ultricies malesuada"));
         mailList.add(new Mail("Emre", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Mahmut", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Selami", "12 Temmuz", "Test maili"));
@@ -70,15 +78,23 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         //Slider Panels
         pnl_slider_right_arrow.addMouseListener(this);
         pnl_slider_left_arrow.addMouseListener(this);
-    }
-    
-    
-    /**
-     * Mouse Active Effect
-     *  Hem exit hem pressed çalıştığı için çalışmıyor FIXLE!
-     * @param panel 
-     */
 
+        /**
+         * Resize bars
+         *
+         * resizeBarUP.addMouseListener(this);
+         * resizeBarDown.addMouseListener(this);
+         *
+         * WindowResizeAdapter.install(resizeBarUP, SwingConstants.NORTH);
+         * WindowResizeAdapter.install(resizeBarDown, SwingConstants.SOUTH);
+         */
+    }
+
+    /**
+     * Mouse Active Effect Hem exit hem pressed çalıştığı için çalışmıyor FIXLE!
+     *
+     * @param panel
+     */
     private void menuButtonActiveEffect(JPanel panel) {
         Component[] menuPanels = pnl_sidebar_menus.getComponents();
         for (Component menuPanel : menuPanels) {
@@ -143,6 +159,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         this.setUndecorated(true); // title barı kaldırıyor
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
+
     }
 
     public void moveTitlebar() {
@@ -228,7 +245,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         giden_icon = new javax.swing.JButton();
         pnl_main = new javax.swing.JPanel();
         pnl_main_titlebar = new javax.swing.JPanel();
-        pnl_main_details = new javax.swing.JPanel();
+        pnl_main_splitpane = new javax.swing.JSplitPane();
         pnl_main_mails = new javax.swing.JPanel();
         pnl_mail_slider = new javax.swing.JPanel();
         pnl_slider_left = new javax.swing.JPanel();
@@ -308,6 +325,34 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         jLabel56 = new javax.swing.JLabel();
         pnl_mail_10_message = new javax.swing.JPanel();
         jLabel57 = new javax.swing.JLabel();
+        pnl_main_details = new javax.swing.JPanel();
+        pnl_mail_header = new javax.swing.JPanel();
+        mail_author = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        mail_buttons = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        mail_time = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        pnl_mail_body = new javax.swing.JPanel();
+        mail_body_split = new javax.swing.JSplitPane();
+        mail_body_message = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea3 = new javax.swing.JTextArea();
+        mail_body_reply = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        resizeBarUP = new javax.swing.JPanel();
+        resizeBarDown = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -411,7 +456,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         pnl_gelen_text.setLayout(new java.awt.BorderLayout());
 
         gelen_text.setBackground(new java.awt.Color(37, 40, 44));
-        gelen_text.setForeground(new java.awt.Color(255, 255, 255));
+        gelen_text.setForeground(new java.awt.Color(165, 165, 172));
         gelen_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         gelen_text.setText("Gelen Kutusu");
         gelen_text.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -441,7 +486,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         pnl_cop_text.setPreferredSize(new java.awt.Dimension(100, 100));
         pnl_cop_text.setLayout(new java.awt.BorderLayout());
 
-        cop_text.setForeground(new java.awt.Color(255, 255, 255));
+        cop_text.setForeground(new java.awt.Color(165, 165, 172));
         cop_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         cop_text.setText("Çöp Kutusu");
         pnl_cop_text.add(cop_text, java.awt.BorderLayout.CENTER);
@@ -470,7 +515,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         pnl_taslak_text.setPreferredSize(new java.awt.Dimension(100, 100));
         pnl_taslak_text.setLayout(new java.awt.BorderLayout());
 
-        taslak_text.setForeground(new java.awt.Color(255, 255, 255));
+        taslak_text.setForeground(new java.awt.Color(165, 165, 172));
         taslak_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         taslak_text.setText("Taslak");
         taslak_text.setPreferredSize(new java.awt.Dimension(41, 10));
@@ -500,7 +545,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         pnl_giden_text.setPreferredSize(new java.awt.Dimension(100, 100));
         pnl_giden_text.setLayout(new java.awt.BorderLayout());
 
-        giden_text.setForeground(new java.awt.Color(255, 255, 255));
+        giden_text.setForeground(new java.awt.Color(165, 165, 172));
         giden_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         giden_text.setText("Giden Kutusu");
         pnl_giden_text.add(giden_text, java.awt.BorderLayout.CENTER);
@@ -545,27 +590,17 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
 
         pnl_main.add(pnl_main_titlebar, java.awt.BorderLayout.PAGE_START);
 
-        pnl_main_details.setBackground(new java.awt.Color(69, 73, 69));
-
-        javax.swing.GroupLayout pnl_main_detailsLayout = new javax.swing.GroupLayout(pnl_main_details);
-        pnl_main_details.setLayout(pnl_main_detailsLayout);
-        pnl_main_detailsLayout.setHorizontalGroup(
-            pnl_main_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        pnl_main_detailsLayout.setVerticalGroup(
-            pnl_main_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 750, Short.MAX_VALUE)
-        );
-
-        pnl_main.add(pnl_main_details, java.awt.BorderLayout.CENTER);
+        pnl_main_splitpane.setBackground(new java.awt.Color(37, 40, 44));
+        pnl_main_splitpane.setDividerLocation(700);
+        pnl_main_splitpane.setDividerSize(3);
+        pnl_main_splitpane.setForeground(new java.awt.Color(37, 40, 44));
 
         pnl_main_mails.setBackground(new java.awt.Color(45, 48, 53));
         pnl_main_mails.setPreferredSize(new java.awt.Dimension(700, 750));
         pnl_main_mails.setLayout(new java.awt.BorderLayout());
 
         pnl_mail_slider.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_slider.setPreferredSize(new java.awt.Dimension(700, 50));
+        pnl_mail_slider.setPreferredSize(new java.awt.Dimension(600, 40));
         pnl_mail_slider.setLayout(new java.awt.BorderLayout());
 
         pnl_slider_left.setBackground(new java.awt.Color(45, 48, 53));
@@ -603,8 +638,9 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
         pnl_main_mails.add(pnl_mail_slider, java.awt.BorderLayout.PAGE_END);
 
         pnl_mail_list.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_list.setPreferredSize(new java.awt.Dimension(700, 450));
-        pnl_mail_list.setLayout(new java.awt.GridLayout(10, 0, 10, 0));
+        pnl_mail_list.setPreferredSize(new java.awt.Dimension(650, 650));
+        pnl_mail_list.setRequestFocusEnabled(false);
+        pnl_mail_list.setLayout(new java.awt.GridLayout(10, 0, 5, 0));
 
         pnl_mail_1.setBackground(new java.awt.Color(255, 102, 102));
         pnl_mail_1.setLayout(new java.awt.BorderLayout());
@@ -978,9 +1014,215 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
 
         pnl_main_mails.add(pnl_mail_list, java.awt.BorderLayout.LINE_START);
 
-        pnl_main.add(pnl_main_mails, java.awt.BorderLayout.LINE_START);
+        pnl_main_splitpane.setLeftComponent(pnl_main_mails);
+
+        pnl_main_details.setBackground(new java.awt.Color(37, 40, 44));
+        pnl_main_details.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_header.setPreferredSize(new java.awt.Dimension(574, 60));
+        pnl_mail_header.setLayout(new java.awt.BorderLayout());
+
+        mail_author.setBackground(new java.awt.Color(45, 48, 53));
+        mail_author.setLayout(new java.awt.BorderLayout());
+
+        jLabel4.setBackground(new java.awt.Color(45, 48, 53));
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("[Author]");
+        jLabel4.setPreferredSize(new java.awt.Dimension(89, 15));
+        mail_author.add(jLabel4, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header.add(mail_author, java.awt.BorderLayout.LINE_START);
+
+        mail_buttons.setBackground(new java.awt.Color(45, 48, 53));
+        mail_buttons.setLayout(new java.awt.BorderLayout());
+
+        jLabel6.setBackground(new java.awt.Color(45, 48, 53));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/left-arrow.png"))); // NOI18N
+        jLabel6.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons.add(jLabel6, java.awt.BorderLayout.LINE_START);
+
+        jLabel7.setBackground(new java.awt.Color(45, 48, 53));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/right-arrow.png"))); // NOI18N
+        jLabel7.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons.add(jLabel7, java.awt.BorderLayout.LINE_END);
+
+        jLabel8.setBackground(new java.awt.Color(45, 48, 53));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/mail_menu_icon_cop.png"))); // NOI18N
+        jLabel8.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons.add(jLabel8, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header.add(mail_buttons, java.awt.BorderLayout.LINE_END);
+
+        mail_time.setBackground(new java.awt.Color(45, 48, 53));
+        mail_time.setLayout(new java.awt.BorderLayout());
+
+        jLabel5.setBackground(new java.awt.Color(45, 48, 53));
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel5.setText("[Time]");
+        mail_time.add(jLabel5, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header.add(mail_time, java.awt.BorderLayout.CENTER);
+
+        pnl_main_details.add(pnl_mail_header, java.awt.BorderLayout.PAGE_START);
+
+        pnl_mail_body.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body.setLayout(new java.awt.BorderLayout());
+
+        mail_body_split.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_split.setDividerLocation(595);
+        mail_body_split.setDividerSize(3);
+        mail_body_split.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_split.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        mail_body_message.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_message.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_message.setLayout(new java.awt.BorderLayout());
+
+        jPanel4.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel4.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel4.setPreferredSize(new java.awt.Dimension(60, 60));
+        jPanel4.setLayout(new java.awt.BorderLayout());
+
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        jTextArea2.setEditable(false);
+        jTextArea2.setBackground(new java.awt.Color(45, 48, 53));
+        jTextArea2.setColumns(5);
+        jTextArea2.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jTextArea2.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea2.setLineWrap(true);
+        jTextArea2.setRows(2);
+        jTextArea2.setTabSize(2);
+        jTextArea2.setWrapStyleWord(true);
+        jTextArea2.setCaretColor(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setViewportView(jTextArea2);
+
+        jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        mail_body_message.add(jPanel4, java.awt.BorderLayout.PAGE_START);
+
+        jPanel5.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel5.setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3), "Email Eki", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(165, 165, 172))); // NOI18N
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(60, 60));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel5.add(jPanel1, java.awt.BorderLayout.PAGE_END);
+
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+        jTextArea3.setEditable(false);
+        jTextArea3.setBackground(new java.awt.Color(45, 48, 53));
+        jTextArea3.setColumns(5);
+        jTextArea3.setForeground(new java.awt.Color(165, 165, 172));
+        jTextArea3.setLineWrap(true);
+        jTextArea3.setRows(2);
+        jTextArea3.setTabSize(2);
+        jTextArea3.setWrapStyleWord(true);
+        jTextArea3.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        jScrollPane3.setViewportView(jTextArea3);
+
+        jPanel5.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        mail_body_message.add(jPanel5, java.awt.BorderLayout.CENTER);
+
+        mail_body_split.setTopComponent(mail_body_message);
+
+        mail_body_reply.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_reply.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_reply.setPreferredSize(new java.awt.Dimension(100, 100));
+        mail_body_reply.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel2.setPreferredSize(new java.awt.Dimension(40, 40));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/send.png"))); // NOI18N
+        jLabel9.setPreferredSize(new java.awt.Dimension(30, 30));
+        jPanel2.add(jLabel9, java.awt.BorderLayout.CENTER);
+
+        mail_body_reply.add(jPanel2, java.awt.BorderLayout.LINE_END);
+
+        jPanel3.setBackground(new java.awt.Color(45, 48, 53));
+        jPanel3.setForeground(new java.awt.Color(12, 12, 12));
+        jPanel3.setPreferredSize(new java.awt.Dimension(300, 124));
+        jPanel3.setLayout(new java.awt.BorderLayout());
+
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane2.setAutoscrolls(true);
+
+        jTextArea1.setBackground(new java.awt.Color(44, 48, 53));
+        jTextArea1.setColumns(50);
+        jTextArea1.setFont(new java.awt.Font("Bahnschrift", 0, 11)); // NOI18N
+        jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Cevap göndermek için tıklayın.\n");
+        jTextArea1.setToolTipText("");
+        jTextArea1.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        jTextArea1.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTextArea1.setMinimumSize(new java.awt.Dimension(1, 1));
+        jTextArea1.setSelectionColor(new java.awt.Color(255, 255, 255));
+        jScrollPane2.setViewportView(jTextArea1);
+
+        jPanel3.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        mail_body_reply.add(jPanel3, java.awt.BorderLayout.CENTER);
+
+        mail_body_split.setRightComponent(mail_body_reply);
+
+        pnl_mail_body.add(mail_body_split, java.awt.BorderLayout.CENTER);
+
+        pnl_main_details.add(pnl_mail_body, java.awt.BorderLayout.CENTER);
+
+        pnl_main_splitpane.setRightComponent(pnl_main_details);
+
+        pnl_main.add(pnl_main_splitpane, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(pnl_main, java.awt.BorderLayout.CENTER);
+
+        resizeBarUP.setBackground(new java.awt.Color(37, 40, 44));
+        resizeBarUP.setPreferredSize(new java.awt.Dimension(5, 5));
+
+        javax.swing.GroupLayout resizeBarUPLayout = new javax.swing.GroupLayout(resizeBarUP);
+        resizeBarUP.setLayout(resizeBarUPLayout);
+        resizeBarUPLayout.setHorizontalGroup(
+            resizeBarUPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1390, Short.MAX_VALUE)
+        );
+        resizeBarUPLayout.setVerticalGroup(
+            resizeBarUPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(resizeBarUP, java.awt.BorderLayout.PAGE_START);
+
+        resizeBarDown.setBackground(new java.awt.Color(37, 40, 44));
+        resizeBarDown.setPreferredSize(new java.awt.Dimension(5, 5));
+
+        javax.swing.GroupLayout resizeBarDownLayout = new javax.swing.GroupLayout(resizeBarDown);
+        resizeBarDown.setLayout(resizeBarDownLayout);
+        resizeBarDownLayout.setHorizontalGroup(
+            resizeBarDownLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1390, Short.MAX_VALUE)
+        );
+        resizeBarDownLayout.setVerticalGroup(
+            resizeBarDownLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(resizeBarDown, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1027,6 +1269,9 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
             java.util.logging.Logger.getLogger(FrmMail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1060,6 +1305,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
@@ -1070,6 +1316,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
@@ -1078,7 +1325,28 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel57;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JLabel lbl_slider_number;
+    private javax.swing.JPanel mail_author;
+    private javax.swing.JPanel mail_body_message;
+    private javax.swing.JPanel mail_body_reply;
+    private javax.swing.JSplitPane mail_body_split;
+    private javax.swing.JPanel mail_buttons;
+    private javax.swing.JPanel mail_time;
     private javax.swing.JPanel pnl_btnclose;
     private javax.swing.JPanel pnl_btnmaximize;
     private javax.swing.JPanel pnl_btnminimize;
@@ -1129,11 +1397,14 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JPanel pnl_mail_9_author;
     private javax.swing.JPanel pnl_mail_9_message;
     private javax.swing.JPanel pnl_mail_9_time;
+    private javax.swing.JPanel pnl_mail_body;
+    private javax.swing.JPanel pnl_mail_header;
     private javax.swing.JPanel pnl_mail_list;
     private javax.swing.JPanel pnl_mail_slider;
     private javax.swing.JPanel pnl_main;
     private javax.swing.JPanel pnl_main_details;
     private javax.swing.JPanel pnl_main_mails;
+    private javax.swing.JSplitPane pnl_main_splitpane;
     private javax.swing.JPanel pnl_main_titlebar;
     private javax.swing.JPanel pnl_sidebar;
     private javax.swing.JPanel pnl_sidebar_cop;
@@ -1150,6 +1421,8 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JPanel pnl_taslak_icon;
     private javax.swing.JPanel pnl_taslak_text;
     private javax.swing.JPanel pnl_titlebuttons;
+    private javax.swing.JPanel resizeBarDown;
+    private javax.swing.JPanel resizeBarUP;
     private javax.swing.JButton taslak_icon;
     private javax.swing.JLabel taslak_text;
     // End of variables declaration//GEN-END:variables
@@ -1170,6 +1443,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent evt) {
+
         /* Mouse clicked effect on menu
         if (evt.getSource() == pnl_sidebar_gelen || evt.getSource() == pnl_sidebar_giden) {
             System.out.println("pressed");
@@ -1180,11 +1454,14 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent evt) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseEntered(MouseEvent evt) {
+        if (evt.getSource() == resizeBarUP || evt.getSource() == resizeBarDown) {
+            this.setCursor(Cursor.N_RESIZE_CURSOR);
+        }
+
         if (evt.getSource() == pnl_mail_1 || evt.getSource() == pnl_mail_2 || evt.getSource() == pnl_mail_3 || evt.getSource() == pnl_mail_4 || evt.getSource() == pnl_mail_5
                 || evt.getSource() == pnl_mail_6 || evt.getSource() == pnl_mail_7 || evt.getSource() == pnl_mail_8 || evt.getSource() == pnl_mail_9 || evt.getSource() == pnl_mail_10) {
             JPanel panel = (JPanel) evt.getSource();
@@ -1222,10 +1499,16 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
             JPanel subPanel = (JPanel) panelComp[0];
             hoverColor(subPanel, new Color(56, 58, 71));
         }
+
     }
 
     @Override
     public void mouseExited(MouseEvent evt) {
+
+        if (evt.getSource() == resizeBarUP || evt.getSource() == resizeBarDown) {
+            this.setCursor(Cursor.DEFAULT_CURSOR);
+        }
+
         if (evt.getSource() == pnl_mail_1 || evt.getSource() == pnl_mail_2 || evt.getSource() == pnl_mail_3 || evt.getSource() == pnl_mail_4 || evt.getSource() == pnl_mail_5
                 || evt.getSource() == pnl_mail_6 || evt.getSource() == pnl_mail_7 || evt.getSource() == pnl_mail_8 || evt.getSource() == pnl_mail_9 || evt.getSource() == pnl_mail_10) {
             JPanel panel = (JPanel) evt.getSource();
@@ -1263,5 +1546,14 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener {
             hoverColor((JPanel) label.getParent(), new Color(45, 48, 53));
             // Mail Page Operations
         }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent evt) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent evt) {
     }
 }
