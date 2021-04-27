@@ -9,7 +9,6 @@
 package com.vbteam.views;
 
 import com.vbteam.models.Mail;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -28,39 +27,24 @@ import javax.swing.JPanel;
  *
  * @author BatuPC
  */
-public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
+public class FrmMailYedek2 extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
 
-    CardLayout cardLayout;
     boolean maxCheck = true, gelenState = false, gidenState = false, taslakState = false, copState = false;
     private int mouseX1, mouseX2, mouseY1, mouseY2, pX, pY, pageNumber = 1;
     ArrayList<JPanel> mailPanelList = new ArrayList<>();
     private List<Mail> mailList = new ArrayList<Mail>();
 
-    public FrmMail() {
+    public FrmMailYedek2() {
         initGui();
         initComponents();
         centerLocationAndSetSize();
 
-        //Mail + Panel Test
-        TestProcedure();
-
-        cardLayout = (CardLayout) pnl_main_mail_card.getLayout();
-
-        moveTitlebar();
-        setMouseListeners();
-        setMailPanels();
-    }
-
-    private void TestProcedure() {
         pnl_mail_detail_header_text.setText("Mail sistemi hakkında , Aenean euismod maximus pharetra. Nunc a urna commodo, egestas sem ac");
         pnl_mail_body_text.setText("Aenean euismod maximus pharetra. Nunc a urna commodo, egestas sem ac, condimentum erat. Sed facilisis ipsum in ipsum vehicula, eu blandit dui porta. Etiam diam justo, facilisis id vestibulum ac, rhoncus vitae magna. Cras bibendum condimentum mollis. Praesent dui erat, semper sed convallis ut, imperdiet at mi. Suspendisse nec leo efficitur tellus rutrum rhoncus vel ac risus. Vestibulum ultricies euismod nisi, eu pulvinar ligula pretium in. Nunc fringilla nibh vel ex egestas consequat.\n"
                 + "\n"
-                + "Vivamus consectetur pretium felis et viverra. Suspendisse sagittis ultricies malesuada. Praesent fermentum metus sit amet massa vulputate, "
-                + "sit amet vehicula metus efficitur. Aenean vulputate nulla leo, a consectetur enim venenatis vel. Quisque a nibh non lectus"
-                + " sodales dictum in sit amet elit. Nam sapien felis, viverra ac eros et, malesuada tempus nulla. Suspendisse potenti. "
-                + "Mauris at sapien nec erat rhoncus sodales. Phasellus elementum tempus ultrices. Pellentesque habitant morbi tristique "
-                + "senectus et netus et malesuada fames ac turpis egestas. Fusce vel elit mauris. "
-                + "Etiam sit amet erat consectetur, feugiat sapien nec, convallis sem. Quisque felis elit, viverra id convallis et, interdum sed mauris.");
+                + "Vivamus consectetur pretium felis et viverra. Suspendisse sagittis ultricies malesuada. Praesent fermentum metus sit amet massa vulputate, sit amet vehicula metus efficitur. Aenean vulputate nulla leo, a consectetur enim venenatis vel. Quisque a nibh non lectus sodales dictum in sit amet elit. Nam sapien felis, viverra ac eros et, malesuada tempus nulla. Suspendisse potenti. Mauris at sapien nec erat rhoncus sodales. Phasellus elementum tempus ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce vel elit mauris. Etiam sit amet erat consectetur, feugiat sapien nec, convallis sem. Quisque felis elit, viverra id convallis et, interdum sed mauris.");
+        moveTitlebar();
+        setMouseListeners();
         mailList.add(new Mail("Batuhan", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Veysel", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Mahmut", "12 Temmuz", "Nunc a urna commodo"));
@@ -69,6 +53,8 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         mailList.add(new Mail("Mahmut", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Selami", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Emre", "12 Temmuz", "Test maili"));
+
+        setMailPanels();
     }
 
     private void setMouseListeners() {
@@ -120,15 +106,9 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         switch (panelName) {
             case "gelenKutu":
                 gelenState = control;
-                if (control) {
-                    cardLayout.show(pnl_main_mail_card, "gelenMailPanel");
-                }
                 break;
             case "gidenKutu":
                 gidenState = control;
-                if (control) {
-                    cardLayout.show(pnl_main_mail_card, "gidenMailPanel");
-                }
                 break;
             case "taslakKutu":
                 taslakState = control;
@@ -299,34 +279,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         pnl_main_titlebar = new javax.swing.JPanel();
         pnl_main_mail = new javax.swing.JPanel();
         pnl_gelen_splitpane = new javax.swing.JSplitPane();
-        pnl_main_details = new javax.swing.JPanel();
-        pnl_mail_header = new javax.swing.JPanel();
-        mail_author = new javax.swing.JPanel();
-        mail_author_text = new javax.swing.JLabel();
-        mail_buttons = new javax.swing.JPanel();
-        btn_mail_1 = new javax.swing.JLabel();
-        btn_mail_2 = new javax.swing.JLabel();
-        btn_mail_3 = new javax.swing.JLabel();
-        mail_time = new javax.swing.JPanel();
-        mail_time_text = new javax.swing.JLabel();
-        pnl_mail_body = new javax.swing.JPanel();
-        mail_body_split = new javax.swing.JSplitPane();
-        mail_body_message = new javax.swing.JPanel();
-        pnl_mail_detail_header = new javax.swing.JPanel();
-        pnl_mail_detail_header_scrollpane = new javax.swing.JScrollPane();
-        pnl_mail_detail_header_text = new javax.swing.JTextArea();
-        pnl_mail_detail_body = new javax.swing.JPanel();
-        pnl_mail_detail_attachment = new javax.swing.JPanel();
-        pnl_mail_body_scrollpane = new javax.swing.JScrollPane();
-        pnl_mail_body_text = new javax.swing.JTextArea();
-        mail_body_reply = new javax.swing.JPanel();
-        pnl_mail_body_reply_btn = new javax.swing.JPanel();
-        btn_reply = new javax.swing.JLabel();
-        pnl_mail_body_reply = new javax.swing.JPanel();
-        pnl_mail_body_reply_scrollpane = new javax.swing.JScrollPane();
-        pnl_mail_body_reply_text = new javax.swing.JTextArea();
-        pnl_main_mail_card = new javax.swing.JPanel();
-        pnl_main_mails_gelen = new javax.swing.JPanel();
+        pnl_main_mails = new javax.swing.JPanel();
         pnl_mail_slider = new javax.swing.JPanel();
         pnl_slider_left = new javax.swing.JPanel();
         pnl_slider_left_arrow = new javax.swing.JLabel();
@@ -405,9 +358,138 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         pnl_mail_10_time_text = new javax.swing.JLabel();
         pnl_mail_10_message = new javax.swing.JPanel();
         pnl_mail_10_message_text = new javax.swing.JLabel();
-        pnl_main_mails_giden = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
+        pnl_main_details = new javax.swing.JPanel();
+        pnl_mail_header = new javax.swing.JPanel();
+        mail_author = new javax.swing.JPanel();
+        mail_author_text = new javax.swing.JLabel();
+        mail_buttons = new javax.swing.JPanel();
+        btn_mail_1 = new javax.swing.JLabel();
+        btn_mail_2 = new javax.swing.JLabel();
+        btn_mail_3 = new javax.swing.JLabel();
+        mail_time = new javax.swing.JPanel();
+        mail_time_text = new javax.swing.JLabel();
+        pnl_mail_body = new javax.swing.JPanel();
+        mail_body_split = new javax.swing.JSplitPane();
+        mail_body_message = new javax.swing.JPanel();
+        pnl_mail_detail_header = new javax.swing.JPanel();
+        pnl_mail_detail_header_scrollpane = new javax.swing.JScrollPane();
+        pnl_mail_detail_header_text = new javax.swing.JTextArea();
+        pnl_mail_detail_body = new javax.swing.JPanel();
+        pnl_mail_detail_attachment = new javax.swing.JPanel();
+        pnl_mail_body_scrollpane = new javax.swing.JScrollPane();
+        pnl_mail_body_text = new javax.swing.JTextArea();
+        mail_body_reply = new javax.swing.JPanel();
+        pnl_mail_body_reply_btn = new javax.swing.JPanel();
+        btn_reply = new javax.swing.JLabel();
+        pnl_mail_body_reply = new javax.swing.JPanel();
+        pnl_mail_body_reply_scrollpane = new javax.swing.JScrollPane();
+        pnl_mail_body_reply_text = new javax.swing.JTextArea();
+        pnl_giden_splitpane = new javax.swing.JSplitPane();
+        pnl_main_mails1 = new javax.swing.JPanel();
+        pnl_mail_slider1 = new javax.swing.JPanel();
+        pnl_slider_left1 = new javax.swing.JPanel();
+        pnl_slider_left_arrow1 = new javax.swing.JLabel();
+        pnl_slider_right1 = new javax.swing.JPanel();
+        pnl_slider_right_arrow1 = new javax.swing.JLabel();
+        pnl_slider_middle1 = new javax.swing.JPanel();
+        lbl_slider_number1 = new javax.swing.JLabel();
+        pnl_mail_list1 = new javax.swing.JPanel();
+        pnl_mail_11 = new javax.swing.JPanel();
+        pnl_mail_1_author1 = new javax.swing.JPanel();
+        pnl_mail_1_author_text1 = new javax.swing.JLabel();
+        pnl_mail_1_time1 = new javax.swing.JPanel();
+        pnl_mail_1_time_text1 = new javax.swing.JLabel();
+        pnl_mail_1_message1 = new javax.swing.JPanel();
+        pnl_mail_1_message_text1 = new javax.swing.JLabel();
+        pnl_mail_12 = new javax.swing.JPanel();
+        pnl_mail_2_author1 = new javax.swing.JPanel();
+        pnl_mail_2_author_text1 = new javax.swing.JLabel();
+        pnl_mail_2_time1 = new javax.swing.JPanel();
+        pnl_mail_2_time_text1 = new javax.swing.JLabel();
+        pnl_mail_2_message1 = new javax.swing.JPanel();
+        pnl_mail_2_message_text1 = new javax.swing.JLabel();
+        pnl_mail_13 = new javax.swing.JPanel();
+        pnl_mail_3_author1 = new javax.swing.JPanel();
+        pnl_mail_3_author_text1 = new javax.swing.JLabel();
+        pnl_mail_3_time1 = new javax.swing.JPanel();
+        pnl_mail_3_time_text1 = new javax.swing.JLabel();
+        pnl_mail_3_message1 = new javax.swing.JPanel();
+        pnl_mail_3_message_text1 = new javax.swing.JLabel();
+        pnl_mail_14 = new javax.swing.JPanel();
+        pnl_mail_4_time1 = new javax.swing.JPanel();
+        pnl_mail_4_time_text1 = new javax.swing.JLabel();
+        pnl_mail_4_author1 = new javax.swing.JPanel();
+        pnl_mail_4_author_text1 = new javax.swing.JLabel();
+        pnl_mail_4_message1 = new javax.swing.JPanel();
+        pnl_mail_4_message_text1 = new javax.swing.JLabel();
+        pnl_mail_15 = new javax.swing.JPanel();
+        pnl_mail_5_author1 = new javax.swing.JPanel();
+        pnl_mail_5_author_text1 = new javax.swing.JLabel();
+        pnl_mail_5_time1 = new javax.swing.JPanel();
+        pnl_mail_5_time_text1 = new javax.swing.JLabel();
+        pnl_mail_5_message1 = new javax.swing.JPanel();
+        pnl_mail_5_message_text1 = new javax.swing.JLabel();
+        pnl_mail_16 = new javax.swing.JPanel();
+        pnl_mail_6_author1 = new javax.swing.JPanel();
+        pnl_mail_6_author_text1 = new javax.swing.JLabel();
+        pnl_mail_6_time1 = new javax.swing.JPanel();
+        pnl_mail_6_time_text1 = new javax.swing.JLabel();
+        pnl_mail_6_message1 = new javax.swing.JPanel();
+        pnl_mail_6_message_text1 = new javax.swing.JLabel();
+        pnl_mail_17 = new javax.swing.JPanel();
+        pnl_mail_7_author1 = new javax.swing.JPanel();
+        pnl_mail_7_author_text1 = new javax.swing.JLabel();
+        pnl_mail_7_time1 = new javax.swing.JPanel();
+        pnl_mail_7_time_text1 = new javax.swing.JLabel();
+        pnl_mail_7_message1 = new javax.swing.JPanel();
+        pnl_mail_7_message_text1 = new javax.swing.JLabel();
+        pnl_mail_18 = new javax.swing.JPanel();
+        pnl_mail_8_author1 = new javax.swing.JPanel();
+        pnl_mail_8_author_text1 = new javax.swing.JLabel();
+        pnl_mail_8_time1 = new javax.swing.JPanel();
+        pnl_mail_8_time_text1 = new javax.swing.JLabel();
+        pnl_mail_8_message1 = new javax.swing.JPanel();
+        pnl_mail_8_message_text1 = new javax.swing.JLabel();
+        pnl_mail_19 = new javax.swing.JPanel();
+        pnl_mail_9_author1 = new javax.swing.JPanel();
+        pnl_mail_9_author_text1 = new javax.swing.JLabel();
+        pnl_mail_9_time1 = new javax.swing.JPanel();
+        pnl_mail_9_time_text1 = new javax.swing.JLabel();
+        pnl_mail_9_message1 = new javax.swing.JPanel();
+        pnl_mail_9_message_text1 = new javax.swing.JLabel();
+        pnl_mail_20 = new javax.swing.JPanel();
+        pnl_mail_10_author1 = new javax.swing.JPanel();
+        pnl_mail_10_author_text1 = new javax.swing.JLabel();
+        pnl_mail_10_time1 = new javax.swing.JPanel();
+        pnl_mail_10_time_text1 = new javax.swing.JLabel();
+        pnl_mail_10_message1 = new javax.swing.JPanel();
+        pnl_mail_10_message_text1 = new javax.swing.JLabel();
+        pnl_main_details1 = new javax.swing.JPanel();
+        pnl_mail_header1 = new javax.swing.JPanel();
+        mail_author1 = new javax.swing.JPanel();
+        mail_author_text1 = new javax.swing.JLabel();
+        mail_buttons1 = new javax.swing.JPanel();
+        btn_mail_4 = new javax.swing.JLabel();
+        btn_mail_5 = new javax.swing.JLabel();
+        btn_mail_6 = new javax.swing.JLabel();
+        mail_time1 = new javax.swing.JPanel();
+        mail_time_text1 = new javax.swing.JLabel();
+        pnl_mail_body1 = new javax.swing.JPanel();
+        mail_body_split1 = new javax.swing.JSplitPane();
+        mail_body_message1 = new javax.swing.JPanel();
+        pnl_mail_detail_header1 = new javax.swing.JPanel();
+        pnl_mail_detail_header_scrollpane1 = new javax.swing.JScrollPane();
+        pnl_mail_detail_header_text1 = new javax.swing.JTextArea();
+        pnl_mail_detail_body1 = new javax.swing.JPanel();
+        pnl_mail_detail_attachment1 = new javax.swing.JPanel();
+        pnl_mail_body_scrollpane1 = new javax.swing.JScrollPane();
+        pnl_mail_body_text1 = new javax.swing.JTextArea();
+        mail_body_reply1 = new javax.swing.JPanel();
+        pnl_mail_body_reply_btn1 = new javax.swing.JPanel();
+        btn_reply1 = new javax.swing.JLabel();
+        pnl_mail_body_reply1 = new javax.swing.JPanel();
+        pnl_mail_body_reply_scrollpane1 = new javax.swing.JScrollPane();
+        pnl_mail_body_reply_text1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -682,184 +764,9 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         pnl_gelen_splitpane.setForeground(new java.awt.Color(37, 40, 44));
         pnl_gelen_splitpane.setPreferredSize(new java.awt.Dimension(1250, 700));
 
-        pnl_main_details.setBackground(new java.awt.Color(37, 40, 44));
-        pnl_main_details.setLayout(new java.awt.BorderLayout());
-
-        pnl_mail_header.setPreferredSize(new java.awt.Dimension(574, 60));
-        pnl_mail_header.setLayout(new java.awt.BorderLayout());
-
-        mail_author.setBackground(new java.awt.Color(45, 48, 53));
-        mail_author.setLayout(new java.awt.BorderLayout());
-
-        mail_author_text.setBackground(new java.awt.Color(45, 48, 53));
-        mail_author_text.setForeground(new java.awt.Color(255, 255, 255));
-        mail_author_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        mail_author_text.setText("[Author]");
-        mail_author_text.setPreferredSize(new java.awt.Dimension(89, 15));
-        mail_author.add(mail_author_text, java.awt.BorderLayout.CENTER);
-
-        pnl_mail_header.add(mail_author, java.awt.BorderLayout.LINE_START);
-
-        mail_buttons.setBackground(new java.awt.Color(45, 48, 53));
-        mail_buttons.setLayout(new java.awt.BorderLayout());
-
-        btn_mail_1.setBackground(new java.awt.Color(45, 48, 53));
-        btn_mail_1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btn_mail_1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/left-arrow.png"))); // NOI18N
-        btn_mail_1.setPreferredSize(new java.awt.Dimension(40, 15));
-        mail_buttons.add(btn_mail_1, java.awt.BorderLayout.LINE_START);
-
-        btn_mail_2.setBackground(new java.awt.Color(45, 48, 53));
-        btn_mail_2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btn_mail_2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/right-arrow.png"))); // NOI18N
-        btn_mail_2.setPreferredSize(new java.awt.Dimension(40, 15));
-        mail_buttons.add(btn_mail_2, java.awt.BorderLayout.LINE_END);
-
-        btn_mail_3.setBackground(new java.awt.Color(45, 48, 53));
-        btn_mail_3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btn_mail_3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/mail_menu_icon_cop.png"))); // NOI18N
-        btn_mail_3.setPreferredSize(new java.awt.Dimension(40, 15));
-        mail_buttons.add(btn_mail_3, java.awt.BorderLayout.CENTER);
-
-        pnl_mail_header.add(mail_buttons, java.awt.BorderLayout.LINE_END);
-
-        mail_time.setBackground(new java.awt.Color(45, 48, 53));
-        mail_time.setLayout(new java.awt.BorderLayout());
-
-        mail_time_text.setBackground(new java.awt.Color(45, 48, 53));
-        mail_time_text.setForeground(new java.awt.Color(255, 255, 255));
-        mail_time_text.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        mail_time_text.setText("[Time]");
-        mail_time.add(mail_time_text, java.awt.BorderLayout.CENTER);
-
-        pnl_mail_header.add(mail_time, java.awt.BorderLayout.CENTER);
-
-        pnl_main_details.add(pnl_mail_header, java.awt.BorderLayout.PAGE_START);
-
-        pnl_mail_body.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_body.setLayout(new java.awt.BorderLayout());
-
-        mail_body_split.setBackground(new java.awt.Color(45, 48, 53));
-        mail_body_split.setDividerLocation(595);
-        mail_body_split.setDividerSize(3);
-        mail_body_split.setForeground(new java.awt.Color(45, 48, 53));
-        mail_body_split.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
-        mail_body_message.setBackground(new java.awt.Color(45, 48, 53));
-        mail_body_message.setForeground(new java.awt.Color(45, 48, 53));
-        mail_body_message.setLayout(new java.awt.BorderLayout());
-
-        pnl_mail_detail_header.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_detail_header.setForeground(new java.awt.Color(255, 255, 255));
-        pnl_mail_detail_header.setPreferredSize(new java.awt.Dimension(60, 60));
-        pnl_mail_detail_header.setLayout(new java.awt.BorderLayout());
-
-        pnl_mail_detail_header_scrollpane.setBorder(null);
-        pnl_mail_detail_header_scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        pnl_mail_detail_header_scrollpane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        pnl_mail_detail_header_text.setEditable(false);
-        pnl_mail_detail_header_text.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_detail_header_text.setColumns(5);
-        pnl_mail_detail_header_text.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        pnl_mail_detail_header_text.setForeground(new java.awt.Color(255, 255, 255));
-        pnl_mail_detail_header_text.setLineWrap(true);
-        pnl_mail_detail_header_text.setRows(2);
-        pnl_mail_detail_header_text.setTabSize(2);
-        pnl_mail_detail_header_text.setWrapStyleWord(true);
-        pnl_mail_detail_header_text.setCaretColor(new java.awt.Color(255, 255, 255));
-        pnl_mail_detail_header_scrollpane.setViewportView(pnl_mail_detail_header_text);
-
-        pnl_mail_detail_header.add(pnl_mail_detail_header_scrollpane, java.awt.BorderLayout.CENTER);
-
-        mail_body_message.add(pnl_mail_detail_header, java.awt.BorderLayout.PAGE_START);
-
-        pnl_mail_detail_body.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_detail_body.setLayout(new java.awt.BorderLayout());
-
-        pnl_mail_detail_attachment.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_detail_attachment.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3), "Email Eki", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(165, 165, 172))); // NOI18N
-        pnl_mail_detail_attachment.setForeground(new java.awt.Color(255, 255, 255));
-        pnl_mail_detail_attachment.setPreferredSize(new java.awt.Dimension(60, 60));
-        pnl_mail_detail_attachment.setLayout(new java.awt.BorderLayout());
-        pnl_mail_detail_body.add(pnl_mail_detail_attachment, java.awt.BorderLayout.PAGE_END);
-
-        pnl_mail_body_scrollpane.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
-
-        pnl_mail_body_text.setEditable(false);
-        pnl_mail_body_text.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_body_text.setColumns(5);
-        pnl_mail_body_text.setForeground(new java.awt.Color(165, 165, 172));
-        pnl_mail_body_text.setLineWrap(true);
-        pnl_mail_body_text.setRows(2);
-        pnl_mail_body_text.setTabSize(2);
-        pnl_mail_body_text.setWrapStyleWord(true);
-        pnl_mail_body_text.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
-        pnl_mail_body_scrollpane.setViewportView(pnl_mail_body_text);
-
-        pnl_mail_detail_body.add(pnl_mail_body_scrollpane, java.awt.BorderLayout.CENTER);
-
-        mail_body_message.add(pnl_mail_detail_body, java.awt.BorderLayout.CENTER);
-
-        mail_body_split.setTopComponent(mail_body_message);
-
-        mail_body_reply.setBackground(new java.awt.Color(45, 48, 53));
-        mail_body_reply.setForeground(new java.awt.Color(45, 48, 53));
-        mail_body_reply.setPreferredSize(new java.awt.Dimension(100, 100));
-        mail_body_reply.setLayout(new java.awt.BorderLayout());
-
-        pnl_mail_body_reply_btn.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_body_reply_btn.setPreferredSize(new java.awt.Dimension(40, 40));
-        pnl_mail_body_reply_btn.setLayout(new java.awt.BorderLayout());
-
-        btn_reply.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btn_reply.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/send.png"))); // NOI18N
-        btn_reply.setPreferredSize(new java.awt.Dimension(30, 30));
-        pnl_mail_body_reply_btn.add(btn_reply, java.awt.BorderLayout.CENTER);
-
-        mail_body_reply.add(pnl_mail_body_reply_btn, java.awt.BorderLayout.LINE_END);
-
-        pnl_mail_body_reply.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_mail_body_reply.setForeground(new java.awt.Color(12, 12, 12));
-        pnl_mail_body_reply.setPreferredSize(new java.awt.Dimension(300, 124));
-        pnl_mail_body_reply.setLayout(new java.awt.BorderLayout());
-
-        pnl_mail_body_reply_scrollpane.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
-        pnl_mail_body_reply_scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        pnl_mail_body_reply_scrollpane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        pnl_mail_body_reply_scrollpane.setAutoscrolls(true);
-
-        pnl_mail_body_reply_text.setBackground(new java.awt.Color(44, 48, 53));
-        pnl_mail_body_reply_text.setColumns(50);
-        pnl_mail_body_reply_text.setFont(new java.awt.Font("Bahnschrift", 0, 11)); // NOI18N
-        pnl_mail_body_reply_text.setForeground(new java.awt.Color(255, 255, 255));
-        pnl_mail_body_reply_text.setRows(5);
-        pnl_mail_body_reply_text.setText("Cevap göndermek için tıklayın.\n");
-        pnl_mail_body_reply_text.setToolTipText("");
-        pnl_mail_body_reply_text.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        pnl_mail_body_reply_text.setCaretColor(new java.awt.Color(255, 255, 255));
-        pnl_mail_body_reply_text.setMinimumSize(new java.awt.Dimension(1, 1));
-        pnl_mail_body_reply_text.setSelectionColor(new java.awt.Color(255, 255, 255));
-        pnl_mail_body_reply_scrollpane.setViewportView(pnl_mail_body_reply_text);
-
-        pnl_mail_body_reply.add(pnl_mail_body_reply_scrollpane, java.awt.BorderLayout.CENTER);
-
-        mail_body_reply.add(pnl_mail_body_reply, java.awt.BorderLayout.CENTER);
-
-        mail_body_split.setRightComponent(mail_body_reply);
-
-        pnl_mail_body.add(mail_body_split, java.awt.BorderLayout.CENTER);
-
-        pnl_main_details.add(pnl_mail_body, java.awt.BorderLayout.CENTER);
-
-        pnl_gelen_splitpane.setRightComponent(pnl_main_details);
-
-        pnl_main_mail_card.setBackground(new java.awt.Color(37, 40, 44));
-        pnl_main_mail_card.setLayout(new java.awt.CardLayout());
-
-        pnl_main_mails_gelen.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_main_mails_gelen.setPreferredSize(new java.awt.Dimension(700, 750));
-        pnl_main_mails_gelen.setLayout(new java.awt.BorderLayout());
+        pnl_main_mails.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_main_mails.setPreferredSize(new java.awt.Dimension(700, 750));
+        pnl_main_mails.setLayout(new java.awt.BorderLayout());
 
         pnl_mail_slider.setBackground(new java.awt.Color(45, 48, 53));
         pnl_mail_slider.setPreferredSize(new java.awt.Dimension(600, 40));
@@ -897,7 +804,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
 
         pnl_mail_slider.add(pnl_slider_middle, java.awt.BorderLayout.CENTER);
 
-        pnl_main_mails_gelen.add(pnl_mail_slider, java.awt.BorderLayout.PAGE_END);
+        pnl_main_mails.add(pnl_mail_slider, java.awt.BorderLayout.PAGE_END);
 
         pnl_mail_list.setBackground(new java.awt.Color(45, 48, 53));
         pnl_mail_list.setPreferredSize(new java.awt.Dimension(700, 700));
@@ -1274,22 +1181,784 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
 
         pnl_mail_list.add(pnl_mail_10);
 
-        pnl_main_mails_gelen.add(pnl_mail_list, java.awt.BorderLayout.LINE_START);
+        pnl_main_mails.add(pnl_mail_list, java.awt.BorderLayout.LINE_START);
 
-        pnl_main_mail_card.add(pnl_main_mails_gelen, "gelenMailPanel");
+        pnl_gelen_splitpane.setLeftComponent(pnl_main_mails);
 
-        pnl_main_mails_giden.setBackground(java.awt.Color.red);
-        pnl_main_mails_giden.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        pnl_main_details.setBackground(new java.awt.Color(37, 40, 44));
+        pnl_main_details.setLayout(new java.awt.BorderLayout());
 
-        jScrollPane1.setViewportView(jTree1);
+        pnl_mail_header.setPreferredSize(new java.awt.Dimension(574, 60));
+        pnl_mail_header.setLayout(new java.awt.BorderLayout());
 
-        pnl_main_mails_giden.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        mail_author.setBackground(new java.awt.Color(45, 48, 53));
+        mail_author.setLayout(new java.awt.BorderLayout());
 
-        pnl_main_mail_card.add(pnl_main_mails_giden, "gidenMailPanel");
+        mail_author_text.setBackground(new java.awt.Color(45, 48, 53));
+        mail_author_text.setForeground(new java.awt.Color(255, 255, 255));
+        mail_author_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        mail_author_text.setText("[Author]");
+        mail_author_text.setPreferredSize(new java.awt.Dimension(89, 15));
+        mail_author.add(mail_author_text, java.awt.BorderLayout.CENTER);
 
-        pnl_gelen_splitpane.setLeftComponent(pnl_main_mail_card);
+        pnl_mail_header.add(mail_author, java.awt.BorderLayout.LINE_START);
+
+        mail_buttons.setBackground(new java.awt.Color(45, 48, 53));
+        mail_buttons.setLayout(new java.awt.BorderLayout());
+
+        btn_mail_1.setBackground(new java.awt.Color(45, 48, 53));
+        btn_mail_1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_mail_1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/left-arrow.png"))); // NOI18N
+        btn_mail_1.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons.add(btn_mail_1, java.awt.BorderLayout.LINE_START);
+
+        btn_mail_2.setBackground(new java.awt.Color(45, 48, 53));
+        btn_mail_2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_mail_2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/right-arrow.png"))); // NOI18N
+        btn_mail_2.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons.add(btn_mail_2, java.awt.BorderLayout.LINE_END);
+
+        btn_mail_3.setBackground(new java.awt.Color(45, 48, 53));
+        btn_mail_3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_mail_3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/mail_menu_icon_cop.png"))); // NOI18N
+        btn_mail_3.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons.add(btn_mail_3, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header.add(mail_buttons, java.awt.BorderLayout.LINE_END);
+
+        mail_time.setBackground(new java.awt.Color(45, 48, 53));
+        mail_time.setLayout(new java.awt.BorderLayout());
+
+        mail_time_text.setBackground(new java.awt.Color(45, 48, 53));
+        mail_time_text.setForeground(new java.awt.Color(255, 255, 255));
+        mail_time_text.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        mail_time_text.setText("[Time]");
+        mail_time.add(mail_time_text, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header.add(mail_time, java.awt.BorderLayout.CENTER);
+
+        pnl_main_details.add(pnl_mail_header, java.awt.BorderLayout.PAGE_START);
+
+        pnl_mail_body.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body.setLayout(new java.awt.BorderLayout());
+
+        mail_body_split.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_split.setDividerLocation(595);
+        mail_body_split.setDividerSize(3);
+        mail_body_split.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_split.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        mail_body_message.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_message.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_message.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_detail_header.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_header.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_header.setPreferredSize(new java.awt.Dimension(60, 60));
+        pnl_mail_detail_header.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_detail_header_scrollpane.setBorder(null);
+        pnl_mail_detail_header_scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        pnl_mail_detail_header_scrollpane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        pnl_mail_detail_header_text.setEditable(false);
+        pnl_mail_detail_header_text.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_header_text.setColumns(5);
+        pnl_mail_detail_header_text.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        pnl_mail_detail_header_text.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_header_text.setLineWrap(true);
+        pnl_mail_detail_header_text.setRows(2);
+        pnl_mail_detail_header_text.setTabSize(2);
+        pnl_mail_detail_header_text.setWrapStyleWord(true);
+        pnl_mail_detail_header_text.setCaretColor(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_header_scrollpane.setViewportView(pnl_mail_detail_header_text);
+
+        pnl_mail_detail_header.add(pnl_mail_detail_header_scrollpane, java.awt.BorderLayout.CENTER);
+
+        mail_body_message.add(pnl_mail_detail_header, java.awt.BorderLayout.PAGE_START);
+
+        pnl_mail_detail_body.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_body.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_detail_attachment.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_attachment.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3), "Email Eki", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(165, 165, 172))); // NOI18N
+        pnl_mail_detail_attachment.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_attachment.setPreferredSize(new java.awt.Dimension(60, 60));
+        pnl_mail_detail_attachment.setLayout(new java.awt.BorderLayout());
+        pnl_mail_detail_body.add(pnl_mail_detail_attachment, java.awt.BorderLayout.PAGE_END);
+
+        pnl_mail_body_scrollpane.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+        pnl_mail_body_text.setEditable(false);
+        pnl_mail_body_text.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body_text.setColumns(5);
+        pnl_mail_body_text.setForeground(new java.awt.Color(165, 165, 172));
+        pnl_mail_body_text.setLineWrap(true);
+        pnl_mail_body_text.setRows(2);
+        pnl_mail_body_text.setTabSize(2);
+        pnl_mail_body_text.setWrapStyleWord(true);
+        pnl_mail_body_text.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        pnl_mail_body_scrollpane.setViewportView(pnl_mail_body_text);
+
+        pnl_mail_detail_body.add(pnl_mail_body_scrollpane, java.awt.BorderLayout.CENTER);
+
+        mail_body_message.add(pnl_mail_detail_body, java.awt.BorderLayout.CENTER);
+
+        mail_body_split.setTopComponent(mail_body_message);
+
+        mail_body_reply.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_reply.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_reply.setPreferredSize(new java.awt.Dimension(100, 100));
+        mail_body_reply.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_body_reply_btn.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body_reply_btn.setPreferredSize(new java.awt.Dimension(40, 40));
+        pnl_mail_body_reply_btn.setLayout(new java.awt.BorderLayout());
+
+        btn_reply.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_reply.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/send.png"))); // NOI18N
+        btn_reply.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnl_mail_body_reply_btn.add(btn_reply, java.awt.BorderLayout.CENTER);
+
+        mail_body_reply.add(pnl_mail_body_reply_btn, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_body_reply.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body_reply.setForeground(new java.awt.Color(12, 12, 12));
+        pnl_mail_body_reply.setPreferredSize(new java.awt.Dimension(300, 124));
+        pnl_mail_body_reply.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_body_reply_scrollpane.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        pnl_mail_body_reply_scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        pnl_mail_body_reply_scrollpane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        pnl_mail_body_reply_scrollpane.setAutoscrolls(true);
+
+        pnl_mail_body_reply_text.setBackground(new java.awt.Color(44, 48, 53));
+        pnl_mail_body_reply_text.setColumns(50);
+        pnl_mail_body_reply_text.setFont(new java.awt.Font("Bahnschrift", 0, 11)); // NOI18N
+        pnl_mail_body_reply_text.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_body_reply_text.setRows(5);
+        pnl_mail_body_reply_text.setText("Cevap göndermek için tıklayın.\n");
+        pnl_mail_body_reply_text.setToolTipText("");
+        pnl_mail_body_reply_text.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        pnl_mail_body_reply_text.setCaretColor(new java.awt.Color(255, 255, 255));
+        pnl_mail_body_reply_text.setMinimumSize(new java.awt.Dimension(1, 1));
+        pnl_mail_body_reply_text.setSelectionColor(new java.awt.Color(255, 255, 255));
+        pnl_mail_body_reply_scrollpane.setViewportView(pnl_mail_body_reply_text);
+
+        pnl_mail_body_reply.add(pnl_mail_body_reply_scrollpane, java.awt.BorderLayout.CENTER);
+
+        mail_body_reply.add(pnl_mail_body_reply, java.awt.BorderLayout.CENTER);
+
+        mail_body_split.setRightComponent(mail_body_reply);
+
+        pnl_mail_body.add(mail_body_split, java.awt.BorderLayout.CENTER);
+
+        pnl_main_details.add(pnl_mail_body, java.awt.BorderLayout.CENTER);
+
+        pnl_gelen_splitpane.setRightComponent(pnl_main_details);
 
         pnl_main_mail.add(pnl_gelen_splitpane, "gelencard");
+
+        pnl_giden_splitpane.setBackground(new java.awt.Color(37, 40, 44));
+        pnl_giden_splitpane.setDividerLocation(700);
+        pnl_giden_splitpane.setDividerSize(3);
+        pnl_giden_splitpane.setForeground(new java.awt.Color(37, 40, 44));
+        pnl_giden_splitpane.setPreferredSize(new java.awt.Dimension(1250, 700));
+
+        pnl_main_mails1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_main_mails1.setPreferredSize(new java.awt.Dimension(700, 750));
+        pnl_main_mails1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_slider1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_slider1.setPreferredSize(new java.awt.Dimension(600, 40));
+        pnl_mail_slider1.setLayout(new java.awt.BorderLayout());
+
+        pnl_slider_left1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_slider_left1.setPreferredSize(new java.awt.Dimension(200, 300));
+        pnl_slider_left1.setLayout(new java.awt.BorderLayout());
+
+        pnl_slider_left_arrow1.setBackground(new java.awt.Color(22, 22, 22));
+        pnl_slider_left_arrow1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_slider_left_arrow1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/left-arrow.png"))); // NOI18N
+        pnl_slider_left1.add(pnl_slider_left_arrow1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_slider1.add(pnl_slider_left1, java.awt.BorderLayout.LINE_START);
+
+        pnl_slider_right1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_slider_right1.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnl_slider_right1.setLayout(new java.awt.BorderLayout());
+
+        pnl_slider_right_arrow1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_slider_right_arrow1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/right-arrow.png"))); // NOI18N
+        pnl_slider_right1.add(pnl_slider_right_arrow1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_slider1.add(pnl_slider_right1, java.awt.BorderLayout.LINE_END);
+
+        pnl_slider_middle1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_slider_middle1.setLayout(new java.awt.BorderLayout());
+
+        lbl_slider_number1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        lbl_slider_number1.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_slider_number1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_slider_number1.setText("1");
+        pnl_slider_middle1.add(lbl_slider_number1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_slider1.add(pnl_slider_middle1, java.awt.BorderLayout.CENTER);
+
+        pnl_main_mails1.add(pnl_mail_slider1, java.awt.BorderLayout.PAGE_END);
+
+        pnl_mail_list1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_list1.setPreferredSize(new java.awt.Dimension(700, 700));
+        pnl_mail_list1.setRequestFocusEnabled(false);
+        pnl_mail_list1.setLayout(new java.awt.GridLayout(10, 0));
+
+        pnl_mail_11.setBackground(new java.awt.Color(255, 102, 102));
+        pnl_mail_11.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_1_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_1_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_1_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_1_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_1_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_1_author_text1.setText("[Author]");
+        pnl_mail_1_author1.add(pnl_mail_1_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_11.add(pnl_mail_1_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_1_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_1_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_1_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_1_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_1_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_1_time_text1.setText("[Time]");
+        pnl_mail_1_time1.add(pnl_mail_1_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_11.add(pnl_mail_1_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_1_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_1_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_1_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_1_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_1_message_text1.setText("[Header.Message]");
+        pnl_mail_1_message1.add(pnl_mail_1_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_11.add(pnl_mail_1_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_11);
+
+        pnl_mail_12.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_12.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_2_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_2_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_2_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_2_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_2_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_2_author_text1.setText("[Author]");
+        pnl_mail_2_author1.add(pnl_mail_2_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_12.add(pnl_mail_2_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_2_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_2_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_2_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_2_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_2_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_2_time_text1.setText("[Time]");
+        pnl_mail_2_time1.add(pnl_mail_2_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_12.add(pnl_mail_2_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_2_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_2_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_2_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_2_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_2_message_text1.setText("[Header.Message]");
+        pnl_mail_2_message1.add(pnl_mail_2_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_12.add(pnl_mail_2_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_12);
+
+        pnl_mail_13.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_13.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_3_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_3_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_3_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_3_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_3_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_3_author_text1.setText("[Author]");
+        pnl_mail_3_author1.add(pnl_mail_3_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_13.add(pnl_mail_3_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_3_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_3_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_3_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_3_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_3_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_3_time_text1.setText("[Time]");
+        pnl_mail_3_time1.add(pnl_mail_3_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_13.add(pnl_mail_3_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_3_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_3_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_3_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_3_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_3_message_text1.setText("[Header.Message]");
+        pnl_mail_3_message1.add(pnl_mail_3_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_13.add(pnl_mail_3_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_13);
+
+        pnl_mail_14.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_14.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_4_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_4_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_4_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_4_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_4_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_4_time_text1.setText("[Author]");
+        pnl_mail_4_time1.add(pnl_mail_4_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_14.add(pnl_mail_4_time1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_4_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_4_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_4_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_4_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_4_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_4_author_text1.setText("[Time]");
+        pnl_mail_4_author1.add(pnl_mail_4_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_14.add(pnl_mail_4_author1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_4_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_4_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_4_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_4_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_4_message_text1.setText("[Header.Message]");
+        pnl_mail_4_message1.add(pnl_mail_4_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_14.add(pnl_mail_4_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_14);
+
+        pnl_mail_15.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_15.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_5_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_5_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_5_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_5_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_5_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_5_author_text1.setText("[Author]");
+        pnl_mail_5_author1.add(pnl_mail_5_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_15.add(pnl_mail_5_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_5_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_5_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_5_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_5_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_5_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_5_time_text1.setText("[Time]");
+        pnl_mail_5_time1.add(pnl_mail_5_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_15.add(pnl_mail_5_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_5_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_5_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_5_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_5_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_5_message_text1.setText("[Header.Message]");
+        pnl_mail_5_message1.add(pnl_mail_5_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_15.add(pnl_mail_5_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_15);
+
+        pnl_mail_16.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_16.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_6_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_6_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_6_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_6_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_6_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_6_author_text1.setText("[Author]");
+        pnl_mail_6_author1.add(pnl_mail_6_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_16.add(pnl_mail_6_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_6_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_6_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_6_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_6_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_6_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_6_time_text1.setText("[Time]");
+        pnl_mail_6_time1.add(pnl_mail_6_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_16.add(pnl_mail_6_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_6_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_6_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_6_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_6_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_6_message_text1.setText("[Header.Message]");
+        pnl_mail_6_message1.add(pnl_mail_6_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_16.add(pnl_mail_6_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_16);
+
+        pnl_mail_17.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_17.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_7_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_7_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_7_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_7_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_7_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_7_author_text1.setText("[Author]");
+        pnl_mail_7_author1.add(pnl_mail_7_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_17.add(pnl_mail_7_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_7_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_7_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_7_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_7_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_7_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_7_time_text1.setText("[Time]");
+        pnl_mail_7_time1.add(pnl_mail_7_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_17.add(pnl_mail_7_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_7_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_7_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_7_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_7_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_7_message_text1.setText("[Header.Message]");
+        pnl_mail_7_message1.add(pnl_mail_7_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_17.add(pnl_mail_7_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_17);
+
+        pnl_mail_18.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_18.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_8_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_8_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_8_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_8_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_8_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_8_author_text1.setText("[Author]");
+        pnl_mail_8_author1.add(pnl_mail_8_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_18.add(pnl_mail_8_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_8_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_8_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_8_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_8_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_8_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_8_time_text1.setText("[Time]");
+        pnl_mail_8_time1.add(pnl_mail_8_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_18.add(pnl_mail_8_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_8_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_8_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_8_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_8_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_8_message_text1.setText("[Header.Message]");
+        pnl_mail_8_message1.add(pnl_mail_8_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_18.add(pnl_mail_8_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_18);
+
+        pnl_mail_19.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_19.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_9_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_9_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_9_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_9_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_9_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_9_author_text1.setText("[Author]");
+        pnl_mail_9_author1.add(pnl_mail_9_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_19.add(pnl_mail_9_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_9_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_9_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_9_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_9_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_9_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_9_time_text1.setText("[Time]");
+        pnl_mail_9_time1.add(pnl_mail_9_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_19.add(pnl_mail_9_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_9_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_9_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_9_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_9_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_9_message_text1.setText("[Header.Message]");
+        pnl_mail_9_message1.add(pnl_mail_9_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_19.add(pnl_mail_9_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_19);
+
+        pnl_mail_20.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_20.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_10_author1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_10_author1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_10_author1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_10_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_10_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_10_author_text1.setText("[Author]");
+        pnl_mail_10_author1.add(pnl_mail_10_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_20.add(pnl_mail_10_author1, java.awt.BorderLayout.LINE_START);
+
+        pnl_mail_10_time1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_10_time1.setPreferredSize(new java.awt.Dimension(100, 175));
+        pnl_mail_10_time1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_10_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_10_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_10_time_text1.setText("[Time]");
+        pnl_mail_10_time1.add(pnl_mail_10_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_20.add(pnl_mail_10_time1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_10_message1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_10_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_10_message_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_10_message_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnl_mail_10_message_text1.setText("[Header.Message]");
+        pnl_mail_10_message1.add(pnl_mail_10_message_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_20.add(pnl_mail_10_message1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_list1.add(pnl_mail_20);
+
+        pnl_main_mails1.add(pnl_mail_list1, java.awt.BorderLayout.LINE_START);
+
+        pnl_giden_splitpane.setLeftComponent(pnl_main_mails1);
+
+        pnl_main_details1.setBackground(new java.awt.Color(37, 40, 44));
+        pnl_main_details1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_header1.setPreferredSize(new java.awt.Dimension(574, 60));
+        pnl_mail_header1.setLayout(new java.awt.BorderLayout());
+
+        mail_author1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_author1.setLayout(new java.awt.BorderLayout());
+
+        mail_author_text1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_author_text1.setForeground(new java.awt.Color(255, 255, 255));
+        mail_author_text1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        mail_author_text1.setText("[Author]");
+        mail_author_text1.setPreferredSize(new java.awt.Dimension(89, 15));
+        mail_author1.add(mail_author_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header1.add(mail_author1, java.awt.BorderLayout.LINE_START);
+
+        mail_buttons1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_buttons1.setLayout(new java.awt.BorderLayout());
+
+        btn_mail_4.setBackground(new java.awt.Color(45, 48, 53));
+        btn_mail_4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_mail_4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/left-arrow.png"))); // NOI18N
+        btn_mail_4.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons1.add(btn_mail_4, java.awt.BorderLayout.LINE_START);
+
+        btn_mail_5.setBackground(new java.awt.Color(45, 48, 53));
+        btn_mail_5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_mail_5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/right-arrow.png"))); // NOI18N
+        btn_mail_5.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons1.add(btn_mail_5, java.awt.BorderLayout.LINE_END);
+
+        btn_mail_6.setBackground(new java.awt.Color(45, 48, 53));
+        btn_mail_6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_mail_6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/mail_menu_icon_cop.png"))); // NOI18N
+        btn_mail_6.setPreferredSize(new java.awt.Dimension(40, 15));
+        mail_buttons1.add(btn_mail_6, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header1.add(mail_buttons1, java.awt.BorderLayout.LINE_END);
+
+        mail_time1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_time1.setLayout(new java.awt.BorderLayout());
+
+        mail_time_text1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_time_text1.setForeground(new java.awt.Color(255, 255, 255));
+        mail_time_text1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        mail_time_text1.setText("[Time]");
+        mail_time1.add(mail_time_text1, java.awt.BorderLayout.CENTER);
+
+        pnl_mail_header1.add(mail_time1, java.awt.BorderLayout.CENTER);
+
+        pnl_main_details1.add(pnl_mail_header1, java.awt.BorderLayout.PAGE_START);
+
+        pnl_mail_body1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body1.setLayout(new java.awt.BorderLayout());
+
+        mail_body_split1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_split1.setDividerLocation(595);
+        mail_body_split1.setDividerSize(3);
+        mail_body_split1.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_split1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        mail_body_message1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_message1.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_message1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_detail_header1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_header1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_header1.setPreferredSize(new java.awt.Dimension(60, 60));
+        pnl_mail_detail_header1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_detail_header_scrollpane1.setBorder(null);
+        pnl_mail_detail_header_scrollpane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        pnl_mail_detail_header_scrollpane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        pnl_mail_detail_header_text1.setEditable(false);
+        pnl_mail_detail_header_text1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_header_text1.setColumns(5);
+        pnl_mail_detail_header_text1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        pnl_mail_detail_header_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_header_text1.setLineWrap(true);
+        pnl_mail_detail_header_text1.setRows(2);
+        pnl_mail_detail_header_text1.setTabSize(2);
+        pnl_mail_detail_header_text1.setWrapStyleWord(true);
+        pnl_mail_detail_header_text1.setCaretColor(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_header_scrollpane1.setViewportView(pnl_mail_detail_header_text1);
+
+        pnl_mail_detail_header1.add(pnl_mail_detail_header_scrollpane1, java.awt.BorderLayout.CENTER);
+
+        mail_body_message1.add(pnl_mail_detail_header1, java.awt.BorderLayout.PAGE_START);
+
+        pnl_mail_detail_body1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_body1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_detail_attachment1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_detail_attachment1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3), "Email Eki", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(165, 165, 172))); // NOI18N
+        pnl_mail_detail_attachment1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_detail_attachment1.setPreferredSize(new java.awt.Dimension(60, 60));
+        pnl_mail_detail_attachment1.setLayout(new java.awt.BorderLayout());
+        pnl_mail_detail_body1.add(pnl_mail_detail_attachment1, java.awt.BorderLayout.PAGE_END);
+
+        pnl_mail_body_scrollpane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+        pnl_mail_body_text1.setEditable(false);
+        pnl_mail_body_text1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body_text1.setColumns(5);
+        pnl_mail_body_text1.setForeground(new java.awt.Color(165, 165, 172));
+        pnl_mail_body_text1.setLineWrap(true);
+        pnl_mail_body_text1.setRows(2);
+        pnl_mail_body_text1.setTabSize(2);
+        pnl_mail_body_text1.setWrapStyleWord(true);
+        pnl_mail_body_text1.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        pnl_mail_body_scrollpane1.setViewportView(pnl_mail_body_text1);
+
+        pnl_mail_detail_body1.add(pnl_mail_body_scrollpane1, java.awt.BorderLayout.CENTER);
+
+        mail_body_message1.add(pnl_mail_detail_body1, java.awt.BorderLayout.CENTER);
+
+        mail_body_split1.setTopComponent(mail_body_message1);
+
+        mail_body_reply1.setBackground(new java.awt.Color(45, 48, 53));
+        mail_body_reply1.setForeground(new java.awt.Color(45, 48, 53));
+        mail_body_reply1.setPreferredSize(new java.awt.Dimension(100, 100));
+        mail_body_reply1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_body_reply_btn1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body_reply_btn1.setPreferredSize(new java.awt.Dimension(40, 40));
+        pnl_mail_body_reply_btn1.setLayout(new java.awt.BorderLayout());
+
+        btn_reply1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btn_reply1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/send.png"))); // NOI18N
+        btn_reply1.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnl_mail_body_reply_btn1.add(btn_reply1, java.awt.BorderLayout.CENTER);
+
+        mail_body_reply1.add(pnl_mail_body_reply_btn1, java.awt.BorderLayout.LINE_END);
+
+        pnl_mail_body_reply1.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_mail_body_reply1.setForeground(new java.awt.Color(12, 12, 12));
+        pnl_mail_body_reply1.setPreferredSize(new java.awt.Dimension(300, 124));
+        pnl_mail_body_reply1.setLayout(new java.awt.BorderLayout());
+
+        pnl_mail_body_reply_scrollpane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        pnl_mail_body_reply_scrollpane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        pnl_mail_body_reply_scrollpane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        pnl_mail_body_reply_scrollpane1.setAutoscrolls(true);
+
+        pnl_mail_body_reply_text1.setBackground(new java.awt.Color(44, 48, 53));
+        pnl_mail_body_reply_text1.setColumns(50);
+        pnl_mail_body_reply_text1.setFont(new java.awt.Font("Bahnschrift", 0, 11)); // NOI18N
+        pnl_mail_body_reply_text1.setForeground(new java.awt.Color(255, 255, 255));
+        pnl_mail_body_reply_text1.setRows(5);
+        pnl_mail_body_reply_text1.setText("Cevap göndermek için tıklayın.\n");
+        pnl_mail_body_reply_text1.setToolTipText("");
+        pnl_mail_body_reply_text1.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        pnl_mail_body_reply_text1.setCaretColor(new java.awt.Color(255, 255, 255));
+        pnl_mail_body_reply_text1.setMinimumSize(new java.awt.Dimension(1, 1));
+        pnl_mail_body_reply_text1.setSelectionColor(new java.awt.Color(255, 255, 255));
+        pnl_mail_body_reply_scrollpane1.setViewportView(pnl_mail_body_reply_text1);
+
+        pnl_mail_body_reply1.add(pnl_mail_body_reply_scrollpane1, java.awt.BorderLayout.CENTER);
+
+        mail_body_reply1.add(pnl_mail_body_reply1, java.awt.BorderLayout.CENTER);
+
+        mail_body_split1.setRightComponent(mail_body_reply1);
+
+        pnl_mail_body1.add(mail_body_split1, java.awt.BorderLayout.CENTER);
+
+        pnl_main_details1.add(pnl_mail_body1, java.awt.BorderLayout.CENTER);
+
+        pnl_giden_splitpane.setRightComponent(pnl_main_details1);
+
+        pnl_main_mail.add(pnl_giden_splitpane, "gidencard");
 
         pnl_main.add(pnl_main_mail, java.awt.BorderLayout.CENTER);
 
@@ -1331,14 +2000,18 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmMail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMailYedek2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmMail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMailYedek2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmMail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMailYedek2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmMail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmMailYedek2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -1347,7 +2020,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmMail().setVisible(true);
+                new FrmMailYedek2().setVisible(true);
             }
         });
     }
@@ -1357,9 +2030,13 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     private javax.swing.JLabel btn_mail_1;
     private javax.swing.JLabel btn_mail_2;
     private javax.swing.JLabel btn_mail_3;
+    private javax.swing.JLabel btn_mail_4;
+    private javax.swing.JLabel btn_mail_5;
+    private javax.swing.JLabel btn_mail_6;
     private javax.swing.JButton btn_maximize;
     private javax.swing.JButton btn_minimize;
     private javax.swing.JLabel btn_reply;
+    private javax.swing.JLabel btn_reply1;
     private javax.swing.JButton btn_yeni_mail;
     private javax.swing.JLabel cop_icon;
     private javax.swing.JLabel cop_text;
@@ -1368,17 +2045,24 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     private javax.swing.JLabel gelen_text;
     private javax.swing.JLabel giden_icon;
     private javax.swing.JLabel giden_text;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTree jTree1;
     private javax.swing.JLabel lbl_slider_number;
+    private javax.swing.JLabel lbl_slider_number1;
     private javax.swing.JPanel mail_author;
+    private javax.swing.JPanel mail_author1;
     private javax.swing.JLabel mail_author_text;
+    private javax.swing.JLabel mail_author_text1;
     private javax.swing.JPanel mail_body_message;
+    private javax.swing.JPanel mail_body_message1;
     private javax.swing.JPanel mail_body_reply;
+    private javax.swing.JPanel mail_body_reply1;
     private javax.swing.JSplitPane mail_body_split;
+    private javax.swing.JSplitPane mail_body_split1;
     private javax.swing.JPanel mail_buttons;
+    private javax.swing.JPanel mail_buttons1;
     private javax.swing.JPanel mail_time;
+    private javax.swing.JPanel mail_time1;
     private javax.swing.JLabel mail_time_text;
+    private javax.swing.JLabel mail_time_text1;
     private javax.swing.JPanel pnl_btnclose;
     private javax.swing.JPanel pnl_btnmaximize;
     private javax.swing.JPanel pnl_btnminimize;
@@ -1389,98 +2073,184 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     private javax.swing.JSplitPane pnl_gelen_splitpane;
     private javax.swing.JPanel pnl_gelen_text;
     private javax.swing.JPanel pnl_giden_icon;
+    private javax.swing.JSplitPane pnl_giden_splitpane;
     private javax.swing.JPanel pnl_giden_text;
     private javax.swing.JPanel pnl_mail_1;
     private javax.swing.JPanel pnl_mail_10;
     private javax.swing.JPanel pnl_mail_10_author;
+    private javax.swing.JPanel pnl_mail_10_author1;
     private javax.swing.JLabel pnl_mail_10_author_text;
+    private javax.swing.JLabel pnl_mail_10_author_text1;
     private javax.swing.JPanel pnl_mail_10_message;
+    private javax.swing.JPanel pnl_mail_10_message1;
     private javax.swing.JLabel pnl_mail_10_message_text;
+    private javax.swing.JLabel pnl_mail_10_message_text1;
     private javax.swing.JPanel pnl_mail_10_time;
+    private javax.swing.JPanel pnl_mail_10_time1;
     private javax.swing.JLabel pnl_mail_10_time_text;
+    private javax.swing.JLabel pnl_mail_10_time_text1;
+    private javax.swing.JPanel pnl_mail_11;
+    private javax.swing.JPanel pnl_mail_12;
+    private javax.swing.JPanel pnl_mail_13;
+    private javax.swing.JPanel pnl_mail_14;
+    private javax.swing.JPanel pnl_mail_15;
+    private javax.swing.JPanel pnl_mail_16;
+    private javax.swing.JPanel pnl_mail_17;
+    private javax.swing.JPanel pnl_mail_18;
+    private javax.swing.JPanel pnl_mail_19;
     private javax.swing.JPanel pnl_mail_1_author;
+    private javax.swing.JPanel pnl_mail_1_author1;
     private javax.swing.JLabel pnl_mail_1_author_text;
+    private javax.swing.JLabel pnl_mail_1_author_text1;
     private javax.swing.JPanel pnl_mail_1_message;
+    private javax.swing.JPanel pnl_mail_1_message1;
     private javax.swing.JLabel pnl_mail_1_message_text;
+    private javax.swing.JLabel pnl_mail_1_message_text1;
     private javax.swing.JPanel pnl_mail_1_time;
+    private javax.swing.JPanel pnl_mail_1_time1;
     private javax.swing.JLabel pnl_mail_1_time_text;
+    private javax.swing.JLabel pnl_mail_1_time_text1;
     private javax.swing.JPanel pnl_mail_2;
+    private javax.swing.JPanel pnl_mail_20;
     private javax.swing.JPanel pnl_mail_2_author;
+    private javax.swing.JPanel pnl_mail_2_author1;
     private javax.swing.JLabel pnl_mail_2_author_text;
+    private javax.swing.JLabel pnl_mail_2_author_text1;
     private javax.swing.JPanel pnl_mail_2_message;
+    private javax.swing.JPanel pnl_mail_2_message1;
     private javax.swing.JLabel pnl_mail_2_message_text;
+    private javax.swing.JLabel pnl_mail_2_message_text1;
     private javax.swing.JPanel pnl_mail_2_time;
+    private javax.swing.JPanel pnl_mail_2_time1;
     private javax.swing.JLabel pnl_mail_2_time_text;
+    private javax.swing.JLabel pnl_mail_2_time_text1;
     private javax.swing.JPanel pnl_mail_3;
     private javax.swing.JPanel pnl_mail_3_author;
+    private javax.swing.JPanel pnl_mail_3_author1;
     private javax.swing.JLabel pnl_mail_3_author_text;
+    private javax.swing.JLabel pnl_mail_3_author_text1;
     private javax.swing.JPanel pnl_mail_3_message;
+    private javax.swing.JPanel pnl_mail_3_message1;
     private javax.swing.JLabel pnl_mail_3_message_text;
+    private javax.swing.JLabel pnl_mail_3_message_text1;
     private javax.swing.JPanel pnl_mail_3_time;
+    private javax.swing.JPanel pnl_mail_3_time1;
     private javax.swing.JLabel pnl_mail_3_time_text;
+    private javax.swing.JLabel pnl_mail_3_time_text1;
     private javax.swing.JPanel pnl_mail_4;
     private javax.swing.JPanel pnl_mail_4_author;
+    private javax.swing.JPanel pnl_mail_4_author1;
     private javax.swing.JLabel pnl_mail_4_author_text;
+    private javax.swing.JLabel pnl_mail_4_author_text1;
     private javax.swing.JPanel pnl_mail_4_message;
+    private javax.swing.JPanel pnl_mail_4_message1;
     private javax.swing.JLabel pnl_mail_4_message_text;
+    private javax.swing.JLabel pnl_mail_4_message_text1;
     private javax.swing.JPanel pnl_mail_4_time;
+    private javax.swing.JPanel pnl_mail_4_time1;
     private javax.swing.JLabel pnl_mail_4_time_text;
+    private javax.swing.JLabel pnl_mail_4_time_text1;
     private javax.swing.JPanel pnl_mail_5;
     private javax.swing.JPanel pnl_mail_5_author;
+    private javax.swing.JPanel pnl_mail_5_author1;
     private javax.swing.JLabel pnl_mail_5_author_text;
+    private javax.swing.JLabel pnl_mail_5_author_text1;
     private javax.swing.JPanel pnl_mail_5_message;
+    private javax.swing.JPanel pnl_mail_5_message1;
     private javax.swing.JLabel pnl_mail_5_message_text;
+    private javax.swing.JLabel pnl_mail_5_message_text1;
     private javax.swing.JPanel pnl_mail_5_time;
+    private javax.swing.JPanel pnl_mail_5_time1;
     private javax.swing.JLabel pnl_mail_5_time_text;
+    private javax.swing.JLabel pnl_mail_5_time_text1;
     private javax.swing.JPanel pnl_mail_6;
     private javax.swing.JPanel pnl_mail_6_author;
+    private javax.swing.JPanel pnl_mail_6_author1;
     private javax.swing.JLabel pnl_mail_6_author_text;
+    private javax.swing.JLabel pnl_mail_6_author_text1;
     private javax.swing.JPanel pnl_mail_6_message;
+    private javax.swing.JPanel pnl_mail_6_message1;
     private javax.swing.JLabel pnl_mail_6_message_text;
+    private javax.swing.JLabel pnl_mail_6_message_text1;
     private javax.swing.JPanel pnl_mail_6_time;
+    private javax.swing.JPanel pnl_mail_6_time1;
     private javax.swing.JLabel pnl_mail_6_time_text;
+    private javax.swing.JLabel pnl_mail_6_time_text1;
     private javax.swing.JPanel pnl_mail_7;
     private javax.swing.JPanel pnl_mail_7_author;
+    private javax.swing.JPanel pnl_mail_7_author1;
     private javax.swing.JLabel pnl_mail_7_author_text;
+    private javax.swing.JLabel pnl_mail_7_author_text1;
     private javax.swing.JPanel pnl_mail_7_message;
+    private javax.swing.JPanel pnl_mail_7_message1;
     private javax.swing.JLabel pnl_mail_7_message_text;
+    private javax.swing.JLabel pnl_mail_7_message_text1;
     private javax.swing.JPanel pnl_mail_7_time;
+    private javax.swing.JPanel pnl_mail_7_time1;
     private javax.swing.JLabel pnl_mail_7_time_text;
+    private javax.swing.JLabel pnl_mail_7_time_text1;
     private javax.swing.JPanel pnl_mail_8;
     private javax.swing.JPanel pnl_mail_8_author;
+    private javax.swing.JPanel pnl_mail_8_author1;
     private javax.swing.JLabel pnl_mail_8_author_text;
+    private javax.swing.JLabel pnl_mail_8_author_text1;
     private javax.swing.JPanel pnl_mail_8_message;
+    private javax.swing.JPanel pnl_mail_8_message1;
     private javax.swing.JLabel pnl_mail_8_message_text;
+    private javax.swing.JLabel pnl_mail_8_message_text1;
     private javax.swing.JPanel pnl_mail_8_time;
+    private javax.swing.JPanel pnl_mail_8_time1;
     private javax.swing.JLabel pnl_mail_8_time_text;
+    private javax.swing.JLabel pnl_mail_8_time_text1;
     private javax.swing.JPanel pnl_mail_9;
     private javax.swing.JPanel pnl_mail_9_author;
+    private javax.swing.JPanel pnl_mail_9_author1;
     private javax.swing.JLabel pnl_mail_9_author_text;
+    private javax.swing.JLabel pnl_mail_9_author_text1;
     private javax.swing.JPanel pnl_mail_9_message;
+    private javax.swing.JPanel pnl_mail_9_message1;
     private javax.swing.JLabel pnl_mail_9_message_text;
+    private javax.swing.JLabel pnl_mail_9_message_text1;
     private javax.swing.JPanel pnl_mail_9_time;
+    private javax.swing.JPanel pnl_mail_9_time1;
     private javax.swing.JLabel pnl_mail_9_time_text;
+    private javax.swing.JLabel pnl_mail_9_time_text1;
     private javax.swing.JPanel pnl_mail_body;
+    private javax.swing.JPanel pnl_mail_body1;
     private javax.swing.JPanel pnl_mail_body_reply;
+    private javax.swing.JPanel pnl_mail_body_reply1;
     private javax.swing.JPanel pnl_mail_body_reply_btn;
+    private javax.swing.JPanel pnl_mail_body_reply_btn1;
     private javax.swing.JScrollPane pnl_mail_body_reply_scrollpane;
+    private javax.swing.JScrollPane pnl_mail_body_reply_scrollpane1;
     private javax.swing.JTextArea pnl_mail_body_reply_text;
+    private javax.swing.JTextArea pnl_mail_body_reply_text1;
     private javax.swing.JScrollPane pnl_mail_body_scrollpane;
+    private javax.swing.JScrollPane pnl_mail_body_scrollpane1;
     private javax.swing.JTextArea pnl_mail_body_text;
+    private javax.swing.JTextArea pnl_mail_body_text1;
     private javax.swing.JPanel pnl_mail_detail_attachment;
+    private javax.swing.JPanel pnl_mail_detail_attachment1;
     private javax.swing.JPanel pnl_mail_detail_body;
+    private javax.swing.JPanel pnl_mail_detail_body1;
     private javax.swing.JPanel pnl_mail_detail_header;
+    private javax.swing.JPanel pnl_mail_detail_header1;
     private javax.swing.JScrollPane pnl_mail_detail_header_scrollpane;
+    private javax.swing.JScrollPane pnl_mail_detail_header_scrollpane1;
     private javax.swing.JTextArea pnl_mail_detail_header_text;
+    private javax.swing.JTextArea pnl_mail_detail_header_text1;
     private javax.swing.JPanel pnl_mail_header;
+    private javax.swing.JPanel pnl_mail_header1;
     private javax.swing.JPanel pnl_mail_list;
+    private javax.swing.JPanel pnl_mail_list1;
     private javax.swing.JPanel pnl_mail_slider;
+    private javax.swing.JPanel pnl_mail_slider1;
     private javax.swing.JPanel pnl_main;
     private javax.swing.JPanel pnl_main_details;
+    private javax.swing.JPanel pnl_main_details1;
     private javax.swing.JPanel pnl_main_mail;
-    private javax.swing.JPanel pnl_main_mail_card;
-    private javax.swing.JPanel pnl_main_mails_gelen;
-    private javax.swing.JPanel pnl_main_mails_giden;
+    private javax.swing.JPanel pnl_main_mails;
+    private javax.swing.JPanel pnl_main_mails1;
     private javax.swing.JPanel pnl_main_titlebar;
     private javax.swing.JPanel pnl_sidebar;
     private javax.swing.JPanel pnl_sidebar_cop;
@@ -1490,10 +2260,15 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     private javax.swing.JPanel pnl_sidebar_taslak;
     private javax.swing.JPanel pnl_sidebar_text;
     private javax.swing.JPanel pnl_slider_left;
+    private javax.swing.JPanel pnl_slider_left1;
     private javax.swing.JLabel pnl_slider_left_arrow;
+    private javax.swing.JLabel pnl_slider_left_arrow1;
     private javax.swing.JPanel pnl_slider_middle;
+    private javax.swing.JPanel pnl_slider_middle1;
     private javax.swing.JPanel pnl_slider_right;
+    private javax.swing.JPanel pnl_slider_right1;
     private javax.swing.JLabel pnl_slider_right_arrow;
+    private javax.swing.JLabel pnl_slider_right_arrow1;
     private javax.swing.JPanel pnl_taslak_icon;
     private javax.swing.JPanel pnl_taslak_text;
     private javax.swing.JPanel pnl_titlebuttons;
