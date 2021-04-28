@@ -14,13 +14,13 @@ import java.awt.event.MouseEvent;
  *
  * @author BatuPC
  */
-public class FrmAuth extends javax.swing.JFrame {
+public class FrmAuthYedek extends javax.swing.JFrame {
 
     CardLayout cardLayout;
     private int pX, pY;
     private ConnectionService conService;
 
-    public FrmAuth() {
+    public FrmAuthYedek() {
         //Remove Title Bar
         setUndecorated(true);
         initComponents();
@@ -96,6 +96,11 @@ public class FrmAuth extends javax.swing.JFrame {
         btn_minimize = new javax.swing.JButton();
         pnl_cardLayout = new javax.swing.JPanel();
         pnl_main = new javax.swing.JPanel();
+        pnl_main_left = new javax.swing.JPanel();
+        logo = new javax.swing.JLabel();
+        pnl_main_right = new javax.swing.JPanel();
+        lbl_welcome = new javax.swing.JLabel();
+        btn_auth = new javax.swing.JButton();
         pnl_auth = new javax.swing.JPanel();
         pnl_register = new javax.swing.JPanel();
         txt_registerUsername = new javax.swing.JTextField();
@@ -170,7 +175,80 @@ public class FrmAuth extends javax.swing.JFrame {
         pnl_cardLayout.setLayout(new java.awt.CardLayout());
 
         pnl_main.setPreferredSize(new java.awt.Dimension(1366, 768));
-        pnl_main.setLayout(new java.awt.BorderLayout());
+
+        pnl_main_left.setBackground(new java.awt.Color(37, 40, 44));
+
+        logo.setBackground(new java.awt.Color(37, 40, 44));
+        logo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logo.setIcon(new javax.swing.ImageIcon("D:\\Resimler\\Design\\vblogowhite.png")); // NOI18N
+
+        javax.swing.GroupLayout pnl_main_leftLayout = new javax.swing.GroupLayout(pnl_main_left);
+        pnl_main_left.setLayout(pnl_main_leftLayout);
+        pnl_main_leftLayout.setHorizontalGroup(
+            pnl_main_leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_main_leftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(logo, javax.swing.GroupLayout.PREFERRED_SIZE, 558, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+        pnl_main_leftLayout.setVerticalGroup(
+            pnl_main_leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_main_leftLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(logo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(69, 69, 69))
+        );
+
+        pnl_main_right.setBackground(new java.awt.Color(45, 48, 53));
+
+        lbl_welcome.setBackground(new java.awt.Color(167, 168, 171));
+        lbl_welcome.setFont(new java.awt.Font("Segoe UI Light", 0, 36)); // NOI18N
+        lbl_welcome.setForeground(new java.awt.Color(167, 168, 171));
+        lbl_welcome.setText("Mail Uygulamasına Hoş geldiniz !");
+
+        btn_auth.setText("Kayıt Ol / Giriş Yap");
+        btn_auth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_authActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnl_main_rightLayout = new javax.swing.GroupLayout(pnl_main_right);
+        pnl_main_right.setLayout(pnl_main_rightLayout);
+        pnl_main_rightLayout.setHorizontalGroup(
+            pnl_main_rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_main_rightLayout.createSequentialGroup()
+                .addGap(127, 127, 127)
+                .addGroup(pnl_main_rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn_auth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_welcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(181, Short.MAX_VALUE))
+        );
+        pnl_main_rightLayout.setVerticalGroup(
+            pnl_main_rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_main_rightLayout.createSequentialGroup()
+                .addGap(115, 115, 115)
+                .addComponent(lbl_welcome)
+                .addGap(178, 178, 178)
+                .addComponent(btn_auth, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout pnl_mainLayout = new javax.swing.GroupLayout(pnl_main);
+        pnl_main.setLayout(pnl_mainLayout);
+        pnl_mainLayout.setHorizontalGroup(
+            pnl_mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_mainLayout.createSequentialGroup()
+                .addComponent(pnl_main_left, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(pnl_main_right, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnl_mainLayout.setVerticalGroup(
+            pnl_mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnl_main_left, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnl_main_right, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
         pnl_cardLayout.add(pnl_main, "welcome");
 
         pnl_register.setBackground(new java.awt.Color(37, 40, 44));
@@ -398,6 +476,31 @@ public class FrmAuth extends javax.swing.JFrame {
 
     
     
+    /**
+     * Sunucu ile bağlantı kurarak giriş yap - kayıt ol ekranına geçişi kontrol eder.
+     * Eğer sunucu ile bağlantı kurulamıyorsa geçiş gerçekleşmez.
+     * @param evt 
+     */
+    private void btn_authActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_authActionPerformed
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    btn_auth.setEnabled(false);
+                    conService.connectServer();
+                    if (conService.checkConnection()) {
+                        cardLayout.show(pnl_cardLayout, "register");
+                    }
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                    btn_auth.setEnabled(true);
+                } finally {
+                    btn_auth.setEnabled(true);
+                }
+            }
+        }.start();
+    }//GEN-LAST:event_btn_authActionPerformed
+
     private void btn_registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registerActionPerformed
 
     }//GEN-LAST:event_btn_registerActionPerformed
@@ -431,26 +534,29 @@ public class FrmAuth extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmAuth.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAuthYedek.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmAuth.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAuthYedek.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmAuth.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAuthYedek.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmAuth.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAuthYedek.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmAuth().setVisible(true);
+                new FrmAuthYedek().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_auth;
     private javax.swing.JButton btn_cardMenu;
     private javax.swing.JButton btn_close;
     private javax.swing.JButton btn_login;
@@ -458,12 +564,16 @@ public class FrmAuth extends javax.swing.JFrame {
     private javax.swing.JButton btn_register;
     private javax.swing.JLabel lbl_login;
     private javax.swing.JLabel lbl_register;
+    private javax.swing.JLabel lbl_welcome;
+    private javax.swing.JLabel logo;
     private javax.swing.JPanel pnl_auth;
     private javax.swing.JPanel pnl_btnclose;
     private javax.swing.JPanel pnl_btnminimize;
     private javax.swing.JPanel pnl_cardLayout;
     private javax.swing.JPanel pnl_login;
     private javax.swing.JPanel pnl_main;
+    private javax.swing.JPanel pnl_main_left;
+    private javax.swing.JPanel pnl_main_right;
     private javax.swing.JPanel pnl_mainscreen;
     private javax.swing.JPanel pnl_register;
     private javax.swing.JPanel pnl_titlebar;

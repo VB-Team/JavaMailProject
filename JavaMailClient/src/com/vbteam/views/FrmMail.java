@@ -20,6 +20,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,9 +44,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
 
         //Mail + Panel Test
         TestProcedure();
-
-        cardLayout = (CardLayout) pnl_main_mail_card.getLayout();
-
+        
         moveTitlebar();
         setMouseListeners();
         setMailPanels();
@@ -120,15 +119,9 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         switch (panelName) {
             case "gelenKutu":
                 gelenState = control;
-                if (control) {
-                    cardLayout.show(pnl_main_mail_card, "gelenMailPanel");
-                }
                 break;
             case "gidenKutu":
                 gidenState = control;
-                if (control) {
-                    cardLayout.show(pnl_main_mail_card, "gidenMailPanel");
-                }
                 break;
             case "taslakKutu":
                 taslakState = control;
@@ -325,8 +318,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         pnl_mail_body_reply = new javax.swing.JPanel();
         pnl_mail_body_reply_scrollpane = new javax.swing.JScrollPane();
         pnl_mail_body_reply_text = new javax.swing.JTextArea();
-        pnl_main_mail_card = new javax.swing.JPanel();
-        pnl_main_mails_gelen = new javax.swing.JPanel();
+        pnl_main_mails = new javax.swing.JPanel();
         pnl_mail_slider = new javax.swing.JPanel();
         pnl_slider_left = new javax.swing.JPanel();
         pnl_slider_left_arrow = new javax.swing.JLabel();
@@ -405,9 +397,6 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         pnl_mail_10_time_text = new javax.swing.JLabel();
         pnl_mail_10_message = new javax.swing.JPanel();
         pnl_mail_10_message_text = new javax.swing.JLabel();
-        pnl_main_mails_giden = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -854,12 +843,9 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
 
         pnl_gelen_splitpane.setRightComponent(pnl_main_details);
 
-        pnl_main_mail_card.setBackground(new java.awt.Color(37, 40, 44));
-        pnl_main_mail_card.setLayout(new java.awt.CardLayout());
-
-        pnl_main_mails_gelen.setBackground(new java.awt.Color(45, 48, 53));
-        pnl_main_mails_gelen.setPreferredSize(new java.awt.Dimension(700, 750));
-        pnl_main_mails_gelen.setLayout(new java.awt.BorderLayout());
+        pnl_main_mails.setBackground(new java.awt.Color(45, 48, 53));
+        pnl_main_mails.setPreferredSize(new java.awt.Dimension(700, 750));
+        pnl_main_mails.setLayout(new java.awt.BorderLayout());
 
         pnl_mail_slider.setBackground(new java.awt.Color(45, 48, 53));
         pnl_mail_slider.setPreferredSize(new java.awt.Dimension(600, 40));
@@ -897,7 +883,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
 
         pnl_mail_slider.add(pnl_slider_middle, java.awt.BorderLayout.CENTER);
 
-        pnl_main_mails_gelen.add(pnl_mail_slider, java.awt.BorderLayout.PAGE_END);
+        pnl_main_mails.add(pnl_mail_slider, java.awt.BorderLayout.PAGE_END);
 
         pnl_mail_list.setBackground(new java.awt.Color(45, 48, 53));
         pnl_mail_list.setPreferredSize(new java.awt.Dimension(700, 700));
@@ -1274,20 +1260,9 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
 
         pnl_mail_list.add(pnl_mail_10);
 
-        pnl_main_mails_gelen.add(pnl_mail_list, java.awt.BorderLayout.LINE_START);
+        pnl_main_mails.add(pnl_mail_list, java.awt.BorderLayout.LINE_START);
 
-        pnl_main_mail_card.add(pnl_main_mails_gelen, "gelenMailPanel");
-
-        pnl_main_mails_giden.setBackground(java.awt.Color.red);
-        pnl_main_mails_giden.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jScrollPane1.setViewportView(jTree1);
-
-        pnl_main_mails_giden.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-
-        pnl_main_mail_card.add(pnl_main_mails_giden, "gidenMailPanel");
-
-        pnl_gelen_splitpane.setLeftComponent(pnl_main_mail_card);
+        pnl_gelen_splitpane.setLeftComponent(pnl_main_mails);
 
         pnl_main_mail.add(pnl_gelen_splitpane, "gelencard");
 
@@ -1368,8 +1343,6 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     private javax.swing.JLabel gelen_text;
     private javax.swing.JLabel giden_icon;
     private javax.swing.JLabel giden_text;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTree jTree1;
     private javax.swing.JLabel lbl_slider_number;
     private javax.swing.JPanel mail_author;
     private javax.swing.JLabel mail_author_text;
@@ -1478,9 +1451,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     private javax.swing.JPanel pnl_main;
     private javax.swing.JPanel pnl_main_details;
     private javax.swing.JPanel pnl_main_mail;
-    private javax.swing.JPanel pnl_main_mail_card;
-    private javax.swing.JPanel pnl_main_mails_gelen;
-    private javax.swing.JPanel pnl_main_mails_giden;
+    private javax.swing.JPanel pnl_main_mails;
     private javax.swing.JPanel pnl_main_titlebar;
     private javax.swing.JPanel pnl_sidebar;
     private javax.swing.JPanel pnl_sidebar_cop;
