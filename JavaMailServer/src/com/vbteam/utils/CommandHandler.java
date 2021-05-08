@@ -20,14 +20,15 @@ public class CommandHandler {
     private static AuthService service=new AuthService();
     
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
-        if (cmd.getType().equals("auth")) {
+        if (cmd.getType().indexOf("auth")==0) {            
             Auth(cmd);
-        }        
+        }
     }
 
     private static void Auth(Command cmd) {
         if (cmd.getType().equals("auth-exist")) {
             service.UserExist(cmd.getUser().getUserName());
+            System.out.println("exist");
         }
         if (cmd.getType().equals("auth-register")) {            
             service.Register(cmd.getUser());

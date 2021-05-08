@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  */
 public class DbContext {
     static Connection con;
-    static String fullurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;user=sa;password=zxcvbn";
+    static String fullurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;user=sa;password=6165";
     static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer";
 
     static String user = "sa";
