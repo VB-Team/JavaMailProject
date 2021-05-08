@@ -79,5 +79,33 @@ public class AuthService implements IAuthService {
         }
         
     }
-    
+
+    @Override
+    public boolean UserExist(String UserName) {
+        try {
+         PreparedStatement statement;
+        context=new DbContext();
+        connection=context.getConnection();
+        String selectQuery="Select TOP 1 u.Id from Users u where u.UserName=?";
+        statement=connection.prepareStatement(selectQuery);
+        statement.setString(1, UserName);
+        ResultSet rs=statement.executeQuery();
+        int UserId=0;
+            while (rs.next()) {                
+                UserId=rs.getInt(1);
+            }
+            statement.close();
+            connection.close();
+            if (UserId>0) {
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {            
+            System.err.println("AuthService Exception"+e.getMessage());
+            return false;
+        }
+    }        
 }
+    
+

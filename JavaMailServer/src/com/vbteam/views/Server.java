@@ -19,7 +19,7 @@ import java.net.Socket;
  */
 public class Server {
 
-    private int port = 1453;
+    private int port = 1443;
     private String host = "127.0.0.1";
     private ServerSocket server;
     private Socket client;
@@ -40,7 +40,7 @@ public class Server {
                 new Thread(new ClientListener(objInStream, objOutStream)).start();
             }
         } catch (Exception e) {
-            System.err.println(e.getMessage()+" asd");
+            System.err.println(e.getMessage());
         }
     }
 }

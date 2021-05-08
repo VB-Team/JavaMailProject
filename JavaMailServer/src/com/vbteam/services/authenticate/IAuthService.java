@@ -14,4 +14,5 @@ import com.vbteam.models.User;
 public interface IAuthService {
    public User Login(String UserName,String Password);
    public User Register(User user);
+   public boolean UserExist(String UserName);
 }

@@ -7,6 +7,7 @@ package com.vbteam.views;
 
 import com.vbteam.models.DraftMail;
 import com.vbteam.models.SentMail;
+import com.vbteam.services.authenticate.AuthService;
 import com.vbteam.services.mail.DraftMailService;
 import com.vbteam.services.mail.SentMailService;
 import java.sql.Timestamp;
@@ -21,7 +22,7 @@ public class ConsoleUI {
 
     public static void main(String args[]) {
        Server server=new Server();
-       server.Connect();       
+       server.Connect();     
     }
 
 }
