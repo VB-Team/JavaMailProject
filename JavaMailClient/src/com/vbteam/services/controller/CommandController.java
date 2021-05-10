@@ -9,6 +9,8 @@ import com.vbteam.models.Command;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,26 +21,19 @@ public class CommandController {
     public static void Handler(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, Command command) {
         System.out.println("handler");
         if (command.getType().equals("auth-echo")) {
-            System.out.println("Echo : " + command.getReturnValue());
+            //System.out.println("Echo : " + command.getReturnValue());
         }
-        if (command.getType().equals("auth-register") || command.getType().equals("auth-login")) {
-            System.out.println("auth");
-            Auth(command, objOutputStream, objInputStream);
-        }
+        
     }
 
-    public static Boolean Auth(Command command, ObjectOutputStream objOutputStream, ObjectInputStream objInputStream) {
+    private static void Auth(Command command, ObjectOutputStream objOutputStream, ObjectInputStream objInputStream) {
         try {
-            objOutputStream.writeObject(command);
             command = (Command) objInputStream.readObject();
-            if (command != null) {
-                //Auth Operations
-            }
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return true;
+            command.getUser();
+        } catch (Exception ex) {
+            System.out.println(ex.getLocalizedMessage());
+        } 
     }
+
+    
 }

@@ -5,6 +5,7 @@
  */
 package com.vbteam.services.socket;
 
+import com.vbteam.models.Command;
 import com.vbteam.models.User;
 import com.vbteam.services.controller.ConnectionController;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ import java.util.Date;
  */
 public class ConnectionService {
 
-    private String hostName, userName, hashedPassword;
+    private String hostName;
     private Socket clientSocket;
     private int socketPort = 1443;
     private ObjectOutputStream objOutStream;
@@ -40,7 +41,7 @@ public class ConnectionService {
             objOutStream = new ObjectOutputStream(outputStream);
             objInStream = new ObjectInputStream(inputStream);
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex.getLocalizedMessage());
         }
     }
 
@@ -50,31 +51,47 @@ public class ConnectionService {
                 return;
             } else {
                 Date date = new Date();
-                user = new User(userName, hashedPassword, 0, date, date, "BATU", "San");
+                //user = new User(userName, hashedPassword, 0, date, date, "BATU", "San");
                 new Thread(new ConnectionController(authType, objInStream, objOutStream, this, user)).start();
             }
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex.getLocalizedMessage());
         }
     }
+    
+    public ObjectInputStream getInputStream(){
+        return this.objInStream;
+    }
+    
+    public ObjectOutputStream getOutputStream(){
+        return this.objOutStream;
+    }
 
-    public Boolean checkConnection() {
-        Boolean control = false;
-        if (clientSocket == null || clientSocket.isConnected() == false) {
-            control = false;
-        }else{
-            control = true;
+    public void SendCommand(Command command) {
+        try {
+            objOutStream.writeObject(command);
+        }catch(Exception ex){
+            System.out.println(ex.getLocalizedMessage());
         }
-        return control;
+
+    }
+
+    public boolean isConnected() {
+        boolean returnValue = false;
+        if (clientSocket != null && clientSocket.isConnected()) {
+            returnValue = true;
+        } else {
+            connectServer();
+        }
+        return returnValue;
     }
 
     public static void main(String[] args) {
         try {
-            ConnectionService conService = new ConnectionService("localhost");
-            conService.Auth("auth-login");
+            ConnectionService conService = new ConnectionService("127.0.0.1");
+            conService.connectServer();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex.getLocalizedMessage());
         }
-
     }
 }

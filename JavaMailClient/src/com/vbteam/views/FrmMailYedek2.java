@@ -8,7 +8,7 @@
  */
 package com.vbteam.views;
 
-import com.vbteam.models.Mail;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -32,7 +32,7 @@ public class FrmMailYedek2 extends javax.swing.JFrame implements MouseListener, 
     boolean maxCheck = true, gelenState = false, gidenState = false, taslakState = false, copState = false;
     private int mouseX1, mouseX2, mouseY1, mouseY2, pX, pY, pageNumber = 1;
     ArrayList<JPanel> mailPanelList = new ArrayList<>();
-    private List<Mail> mailList = new ArrayList<Mail>();
+    //private List<Mail> mailList = new ArrayList<Mail>();
 
     public FrmMailYedek2() {
         initGui();
@@ -45,6 +45,7 @@ public class FrmMailYedek2 extends javax.swing.JFrame implements MouseListener, 
                 + "Vivamus consectetur pretium felis et viverra. Suspendisse sagittis ultricies malesuada. Praesent fermentum metus sit amet massa vulputate, sit amet vehicula metus efficitur. Aenean vulputate nulla leo, a consectetur enim venenatis vel. Quisque a nibh non lectus sodales dictum in sit amet elit. Nam sapien felis, viverra ac eros et, malesuada tempus nulla. Suspendisse potenti. Mauris at sapien nec erat rhoncus sodales. Phasellus elementum tempus ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce vel elit mauris. Etiam sit amet erat consectetur, feugiat sapien nec, convallis sem. Quisque felis elit, viverra id convallis et, interdum sed mauris.");
         moveTitlebar();
         setMouseListeners();
+        /*
         mailList.add(new Mail("Batuhan", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Veysel", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Mahmut", "12 Temmuz", "Nunc a urna commodo"));
@@ -53,8 +54,9 @@ public class FrmMailYedek2 extends javax.swing.JFrame implements MouseListener, 
         mailList.add(new Mail("Mahmut", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Selami", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Emre", "12 Temmuz", "Test maili"));
-
         setMailPanels();
+*/
+        
     }
 
     private void setMouseListeners() {
@@ -138,6 +140,7 @@ public class FrmMailYedek2 extends javax.swing.JFrame implements MouseListener, 
         return menuButtonState;
     }
 
+    /*
     private void setMailPanels() {
         Component myComps[] = pnl_mail_list.getComponents();
         for (int i = 0; i < mailList.size(); i++) {
@@ -172,7 +175,9 @@ public class FrmMailYedek2 extends javax.swing.JFrame implements MouseListener, 
         for (int i = mailList.size(); i < 10; i++) {
             pnl_mail_list.remove((JPanel) myComps[i]);
         }
+    
     }
+    */
 
     public void pushMailsToList() {
         //  ArrayList

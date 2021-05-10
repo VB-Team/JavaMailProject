@@ -8,7 +8,6 @@
  */
 package com.vbteam.views;
 
-import com.vbteam.models.Mail;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -34,7 +33,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     boolean maxCheck = true, gelenState = false, gidenState = false, taslakState = false, copState = false;
     private int mouseX1, mouseX2, mouseY1, mouseY2, pX, pY, pageNumber = 1;
     ArrayList<JPanel> mailPanelList = new ArrayList<>();
-    private List<Mail> mailList = new ArrayList<Mail>();
+    //private List<Mail> mailList = new ArrayList<Mail>();
 
     public FrmMail() {
         initGui();
@@ -50,6 +49,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     }
 
     private void TestProcedure() {
+        /*
         pnl_mail_detail_header_text.setText("Mail sistemi hakkında , Aenean euismod maximus pharetra. Nunc a urna commodo, egestas sem ac");
         pnl_mail_body_text.setText("Aenean euismod maximus pharetra. Nunc a urna commodo, egestas sem ac, condimentum erat. Sed facilisis ipsum in ipsum vehicula, eu blandit dui porta. Etiam diam justo, facilisis id vestibulum ac, rhoncus vitae magna. Cras bibendum condimentum mollis. Praesent dui erat, semper sed convallis ut, imperdiet at mi. Suspendisse nec leo efficitur tellus rutrum rhoncus vel ac risus. Vestibulum ultricies euismod nisi, eu pulvinar ligula pretium in. Nunc fringilla nibh vel ex egestas consequat.\n"
                 + "\n"
@@ -67,6 +67,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         mailList.add(new Mail("Mahmut", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Selami", "12 Temmuz", "Test maili"));
         mailList.add(new Mail("Emre", "12 Temmuz", "Test maili"));
+        */
     }
 
     private void setMouseListeners() {
@@ -151,6 +152,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
     }
 
     private void setMailPanels() {
+        /*
         Component myComps[] = pnl_mail_list.getComponents();
         for (int i = 0; i < mailList.size(); i++) {
             JPanel panel = (JPanel) myComps[i];
@@ -184,6 +186,7 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         for (int i = mailList.size(); i < 10; i++) {
             pnl_mail_list.remove((JPanel) myComps[i]);
         }
+        */
     }
 
     public void pushMailsToList() {
@@ -203,7 +206,6 @@ public class FrmMail extends javax.swing.JFrame implements MouseListener, MouseM
         this.setUndecorated(true); // title barı kaldırıyor
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
-
     }
 
     public void moveTitlebar() {

@@ -5,63 +5,89 @@
  */
 package com.vbteam.models;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
  *
- * @author BatuPC
+ * @author schea
  */
-public class Command {
-
-    private String type, commandText;
+public class Command implements Serializable{    
+    private String type,commandText;
     private User user;
-    private Date date;
-    private Boolean rValue;
+    private boolean boolResponse;
+    private IMail mail;
 
-    //Empty Constructor
-    public Command() {}
+    public Command() {
+    }
 
-    //Default Constructor
-    public Command(String type, User user, String commandText) {
+    public Command(String type, String commandText, User user, IMail mail) {
         this.type = type;
+        this.commandText = commandText;
         this.user = user;
+        this.mail = mail;
+    }
+    
+    public boolean getBoolResponse(){
+        return boolResponse;
+    }
+    
+    public void setBoolResponse(boolean bool){
+        this.boolResponse = bool;
+    }
+    
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the commandText
+     */
+    public String getCommandText() {
+        return commandText;
+    }
+
+    /**
+     * @param commandText the commandText to set
+     */
+    public void setCommandText(String commandText) {
         this.commandText = commandText;
     }
 
-    //Auth constructor
-    public Command(String type, User user) {
-        this.type = type;
+    /**
+     * @return the user
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * @param user the user to set
+     */
+    public void setUser(User user) {
         this.user = user;
     }
 
-    //Boolean response constructor
-    public Command(String type, User user, Boolean rValue) {
-        this.type = type;
-        this.user = user;
-        this.rValue = rValue;
+    /**
+     * @return the mail
+     */
+    public IMail getMail() {
+        return mail;
     }
 
-    public Boolean getReturnValue() {
-        return this.rValue;
-    }
-
-    public String getCommandText() {
-        return this.commandText;
-    }
-
-    public String getUsername() {
-        return this.user.getUsername();
-    }
-
-    public User getUserModel() {
-        return this.user;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public Date getDate() {
-        return this.date;
+    /**
+     * @param mail the mail to set
+     */
+    public void setMail(IMail mail) {
+        this.mail = mail;
     }
 }

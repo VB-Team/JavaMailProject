@@ -20,7 +20,7 @@ public class DbContext {
     static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer";
 
     static String user = "sa";
-    static String pass = "6165";
+    static String pass = "Password1!";
 
     public  Connection getConnection() {
         try {

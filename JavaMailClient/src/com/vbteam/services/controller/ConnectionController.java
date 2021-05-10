@@ -21,7 +21,6 @@ public class ConnectionController implements Runnable {
     private ObjectInputStream objInputStream;
     private ObjectOutputStream objOutputStream;
     private String authType;
-    private Boolean isConnected;
     private ConnectionService conService;
     private User user;
     private Command command;
@@ -36,16 +35,13 @@ public class ConnectionController implements Runnable {
 
     @Override
     public void run() {
-        try {            
-            isConnected = CommandController.Auth(new Command(this.authType, user), objOutputStream, objInputStream);        
-            if (isConnected) {
-                while (true) {
-                    command = new Command();
-                    command = (Command) objInputStream.readObject();
-                    CommandController.Handler(objInputStream, objOutputStream, command);
-                }
+        try {
+            while (true) {
+                command = new Command();
+                command = (Command) objInputStream.readObject();
+                CommandController.Handler(objInputStream, objOutputStream, command);
             }
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage() + " " + ex.getMessage());
         }
     }

@@ -52,6 +52,7 @@ public class AuthService implements IAuthService {
         rs.close();
         return user;       
         } catch (Exception ex) {
+            System.err.println("AuthService Exception"+ex.getMessage());
             return null;
         }
     }
@@ -61,7 +62,8 @@ public class AuthService implements IAuthService {
         try{
         CallableStatement statement;
         context=new DbContext();
-        connection=context.getConnection();                
+        connection=context.getConnection(); 
+        
         String query="{call AddUser(?,?,?,?,?)}";
         statement=connection.prepareCall(query);
         statement.setString(1, user.getFirstName());
@@ -73,8 +75,9 @@ public class AuthService implements IAuthService {
         System.out.println("Etkilenen satır sayısı "+affectedRow);
         statement.close();
         connection.close();
-        return null;        
+        return user;        
         } catch (Exception ex) {
+            System.err.println("AuthService Exception"+ex.getMessage());
             return null;
         }
         

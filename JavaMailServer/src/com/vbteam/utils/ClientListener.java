@@ -26,12 +26,14 @@ public class ClientListener implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
-                Command command = (Command) objInStream.readObject();  
+            boolean whileControl = true;
+            while (whileControl) {
+                Command command = (Command) objInStream.readObject();
                 CommandHandler.Handler(objInStream, objOutStream, command);
             }
+
         } catch (Exception e) {
-            System.err.println("Client Listener Exception: "+e.getMessage());
+            System.err.println("Client Listener Exception: " + e.getMessage());
         }
     }
 

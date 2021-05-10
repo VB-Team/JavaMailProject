@@ -5,40 +5,132 @@
  */
 package com.vbteam.models;
 
-import java.util.Date;
-
+import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Timestamp;
 /**
  *
- * @author BatuPC
+ * @author schea
  */
-public class User {
+public class User implements Serializable{    
+    private int Id;
+    private String Role;
+    private String UserName;    
+    private String Password;    
+    private Date RegisterDate;
+    private String LastLogin;
+    private String FirstName;
+    private String LastName;
+    
+    /**
+     * @return the FirstName
+     */
+    public String getFirstName() {
+        return FirstName;
+    }
 
     /**
-     * DB Constructor username,password,roleid,registerdate,lastlogin ,First
-     * name ,lastname
+     * @param FirstName the FirstName to set
      */
-
-    private String userName, password, firstName, lastName;
-    private int roleId;
-    private Date registerDate, lastLogin;
-
-    public User() {}
-
-    public User(String userName, String password, int roleId, Date registerDate, Date lastLogin, String firstName, String lastName) {
-        this.userName = userName;
-        this.password = password;
-        this.roleId = roleId;
-        this.registerDate = registerDate;
-        this.lastLogin = lastLogin;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public void setFirstName(String FirstName) {
+        this.FirstName = FirstName;
     }
 
-    public String getUsername() {
-        return this.userName;
+    /**
+     * @return the LastName
+     */
+    public String getLastName() {
+        return LastName;
     }
 
+    /**
+     * @param LastName the LastName to set
+     */
+    public void setLastName(String LastName) {
+        this.LastName = LastName;
+    }
+    
+    /**
+     * @return the Id
+     */
+    public int getId() {
+        return Id;
+    }
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(int Id) {
+        this.Id = Id;
+    }
+
+    /**
+     * @return the RoleId
+     */
+    public String getRole() {
+        return Role;
+    }
+
+    /**
+     * @param RoleId the RoleId to set
+     */
+    public void setRole(String Role) {
+        this.Role = Role;
+    }
+
+    /**
+     * @return the UserName
+     */
+    public String getUserName() {
+        return UserName;
+    }
+
+    /**
+     * @param UserName the UserName to set
+     */
+    public void setUserName(String UserName) {
+        this.UserName = UserName;
+    }
+
+    /**
+     * @return the Password
+     */
     public String getPassword() {
-        return this.password;
+        return Password;
+    }
+
+    /**
+     * @param Password the Password to set
+     */
+    public void setPassword(String Password) {
+        this.Password = Password;
+    }
+
+    /**
+     * @return the RegisterDate
+     */
+    public Date getRegisterDate() {
+        return this.RegisterDate;
+    }
+
+    /**
+     * @param RegisterDate the RegisterDate to set
+     */
+    public void setRegisterDate(Date RegisterDate) {
+        this.RegisterDate = RegisterDate;
+    }
+
+    /**
+     * @return the LastLogin
+     */
+    public String getLastLogin() {
+        return LastLogin;
+    }
+
+    /**
+     * @param LastLogin the LastLogin to set
+     */
+    public void setLastLogin(String LastLogin) {
+        this.LastLogin = LastLogin;
     }
 }

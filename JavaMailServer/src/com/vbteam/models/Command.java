@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class Command implements Serializable{    
     private String type,commandText;
     private User user;
+    private boolean boolResponse;
     private IMail mail;
 
     public Command() {
@@ -24,6 +25,14 @@ public class Command implements Serializable{
         this.commandText = commandText;
         this.user = user;
         this.mail = mail;
+    }
+    
+    public boolean getBoolResponse(){
+        return boolResponse;
+    }
+    
+    public void setBoolResponse(boolean bool){
+        this.boolResponse = bool;
     }
     
     /**
