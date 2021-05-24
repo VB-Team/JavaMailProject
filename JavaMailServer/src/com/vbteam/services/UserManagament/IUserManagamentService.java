@@ -17,5 +17,7 @@ public interface IUserManagamentService {
     public boolean DeletedUser(int userId);
     public User UpdateUser(User user);
     public List<User> ListUser();
+    public int FromUserMailCount(int userId);
+    public int SendUserMailCount(int userId);
 
 }

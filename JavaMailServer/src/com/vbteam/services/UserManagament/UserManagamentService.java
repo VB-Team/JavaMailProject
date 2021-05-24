@@ -144,8 +144,51 @@ public class UserManagamentService implements IUserManagamentService {
     }
 
     @Override
-    public int UserMailCount(int userId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int FromUserMailCount(int userId) {
+        try{
+        PreparedStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+        String query="Select Count(*) as TotalMail From SentMail sm where sm.FromId=?";        
+        statement = connection.prepareStatement(query);     
+        statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            int mailCount=0;
+            while (rs.next()) {
+                mailCount=rs.getInt("TotalMail");
+            }
+            statement.close();
+            connection.close();
+            rs.close();
+            return mailCount;
+        } catch (Exception ex) {
+            System.err.println("AuthService Exception : " + ex.getMessage());
+            return 0;
+        }
+    }
+
+    @Override
+    public int SendUserMailCount(int userId) {
+       try{
+        PreparedStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+        String query="Select Count(*) as TotalMail From SentMail sm where sm.SendId=?";        
+        statement = connection.prepareStatement(query);     
+        statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            int mailCount=0;
+            while (rs.next()) {
+                mailCount=rs.getInt("TotalMail");
+            }
+            statement.close();
+            connection.close();
+            rs.close();
+            return mailCount;
+        } catch (Exception ex) {
+            System.err.println("AuthService Exception : " + ex.getMessage());
+            return 0;
+        }
     }
 
 }
