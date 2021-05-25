@@ -62,30 +62,20 @@ public class vAuth {
     }
 
     public static boolean isValidPassword(String password) {
-
-        // Regex to check valid password.
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
                 + "(?=.*[.@#$%^&+=])"
                 + "(?=\\S+$).{8,20}$";
 
-        // Compile the ReGex
         Pattern p = Pattern.compile(regex);
 
-        // Pattern class contains matcher() method
-        // to find matching between given password
-        // and regular expression.
         Matcher m = p.matcher(password);
 
-        // Return if the password
-        // matched the ReGex
         return m.matches();
     }
 
     public static String hashPassword(String password) {
-        // Hash a password for the first time
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
-    
-    
+
 }

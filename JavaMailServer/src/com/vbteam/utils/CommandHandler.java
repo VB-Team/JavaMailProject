@@ -29,28 +29,34 @@ public class CommandHandler {
         try {
             if (cmd.getType().equals("auth-exist")) {
                 boolean bool = service.UserExist(cmd.getUser().getUserName());
-                
+
                 cmd = new Command();
                 cmd.setType("response");
                 cmd.setBoolResponse(bool);
-                
+
                 objOutput.writeObject(cmd);
             }
             if (cmd.getType().equals("auth-register")) {
                 User _user = service.Register(cmd.getUser());
                 System.out.println("register");
-                
+
                 cmd = new Command();
                 cmd.setType("response");
                 cmd.setUser(_user);
-                
+
                 objOutput.writeObject(cmd);
-                
+
             }
             if (cmd.getType().equals("auth-login")) {
                 try {
-                    service.Login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
+                    User _user = service.Login(cmd.getUser().getUserName(),cmd.getUser().getPassword());
                     System.out.println("login");
+
+                    cmd = new Command();
+                    cmd.setType("response");
+                    cmd.setUser(_user);
+
+                    objOutput.writeObject(cmd);
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }

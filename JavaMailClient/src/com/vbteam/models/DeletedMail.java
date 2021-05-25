@@ -21,6 +21,7 @@ public class DeletedMail implements IMail{
     /**
      * @return the Id
      */
+    @Override
     public int getId() {
         return Id;
     }
