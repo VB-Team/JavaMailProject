@@ -1,8 +1,9 @@
 package com.vbteam.views;
 
 import com.vbteam.models.User;
-import com.vbteam.services.UserManagament.UserManagamentService;
+import com.vbteam.services.UserManagement.UserManagementService;
 import com.vbteam.services.authenticate.AuthService;
+import java.util.List;
 
 /**
  *
@@ -22,8 +23,11 @@ public class ConsoleUI {
         user.setRole("Admin");
         User user2 = service.Login("Veysel","Veysel");
         System.out.println(user2.getRegisterDate().toString());*/
-        UserManagamentService management=new UserManagamentService();
-        System.out.println(management.SendUserMailCount(5));
+        UserManagementService management=new UserManagementService();
+        List<User> users=management.ListUser();
+        for (User user : users) {
+            System.out.println(user.getFirstName());
+        }
 
     }
 

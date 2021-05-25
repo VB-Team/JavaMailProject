@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.services.UserManagament;
+package com.vbteam.services.UserManagement;
 
 import com.vbteam.models.User;
 import com.vbteam.utils.DbContext;
@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author schea
  */
-public class UserManagamentService implements IUserManagamentService {
+public class UserManagementService implements IUserManagementService {
 
     DbContext context;
     Connection connection;
