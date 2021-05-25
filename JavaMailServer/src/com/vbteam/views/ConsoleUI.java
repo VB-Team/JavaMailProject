@@ -3,6 +3,7 @@ package com.vbteam.views;
 import com.vbteam.models.User;
 import com.vbteam.services.UserManagament.UserManagamentService;
 import com.vbteam.services.authenticate.AuthService;
+import com.vbteam.utils.BCrypt;
 
 /**
  *
@@ -12,7 +13,7 @@ public class ConsoleUI {
 
     public static void main(String args[]) {
         Server server = new Server();
-        //server.Connect();     
+        server.Connect();     
         /*AuthService service = new AuthService();
         User user = new User();
         user.setFirstName("Veysel");
@@ -22,8 +23,8 @@ public class ConsoleUI {
         user.setRole("Admin");
         User user2 = service.Login("Veysel","Veysel");
         System.out.println(user2.getRegisterDate().toString());*/
-        UserManagamentService management=new UserManagamentService();
-        System.out.println(management.SendUserMailCount(5));
+        //UserManagamentService management=new UserManagamentService();
+        //System.out.println(management.SendUserMailCount(5));
 
     }
 
