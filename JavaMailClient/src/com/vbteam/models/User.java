@@ -18,7 +18,7 @@ public class User implements Serializable{
     private String UserName;    
     private String Password;    
     private Date RegisterDate;
-    private Timestamp LastLogin;
+    private String LastLogin;
     private String FirstName;
     private String LastName;
     
@@ -123,14 +123,14 @@ public class User implements Serializable{
     /**
      * @return the LastLogin
      */
-    public Timestamp getLastLogin() {
+    public String getLastLogin() {
         return LastLogin;
     }
 
     /**
      * @param LastLogin the LastLogin to set
      */
-    public void setLastLogin(Timestamp LastLogin) {
+    public void setLastLogin(String LastLogin) {
         this.LastLogin = LastLogin;
     }
 }

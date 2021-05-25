@@ -6,7 +6,6 @@
 package com.vbteam.services.authenticate;
 
 import com.vbteam.models.User;
-import com.vbteam.utils.BCrypt;
 import com.vbteam.utils.DbContext;
 /**
  *
@@ -31,12 +30,12 @@ public class AuthService implements IAuthService {
             String query = "Select u.Id,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
                     + "From Users u join UserDetail ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id \n"
-                    + "where u.UserName=?";
+                    + "where u.UserName=? and u.Password=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, UserName);
-            ResultSet rs = statement.executeQuery();
-            System.out.println("Etkilenen satır sayısı " + rs);
-            User user = new User();
+            statement.setString(2, Password);
+            ResultSet rs = statement.executeQuery();    
+            User user = new User();             
             while (rs.next()) {
                 user.setId(rs.getInt("Id"));
                 user.setFirstName(rs.getString("FirstName"));
@@ -45,16 +44,13 @@ public class AuthService implements IAuthService {
                 user.setPassword(rs.getString("Password"));
                 user.setRole(rs.getString("Role"));
                 user.setRegisterDate(rs.getDate("RegisterDate"));
-                //System.out.println((rs.getString("LastLogin"))); //AuthService Exception : The column name LastLogin is not valid.
+                System.out.println((rs.getString("LastLogin")));
+
             }
-            if (BCrypt.checkpw(Password, user.getPassword())) {
-                return user;
-            } else {
-                statement.close();
-                connection.close();
-                rs.close();
-                return null;
-            }
+            statement.close();
+            connection.close();
+            rs.close();
+            return user;
         } catch (Exception ex) {
             System.err.println("AuthService Exception : " + ex.getMessage());
             return null;
@@ -73,9 +69,9 @@ public class AuthService implements IAuthService {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getUserName());
-            statement.setString(4, hashPassword(user.getPassword()));
+            statement.setString(4, user.getPassword());
             statement.setString(5, user.getRole());
-            //statement.setObject(6, new java.util.Date());
+            statement.setObject(6, new java.util.Date());
             user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
             user.setRegisterDate(new java.sql.Date(new java.util.Date().getTime()));
             System.out.println(user.getLastLogin());
@@ -121,9 +117,5 @@ public class AuthService implements IAuthService {
             System.err.println("AuthService Exception" + e.getMessage());
             return false;
         }
-    }
-
-    public static String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }
