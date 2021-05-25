@@ -5,10 +5,15 @@
  */
 package com.vbteam.models;
 
+
 /**
  *
  * @author BatuPC
  */
 public interface IMail {
-    
+    public int getId();
+    public String getFromUser();
+    public String getSendUser();
+    public String getSubject();
+    public String getBody();
 }

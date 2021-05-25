@@ -24,6 +24,7 @@ public class DraftMail implements IMail{
     /**
      * @return the Id
      */
+    @Override
     public int getId() {
         return Id;
     }
@@ -118,4 +119,5 @@ public class DraftMail implements IMail{
     public void setCreateDate(Timestamp CreateDate) {
         this.CreateDate = CreateDate;
     }    
+
 }
