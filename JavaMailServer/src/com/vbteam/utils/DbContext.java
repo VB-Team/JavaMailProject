@@ -5,30 +5,53 @@
  */
 package com.vbteam.utils;
 
+import com.vbteam.models.SentMail;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author schea
  */
 public class DbContext {
-    static Connection con;
+
+    static Connection connection;
     static String fullurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;user=sa;password=6165";
     static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer";
 
     static String user = "sa";
-    static String pass = "Password1!";
+    static String batuPass = "Password1!";
+    static String veyselPass = "6165";
 
-    public  Connection getConnection() {
+    public Connection getConnection() {
         try {
-            con = DriverManager.getConnection(conurl, user, pass);
-            System.out.println("Bağlantı Kuruldu");            
+            connection = DriverManager.getConnection(conurl, user, veyselPass);
+            System.out.println("Bağlaantı Kuruldu");
         } catch (SQLException e) {
-            System.out.println("DbContext Exception : "+e.getMessage());
+            System.out.println("DbContext Exception : " + e.getMessage());
         }
-        return con;
+        return connection;
+    }
+
+    public int getUser(String userName) {
+        try {
+            PreparedStatement statement;
+            connection = DriverManager.getConnection(conurl, user, veyselPass);
+            String selectQuery = "Select u.Id from Users u where u.UserName=?";
+
+            statement = connection.prepareStatement(selectQuery);
+            statement.setString(1, userName);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) 
+                return rs.getInt(1);
+            else
+                return -1;
+        } catch (Exception e) {
+             System.out.println("DbContext Exception : " + e.getMessage());
+             return -1;
+        }
     }
 }

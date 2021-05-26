@@ -27,24 +27,15 @@ public class DraftMailService {
         try {
             Integer fromId =null;
             Integer sendId=null;
-            List<Integer> Id = new ArrayList<Integer>();
             PreparedStatement statement;
             
             context = new DbContext();
             connection = context.getConnection();
-            String selectQuery = "Select u.Id from Users u where u.UserName=? or u.UserName=?";
-            statement = connection.prepareStatement(selectQuery);
-            statement.setString(1, mail.getFromUser());
-            statement.setString(2, mail.getSendUser());
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                Id.add(rs.getInt("Id"));
-            } 
             if (mail.getFromUser()!=null) {
-                fromId = Id.get(0);
+                fromId = context.getUser(mail.getFromUser());
             }else if(mail.getSendUser()!=null)
             {
-                sendId = Id.get(1);    
+                sendId = context.getUser(mail.getSendUser());    
             }                    
             String insertQuery="Insert into DraftMail(FromId,SendId,Subject,Body,Attachment,CreateDate)values(?,?,?,?,?,?)";
             statement = connection.prepareStatement(insertQuery);  

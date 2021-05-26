@@ -20,6 +20,19 @@ public class DraftMail implements IMail{
     private byte[] Attachment;
     private String Subject;
     private Timestamp CreateDate;
+
+    public DraftMail() {
+    }
+    
+    public DraftMail(int Id, String SendUser, String FromUser, String Body, byte[] Attachment, String Subject, Timestamp CreateDate) {
+        this.Id = Id;
+        this.SendUser = SendUser;
+        this.FromUser = FromUser;
+        this.Body = Body;
+        this.Attachment = Attachment;
+        this.Subject = Subject;
+        this.CreateDate = CreateDate;
+    }
     
     /**
      * @return the Id

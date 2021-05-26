@@ -11,7 +11,8 @@ import java.sql.Timestamp;
  *
  * @author schea
  */
-public class SentMail implements IMail{
+public class SentMail implements IMail {
+
     private int Id;
     private String FromUser;
     private String SendUser;
@@ -19,6 +20,20 @@ public class SentMail implements IMail{
     private Timestamp SendDate;
     private String Body;
     private byte[] Attachment;
+
+    public SentMail() {
+    }
+
+    public SentMail(int Id, String FromUser, String SendUser, String Subject, Timestamp SendDate, String Body, byte[] Attachment) {
+        this.Id = Id;
+        this.FromUser = FromUser;
+        this.SendUser = SendUser;
+        this.Subject = Subject;
+        this.SendDate = SendDate;
+        this.Body = Body;
+        this.Attachment = Attachment;
+    }
+
     /**
      * @return the Id
      */
@@ -116,5 +131,5 @@ public class SentMail implements IMail{
     public void setAttachment(byte[] Attachment) {
         this.Attachment = Attachment;
     }
-   
+
 }

@@ -1,0 +1,73 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.vbteam.services.logger;
+
+import com.vbteam.models.Log;
+import com.vbteam.utils.DbContext;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+/**
+ *
+ * @author schea
+ */
+public class Logger implements ILogger {
+
+    DbContext context;
+    Connection connection;
+
+    @Override
+    public boolean addLog(Log log) {
+        try {
+            int affectedRow = 0;
+            PreparedStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+            String insertQuery = "Insert into Logs(Type,ExceptionMessage)values(?,?)";
+            statement = connection.prepareStatement(insertQuery);
+            statement.setString(1, log.getType());
+            statement.setString(2, log.getExceptionMessage());
+            affectedRow += statement.executeUpdate();
+            statement.close();
+            connection.close();
+            System.out.println("Etkilenen satır sayısı : " + affectedRow);
+            if (affectedRow > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Logger Service Exception : " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public List<Log> getLog() {
+        try {
+            PreparedStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+            String selectQuery = "Select * From Logs";
+            statement = connection.prepareStatement(selectQuery);
+            ResultSet rs= statement.executeQuery();
+            List<Log> logs=new ArrayList<Log>();
+            while (rs.next()) {                
+                Log log=new Log();
+                log.setExceptionMessage(rs.getString(4));
+                log.setType(rs.getString(3));
+                logs.add(log);
+            }
+            return logs;
+        } catch (Exception e) {
+            System.out.println("Logger Service Exception : "+e.getMessage());
+            return null;
+        }
+    }
+
+}

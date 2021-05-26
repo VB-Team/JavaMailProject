@@ -18,6 +18,20 @@ public class DeletedMail implements IMail{
     private Timestamp DeletedDate;
     private String Body;
     private byte[] Attachment;
+
+    public DeletedMail() {
+    }
+    
+    public DeletedMail(int Id, String FromUser, String SendUser, String Subject, Timestamp DeletedDate, String Body, byte[] Attachment) {
+        this.Id = Id;
+        this.FromUser = FromUser;
+        this.SendUser = SendUser;
+        this.Subject = Subject;
+        this.DeletedDate = DeletedDate;
+        this.Body = Body;
+        this.Attachment = Attachment;
+    }
+    
     /**
      * @return the Id
      */
