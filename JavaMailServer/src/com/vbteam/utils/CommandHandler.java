@@ -24,7 +24,7 @@ public class CommandHandler {
 
     private static AuthService authService = new AuthService();
     private static SentMailService sentMailService = new SentMailService();
-    private static List<SentMail> emailList;
+    private static List<IMail> emailList;
 
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         if (cmd.getType().indexOf("auth") == 0) {
@@ -42,6 +42,16 @@ public class CommandHandler {
                 emailList = new ArrayList<>();
                 emailList.add((SentMail) cmd.getMail());
                 sentMailService.AddMail(emailList);
+            }
+            if (cmd.getType().equals("mail-get-sent")) {
+                System.out.println("Get Mail Debug - ID : " + cmd.getUser().getId());
+                int userId = cmd.getUser().getId();
+
+                cmd = new Command();
+                cmd.setType("mail-get-sent");
+                cmd.setMailList(sentMailService.GetFromMail(userId));
+
+                objOutput.writeObject(cmd);
             }
         } catch (Exception ex) {
             System.out.println("Mail Delivery Service Exception : " + ex.getMessage());

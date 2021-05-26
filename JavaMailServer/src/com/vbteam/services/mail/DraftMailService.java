@@ -7,13 +7,10 @@ package com.vbteam.services.mail;
 
 import com.vbteam.models.DeletedMail;
 import com.vbteam.models.DraftMail;
-import com.vbteam.models.SentMail;
 import com.vbteam.utils.DbContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.Types;
 
 /**

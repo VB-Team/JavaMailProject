@@ -7,6 +7,7 @@ package com.vbteam.services.mail;
 
 import com.vbteam.services.mail.DeletedMailService;
 import com.vbteam.models.DeletedMail;
+import com.vbteam.models.IMail;
 import com.vbteam.models.SentMail;
 import com.vbteam.utils.DbContext;
 import java.sql.Connection;
@@ -24,7 +25,7 @@ public class SentMailService {
     DbContext context;
     Connection connection;
 
-    public void AddMail(List<SentMail> mails) {
+    public void AddMail(List<IMail> mails) {
         try {
 
             int affectedRow = 0;
@@ -32,7 +33,7 @@ public class SentMailService {
             context = new DbContext();
             connection = context.getConnection();
             int fromId, sendId;
-            for (SentMail sentMail : mails) {
+            for (IMail sentMail : mails) {
                 fromId = context.getUser(sentMail.getFromUser());
                 sendId = context.getUser(sentMail.getSendUser());
                 String insertQuery = "Insert into SentMail(FromId,SendId,Subject,Body,Attachment)values(?,?,?,?,?)";
@@ -52,7 +53,7 @@ public class SentMailService {
         }
     }
 
-    public List<SentMail> GetSentMail(int userId) {
+    public List<IMail> GetSentMail(int userId) {
         try {
             PreparedStatement statement;
             context = new DbContext();
@@ -62,7 +63,7 @@ public class SentMailService {
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(userId));
             ResultSet rs = statement.executeQuery();
-            List<SentMail> mails = new ArrayList<SentMail>();
+            List<IMail> mails = new ArrayList<IMail>();
             while (rs.next()) {
                 SentMail mail = new SentMail();
                 int fromId = rs.getInt("FromId");
@@ -86,11 +87,12 @@ public class SentMailService {
             rs.close();
             return mails;
         } catch (Exception ex) {
+            System.out.println("Get Sent Mail Exception : " + ex.getMessage());
             return null;
         }
     }
 
-    public List<SentMail> GetFromMail(int userId) {
+    public List<IMail> GetFromMail(int userId) {
         try {
             PreparedStatement statement;
             context = new DbContext();
@@ -100,7 +102,7 @@ public class SentMailService {
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(userId));
             ResultSet rs = statement.executeQuery();
-            List<SentMail> mails = new ArrayList<SentMail>();
+            List<IMail> mails = new ArrayList<IMail>();
             while (rs.next()) {
                 SentMail mail = new SentMail();
                 int fromId = rs.getInt("FromId");
@@ -124,6 +126,7 @@ public class SentMailService {
             rs.close();
             return mails;
         } catch (Exception ex) {
+            System.out.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
     }

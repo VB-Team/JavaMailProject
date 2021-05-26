@@ -9,19 +9,25 @@ import com.vbteam.models.Command;
 import com.vbteam.models.IMail;
 import com.vbteam.models.SentMail;
 import com.vbteam.models.User;
-import com.vbteam.services.socket.ConnectionService;
-import static com.vbteam.views.FrmAuth.popupPanel;
+import static com.vbteam.views.FrmAuth.conService;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -35,14 +41,15 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     CardLayout mainLayout;
     boolean maxCheck;
-    int selectedRow;
+    int selectedRow, pX, pY;
     User user;
+    byte[] fileByteArray;
 
-    ArrayList<IMail> incomeMails = new ArrayList<>();
-    ArrayList<IMail> testMails = new ArrayList<>();
+    List<IMail> incomeMails = new ArrayList<>();
+    List<IMail> testMails = new ArrayList<>();
 
     public FrmDashboard() {
-        setTestMail();
+        //setTestMail();
 
         popupPanel = new FrmDialog();
         tableModel = (AbstractTableModel) new MailTableModel(incomeMails);
@@ -50,6 +57,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         initGui();
         initComponents();
         customizeTable();
+        moveTitlebar();
 
         centerLocationAndSetSize();
         setListeners();
@@ -77,15 +85,30 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     public void sendEmail() {
         SentMail mail = new SentMail();
-        if (!(mailgonder_field_baslik.getText().isEmpty() && mailgonder_field_icerik.getText().isEmpty() && mailgonder_field_kime.getText().isEmpty())) {
+        if (!(mailgonder_field_baslik.getText().isEmpty() || mailgonder_field_icerik.getText().isEmpty() || mailgonder_field_kime.getText().isEmpty())) {
             mail.setSubject(mailgonder_field_baslik.getText());
             mail.setBody(mailgonder_field_icerik.getText());
             mail.setFromUser(user.getUserName());
             mail.setSendUser(mailgonder_field_kime.getText());
+            mail.setAttachment(fileByteArray);
+            FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
+            
         } else {
             popupDialog("error", "Boşlukları doldurunuz lütfen.");
         }
-        FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
+
+    }
+
+    public void getMails() {
+        try {
+            FrmAuth.conService.SendCommand(new Command("mail-get-sent", null, user, null));
+            Command _command = (Command) conService.getInputStream().readObject();
+
+            incomeMails = _command.getMailList();
+        } catch (Exception ex) {
+            System.out.println("Client Get Mail Exception : " + ex.getLocalizedMessage());
+        }
+
     }
 
     public void setUserDetails(User _user) {
@@ -98,35 +121,29 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         return (MailTableModel) tableModel;
     }
 
-    public void hoverColor(Component jpanel, Color color) {
-        jpanel.setBackground(color);
-    }
+    public void moveTitlebar() {
+        titlebar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2 && !evt.isConsumed()) {
+                    evt.consume();
+                    maximize();
+                }
+            }
 
-    public void setTestMail() {
-        SentMail mail1 = new SentMail();
-        mail1.setBody("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a interdum sapien, et laoreet enim. In faucibus rutrum convallis. Duis porttitor ultricies ligula et dictum. Aenean egestas cursus efficitur. Praesent ac magna tincidunt, vehicula purus eu, faucibus ante. Praesent lectus ipsum, luctus placerat iaculis at, fermentum sollicitudin eros. Pellentesque lectus eros, eleifend sit amet tincidunt et, interdum vitae metus.\n"
-                + "\n"
-                + "Donec luctus eget dui quis lacinia. Vestibulum a consectetur magna. Duis in dignissim velit. Donec pharetra, nisi sed facilisis suscipit, lorem ante efficitur velit, eu pulvinar augue nibh ut nisl. Sed pharetra sed diam eget commodo. Sed commodo ultricies metus, tincidunt sollicitudin lectus consequat ut. Nullam venenatis urna sed mi mollis ultrices. Duis ac nisi a turpis sagittis dapibus eget nec felis. Sed maximus vestibulum nunc vel auctor.\n"
-                + "\n"
-                + "Morbi faucibus est eget commodo blandit. Morbi congue tellus quis nunc ullamcorper, pretium aliquet nisl euismod. Nulla lacinia consectetur massa. Aliquam quam mi, tincidunt sed lobortis ornare, aliquet at tortor. Quisque et turpis aliquet, ultricies augue vel, imperdiet sapien. Donec maximus ac risus in blandit. Nullam at mauris pretium, maximus tellus eu, hendrerit libero. Proin eu nulla erat. Nam efficitur ut ligula id bibendum. Aenean eu lacus elit. Donec tincidunt, elit a euismod venenatis, lacus augue rhoncus eros, eu commodo leo risus varius orci.\n"
-                + "\n"
-                + "Cras vehicula turpis id elit rhoncus luctus at eu odio. Aenean et semper augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec condimentum facilisis arcu sit amet fermentum. Morbi elementum nunc non dapibus vestibulum. Duis non condimentum metus, vitae cursus tellus. Sed ultricies sem consectetur, laoreet nisi nec, vehicula sem. Sed bibendum tincidunt dui, quis rutrum elit. Cras vestibulum dignissim nibh in ullamcorper. Morbi vel felis nunc. Maecenas consequat commodo quam vel iaculis. Aliquam ut condimentum augue. Nullam quis elementum sem, ac molestie lacus. Praesent consectetur orci ante, vitae commodo ex convallis vel. Maecenas tempus nunc et rutrum mattis. Vivamus faucibus commodo purus pharetra feugiat.\n"
-                + "\n"
-                + "Sed maximus imperdiet felis, ac vehicula ante congue nec. Ut eu vestibulum metus. Nulla facilisi. Donec bibendum urna dolor, eget tincidunt justo vehicula in. Donec eleifend dui sit amet velit sollicitudin iaculis. Sed et urna mi. Nullam suscipit porta diam sit amet pretium. Pellentesque sodales dolor eget leo maximus, ac auctor metus fermentum. Donec vel tristique massa, ac maximus massa. Donec at egestas metus. Phasellus vitae augue et purus tempus interdum. " + "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a interdum sapien, et laoreet enim. In faucibus rutrum convallis. Duis porttitor ultricies ligula et dictum. Aenean egestas cursus efficitur. Praesent ac magna tincidunt, vehicula purus eu, faucibus ante. Praesent lectus ipsum, luctus placerat iaculis at, fermentum sollicitudin eros. Pellentesque lectus eros, eleifend sit amet tincidunt et, interdum vitae metus.\n"
-                + "\n"
-                + "Donec luctus eget dui quis lacinia. Vestibulum a consectetur magna. Duis in dignissim velit. Donec pharetra, nisi sed facilisis suscipit, lorem ante efficitur velit, eu pulvinar augue nibh ut nisl. Sed pharetra sed diam eget commodo. Sed commodo ultricies metus, tincidunt sollicitudin lectus consequat ut. Nullam venenatis urna sed mi mollis ultrices. Duis ac nisi a turpis sagittis dapibus eget nec felis. Sed maximus vestibulum nunc vel auctor.\n");
-        mail1.setFromUser("Veysel");
-        mail1.setId(0);
-        mail1.setSubject("Lorem ipsum");
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pX = e.getX();
+                pY = e.getY();
+            }
+        });
 
-        SentMail mail2 = new SentMail();
-        mail2.setBody("Losis suscipit, lorem ante efficitur velit, eu pulvinar augue nibh ut nisl. Sed pharetra sed diam eget commodo. Sed commodo ultricies metus, tincidunt sollicitudin lectus consequat ut. Nullam venenatis urna sed mi mollis ultrices. Duis ac nisi a turpis sagittis dapibus eget nec felis. Sed maximus vestibulum nunc vel auctor.\n");
-        mail2.setFromUser("Batuhan");
-        mail2.setId(1);
-        mail2.setSubject("Ipsum lorem");
-
-        incomeMails.add(mail1);
-        incomeMails.add(mail2);
+        titlebar.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent evt) {
+                setLocation(evt.getXOnScreen() - pX, evt.getYOnScreen() - pY);
+            }
+        });
     }
 
     private void centerLocationAndSetSize() {
@@ -176,7 +193,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     }
 
-    private IMail getMailFromId(ArrayList<IMail> list, int id) {
+    private IMail getMailFromId(List<IMail> list, int id) {
         for (IMail mail : list) {
             if (mail.getId() == id) {
                 return mail;
@@ -190,10 +207,37 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_body_text.setText(mail.getBody());
     }
 
+    private void dosyaGonder() {
+        try {
+            JFileChooser jfc = new JFileChooser(System.getProperty("user.dir", "."));
+
+            jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
+
+
+            if (jfc.showDialog(this, "Dosya Seç") == JFileChooser.APPROVE_OPTION) {
+                fileByteArray = Files.readAllBytes(Paths.get(jfc.getSelectedFile().getPath()));
+                
+                /*
+                FileOutputStream fos = new FileOutputStream("veyselicintumturkiye.tar.xz");
+                fos.write(array);
+                fos.close();
+                */    
+            }
+
+        } catch (Exception ex) {
+            System.out.println("File Transfer Exception : " + ex.getMessage());
+        }
+
+    }
+
     @Override
     public void mouseClicked(MouseEvent evt) {
-        
-        if(evt.getSource()==mailgonder_btn_gonder){
+
+        if (evt.getSource() == mailgonder_btn_dosyaekle) {
+            dosyaGonder();
+        }
+
+        if (evt.getSource() == mailgonder_btn_gonder) {
             sendEmail();
         }
 
@@ -202,6 +246,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         }
 
         if (evt.getSource() == gelenpanel) {
+            getMails();
             tableModel = (AbstractTableModel) new MailTableModel(incomeMails);
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
@@ -283,12 +328,12 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         jPanel1 = new javax.swing.JPanel();
         pnl_titlebuttons = new javax.swing.JPanel();
         pnl_btnclose = new javax.swing.JPanel();
-        btn_close = new javax.swing.JButton();
-        pnl_btnminimize = new javax.swing.JPanel();
         btn_minimize = new javax.swing.JButton();
+        pnl_btnminimize = new javax.swing.JPanel();
+        btn_close = new javax.swing.JButton();
         pnl_btnmaximize = new javax.swing.JPanel();
         btn_maximize = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        titlebar = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         cardPanel = new javax.swing.JPanel();
         pnl_anasayfa = new javax.swing.JPanel();
@@ -399,6 +444,23 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_btnclose.setPreferredSize(new java.awt.Dimension(55, 0));
         pnl_btnclose.setLayout(new java.awt.BorderLayout());
 
+        btn_minimize.setBackground(new java.awt.Color(51, 53, 65));
+        btn_minimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/dry-clean-green.png"))); // NOI18N
+        btn_minimize.setBorderPainted(false);
+        btn_minimize.setContentAreaFilled(false);
+        btn_minimize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_minimizeMouseClicked(evt);
+            }
+        });
+        pnl_btnclose.add(btn_minimize, java.awt.BorderLayout.CENTER);
+
+        pnl_titlebuttons.add(pnl_btnclose, java.awt.BorderLayout.LINE_START);
+
+        pnl_btnminimize.setBackground(new java.awt.Color(20, 20, 22));
+        pnl_btnminimize.setPreferredSize(new java.awt.Dimension(55, 0));
+        pnl_btnminimize.setLayout(new java.awt.BorderLayout());
+
         btn_close.setBackground(new java.awt.Color(51, 53, 65));
         btn_close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/dry-clean.png"))); // NOI18N
         btn_close.setBorder(null);
@@ -409,24 +471,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 btn_closeMouseClicked(evt);
             }
         });
-        pnl_btnclose.add(btn_close, java.awt.BorderLayout.CENTER);
-
-        pnl_titlebuttons.add(pnl_btnclose, java.awt.BorderLayout.LINE_START);
-
-        pnl_btnminimize.setBackground(new java.awt.Color(20, 20, 22));
-        pnl_btnminimize.setPreferredSize(new java.awt.Dimension(55, 0));
-        pnl_btnminimize.setLayout(new java.awt.BorderLayout());
-
-        btn_minimize.setBackground(new java.awt.Color(51, 53, 65));
-        btn_minimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/dry-clean-green.png"))); // NOI18N
-        btn_minimize.setBorderPainted(false);
-        btn_minimize.setContentAreaFilled(false);
-        btn_minimize.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_minimizeMouseClicked(evt);
-            }
-        });
-        pnl_btnminimize.add(btn_minimize, java.awt.BorderLayout.CENTER);
+        pnl_btnminimize.add(btn_close, java.awt.BorderLayout.CENTER);
 
         pnl_titlebuttons.add(pnl_btnminimize, java.awt.BorderLayout.LINE_END);
 
@@ -451,16 +496,16 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         topBar.add(jPanel1, java.awt.BorderLayout.LINE_END);
 
-        jPanel2.setBackground(new java.awt.Color(20, 20, 22));
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        titlebar.setBackground(new java.awt.Color(20, 20, 22));
+        titlebar.setLayout(new java.awt.BorderLayout());
 
         title.setBackground(new java.awt.Color(62, 62, 63));
         title.setForeground(new java.awt.Color(62, 62, 63));
         title.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         title.setText("        VBMail");
-        jPanel2.add(title, java.awt.BorderLayout.CENTER);
+        titlebar.add(title, java.awt.BorderLayout.CENTER);
 
-        topBar.add(jPanel2, java.awt.BorderLayout.CENTER);
+        topBar.add(titlebar, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(topBar, java.awt.BorderLayout.PAGE_START);
 
@@ -1048,7 +1093,6 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     private javax.swing.JPanel mail_author;
@@ -1105,6 +1149,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel taslak_Text;
     private javax.swing.JPanel taslakpanel;
     private javax.swing.JLabel title;
+    private javax.swing.JPanel titlebar;
     private javax.swing.JPanel topBar;
     private javax.swing.JLabel txt_LastTime;
     private javax.swing.JLabel txt_anasayfa;

@@ -7,6 +7,7 @@ package com.vbteam.views;
 
 import com.vbteam.models.IMail;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -16,13 +17,13 @@ import javax.swing.table.AbstractTableModel;
 public class MailTableModel extends AbstractTableModel {
 
     private String[] columnNames = {"Gönderen", "Konu", "İçerik", "Tarih"};
-    private ArrayList<IMail> myList = new ArrayList();
+    private List<IMail> myList = new ArrayList();
 
-    public MailTableModel(ArrayList<IMail> mailList) {
+    public MailTableModel(List<IMail> mailList) {
         myList = mailList;
     }
     
-    public ArrayList<IMail> getList(){
+    public List<IMail> getList(){
         return myList;
     }
 

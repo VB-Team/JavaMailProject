@@ -24,17 +24,21 @@
             <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/models/DeletedMail.java</file>
         </group>
         <group name="GitProject">
+            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/utils/MailServerDbGenerateScript.sql</file>
+            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/views/ConsoleUI.java</file>
+            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/DeletedMail.java</file>
+            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/Command.java</file>
+            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/services/mail/DraftMailService.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/DraftMail.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/IMail.java</file>
+            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/Log.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/services/authenticate/IAuthService.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/User.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/services/authenticate/AuthService.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/services/mail/SentMailService.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/SentMail.java</file>
-            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/DeletedMail.java</file>
             <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/utils/CommandHandler.java</file>
-            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/models/Command.java</file>
-            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/services/mail/DraftMailService.java</file>
+            <file>file:/home/ubuntu/Desktop/JavaMailProject/JavaMailServer/src/com/vbteam/utils/DbContext.java</file>
         </group>
     </open-files>
 </project-private>

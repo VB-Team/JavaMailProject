@@ -6,6 +6,8 @@
 package com.vbteam.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -19,6 +21,7 @@ public class Command implements Serializable {
     private User user;
     private boolean boolResponse;
     private IMail mail;
+    private List<IMail> mailList = new ArrayList();
 
     public Command() {
     }
@@ -28,6 +31,14 @@ public class Command implements Serializable {
         this.commandText = commandText;
         this.user = user;
         this.mail = mail;
+    }
+
+    public void setMailList(List<IMail> _mailList) {
+        mailList = _mailList;
+    }
+    
+    public List<IMail> getMailList(){
+        return mailList;
     }
 
     public boolean getBoolResponse() {
