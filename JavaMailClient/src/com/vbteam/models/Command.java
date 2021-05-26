@@ -11,8 +11,11 @@ import java.io.Serializable;
  *
  * @author schea
  */
-public class Command implements Serializable{    
-    private String type,commandText;
+public class Command implements Serializable {
+
+    private static final long serialVersionUID = 45087848;
+
+    private String type, commandText;
     private User user;
     private boolean boolResponse;
     private IMail mail;
@@ -26,15 +29,15 @@ public class Command implements Serializable{
         this.user = user;
         this.mail = mail;
     }
-    
-    public boolean getBoolResponse(){
+
+    public boolean getBoolResponse() {
         return boolResponse;
     }
-    
-    public void setBoolResponse(boolean bool){
+
+    public void setBoolResponse(boolean bool) {
         this.boolResponse = bool;
     }
-    
+
     /**
      * @return the type
      */

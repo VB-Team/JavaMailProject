@@ -13,7 +13,10 @@ import java.sql.Timestamp;
  *
  * @author schea
  */
-public class DraftMail implements IMail,Serializable{
+public class DraftMail implements IMail, Serializable {
+
+    private static final long serialVersionUID = 45087846;
+
     private int Id;
     private String SendUser;
     private String FromUser;
@@ -21,7 +24,7 @@ public class DraftMail implements IMail,Serializable{
     private byte[] Attachment;
     private String Subject;
     private Timestamp CreateDate;
-    
+
     /**
      * @return the Id
      */
@@ -119,6 +122,6 @@ public class DraftMail implements IMail,Serializable{
      */
     public void setCreateDate(Timestamp CreateDate) {
         this.CreateDate = CreateDate;
-    }    
+    }
 
 }

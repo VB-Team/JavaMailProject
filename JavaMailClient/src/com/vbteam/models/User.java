@@ -13,6 +13,9 @@ import java.sql.Timestamp;
  * @author schea
  */
 public class User implements Serializable{    
+    
+    private static final long serialVersionUID = 45087844;
+    
     private int Id;
     private String Role;
     private String UserName;    

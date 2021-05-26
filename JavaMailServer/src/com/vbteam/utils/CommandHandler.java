@@ -6,12 +6,15 @@
 package com.vbteam.utils;
 
 import com.vbteam.models.Command;
+import com.vbteam.models.IMail;
 import com.vbteam.models.SentMail;
 import com.vbteam.models.User;
 import com.vbteam.services.authenticate.AuthService;
 import com.vbteam.services.mail.SentMailService;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,6 +24,7 @@ public class CommandHandler {
 
     private static AuthService authService = new AuthService();
     private static SentMailService sentMailService = new SentMailService();
+    private static List<SentMail> emailList;
 
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         if (cmd.getType().indexOf("auth") == 0) {
@@ -34,13 +38,14 @@ public class CommandHandler {
     private static void Mail(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         try {
             if (cmd.getType().equals("mail-send")) {
-                System.out.println("Mail Debug "+ cmd.getMail());
-                sentMailService.AddMail((SentMail)cmd.getMail());
+                System.out.println("Mail Debug " + cmd.getMail());
+                emailList = new ArrayList<>();
+                emailList.add((SentMail) cmd.getMail());
+                sentMailService.AddMail(emailList);
             }
-        }catch(Exception ex){
-            System.out.println("Mail Delivery Service Exception : "+ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Mail Delivery Service Exception : " + ex.getMessage());
         }
-        
 
     }
 

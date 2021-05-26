@@ -7,11 +7,15 @@ package com.vbteam.models;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 /**
  *
  * @author schea
  */
-public class DeletedMail implements IMail,Serializable{
+public class DeletedMail implements IMail, Serializable {
+
+    private static final long serialVersionUID = 45087847;
+
     private int Id;
     private String FromUser;
     private String SendUser;
@@ -22,7 +26,7 @@ public class DeletedMail implements IMail,Serializable{
 
     public DeletedMail() {
     }
-    
+
     public DeletedMail(int Id, String FromUser, String SendUser, String Subject, Timestamp DeletedDate, String Body, byte[] Attachment) {
         this.Id = Id;
         this.FromUser = FromUser;
@@ -32,7 +36,7 @@ public class DeletedMail implements IMail,Serializable{
         this.Body = Body;
         this.Attachment = Attachment;
     }
-    
+
     /**
      * @return the Id
      */
@@ -130,5 +134,5 @@ public class DeletedMail implements IMail,Serializable{
     public void setAttachment(byte[] Attachment) {
         this.Attachment = Attachment;
     }
-    
+
 }

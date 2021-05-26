@@ -12,16 +12,10 @@ import java.sql.Timestamp;
  *
  * @author schea
  */
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-public class SentMail implements IMail {
+public class SentMail implements IMail, Serializable {
 
-=======
-public class SentMail implements IMail,Serializable{
->>>>>>> Stashed changes
-=======
-public class SentMail implements IMail,Serializable{
->>>>>>> Stashed changes
+    private static final long serialVersionUID = 45087845;
+
     private int Id;
     private String FromUser;
     private String SendUser;

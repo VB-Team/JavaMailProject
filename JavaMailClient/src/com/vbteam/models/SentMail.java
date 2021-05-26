@@ -12,7 +12,10 @@ import java.sql.Timestamp;
  *
  * @author schea
  */
-public class SentMail implements IMail,Serializable{
+public class SentMail implements IMail, Serializable {
+
+    private static final long serialVersionUID = 45087845;
+
     private int Id;
     private String FromUser;
     private String SendUser;
@@ -20,6 +23,7 @@ public class SentMail implements IMail,Serializable{
     private Timestamp SendDate;
     private String Body;
     private byte[] Attachment;
+
     /**
      * @return the Id
      */
@@ -118,5 +122,5 @@ public class SentMail implements IMail,Serializable{
     public void setAttachment(byte[] Attachment) {
         this.Attachment = Attachment;
     }
-   
+
 }
