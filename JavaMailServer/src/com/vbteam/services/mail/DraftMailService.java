@@ -7,11 +7,15 @@ package com.vbteam.services.mail;
 
 import com.vbteam.models.DeletedMail;
 import com.vbteam.models.DraftMail;
+import com.vbteam.models.IMail;
+import com.vbteam.models.SentMail;
 import com.vbteam.utils.DbContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -20,7 +24,7 @@ import java.sql.Types;
 public class DraftMailService {
     DbContext context;
     Connection connection;
-    public void AddMail(DraftMail mail) {
+    public void addDraftMail(DraftMail mail) {
         try {
             Integer fromId =null;
             Integer sendId=null;
@@ -28,13 +32,13 @@ public class DraftMailService {
             
             context = new DbContext();
             connection = context.getConnection();
-            if (mail.getFromUser()!=null) {
-                fromId = context.getUser(mail.getFromUser());
-            }else if(mail.getSendUser()!=null)
+            if (mail.getSentUser()!=null) {
+                fromId = context.getUser(mail.getSentUser());
+            }else if(mail.getSenderUser()!=null)
             {
-                sendId = context.getUser(mail.getSendUser());    
+                sendId = context.getUser(mail.getSenderUser());    
             }                    
-            String insertQuery="Insert into DraftMail(FromId,SendId,Subject,Body,Attachment,CreateDate)values(?,?,?,?,?,?)";
+            String insertQuery="Insert into DraftMail(SentId,SenderId,Subject,Body,Attachment,CreateDate,AttachmentType)values(?,?,?,?,?,?,?)";
             statement = connection.prepareStatement(insertQuery);  
             if (fromId!=null) {
                 statement.setInt(1, fromId);
@@ -53,16 +57,20 @@ public class DraftMailService {
             }else{statement.setNull(5, Types.NULL);}
             if (mail.getCreateDate()!=null) {
                 statement.setTimestamp(6,mail.getCreateDate());
-            }else{statement.setNull(6, Types.NULL);}            
+            }else{statement.setNull(6, Types.NULL);}
+            if(mail.getAttachmentType()!=null)
+                statement.setString(7, mail.getAttachmentType());
+            else
+                statement.setNull(7, Types.NULL);
             int a=statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı "+a);
             statement.close();
             connection.close();            
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.err.println("Server Draft Mail Exception : "+ex.getLocalizedMessage());
         }
     }
-    public void DeletedMail(int mailId) {
+    public void deleteDraftMail(int mailId) {
         try {
             PreparedStatement statement;
             context = new DbContext();
@@ -74,11 +82,13 @@ public class DraftMailService {
             DraftMail mail = new DraftMail();
             while (rs.next()) {                
                 mail.setId(rs.getInt("Id"));
-                mail.setFromUser(rs.getString("FromId"));
+                mail.setSentUser(rs.getString("SentId"));
                 mail.setSubject(rs.getString("Subject"));
                 mail.setBody(rs.getString("Body"));
-                mail.setCreateDate(rs.getTimestamp("CreateDate"));
-                mail.setSendUser(rs.getString("SendId"));                
+                //mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
+                mail.setSenderUser(rs.getString("SenderId")); 
+                mail.setAttachment(rs.getBytes("Attachment"));
+                mail.setAttachmentType(rs.getString("AttachmentType"));
             }            
             String deleteQuery = "Delete From DraftMail where Id=?";
             statement = connection.prepareStatement(deleteQuery);
@@ -86,17 +96,57 @@ public class DraftMailService {
             statement.executeUpdate();
             DeletedMail deleteMail = new DeletedMail();
             deleteMail.setId(mail.getId());
-            deleteMail.setFromUser(mail.getFromUser());
-            deleteMail.setSendUser(mail.getSendUser());
+            deleteMail.setSentUser(mail.getSentUser());
+            deleteMail.setSenderUser(mail.getSenderUser());
             deleteMail.setBody(mail.getBody());
             deleteMail.setDeletedDate(new java.sql.Timestamp(new java.util.Date().getTime()));
             deleteMail.setSubject(mail.getSubject());
             deleteMail.setAttachment(mail.getAttachment());
             DeletedMailService mailService=new DeletedMailService();
-            mailService.AddMail(deleteMail);
+            mailService.addDeletedMail(deleteMail);
 
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+    public List<IMail> getDraftMails(int userId) {
+        try {
+            PreparedStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+            String query = "Select dm.Id,u.UserName as SendedUser,dm.SentId,dm.Subject,dm.Body,dm.CreateDate,dm.Attachment,dm.AttachmentType From DraftMail dm "
+                    + "inner join Users u on u.Id=dm.SenderId where dm.SenderId=?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, Integer.toString(userId));
+            ResultSet rs = statement.executeQuery();
+            List<IMail> mails = new ArrayList<IMail>();
+            while (rs.next()) {
+                DraftMail mail = new DraftMail();
+                int fromId = rs.getInt("SentId");
+                String query2 = "Select u.UserName from Users u where u.Id=?";
+                statement = connection.prepareStatement(query2);
+                statement.setString(1, Integer.toString(fromId));
+                mail.setId(rs.getInt("Id"));
+                mail.setSentUser(rs.getString("SendedUser"));
+                mail.setSubject(rs.getString("Subject"));
+                mail.setBody(rs.getString("Body"));
+                //mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
+                mail.setAttachment(rs.getBytes("Attachment"));
+                mail.setAttachmentType(rs.getString("AttachmentType"));
+                ResultSet rs2 = statement.executeQuery();
+
+                while (rs2.next()) {
+                    mail.setSenderUser(rs2.getString("UserName"));
+                }
+                mails.add(mail);
+            }
+            statement.close();
+            connection.close();
+            rs.close();
+            return mails;
+        } catch (Exception ex) {
+            System.out.println("Server Get Draft Mail Exception : " + ex.getMessage());
+            return null;
         }
     }
 }

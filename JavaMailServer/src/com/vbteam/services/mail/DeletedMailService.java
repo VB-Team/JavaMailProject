@@ -21,7 +21,7 @@ public class DeletedMailService {
     DbContext context;
     Connection connection;
     List<DeletedMail> mails = new ArrayList<DeletedMail>();
-    public void DeleteMail(DeletedMail mail){
+    public void deleteMail(DeletedMail mail){
     try {            
             PreparedStatement statement;            
             context = new DbContext();
@@ -33,15 +33,15 @@ public class DeletedMailService {
             System.out.println("Etkilenen Satır Sayısı "+a);
             statement.close();
             connection.close();
-    }catch(Exception ex){System.out.println(ex);}
+    }catch(Exception ex){System.out.println("Server Deleted Mail Service Exception : "+ex.toString());}
     }
-    public List<DeletedMail> GetMail(int userId){
+    public List<DeletedMail> getDeletedMail(int userId){
     try {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select dm.Id,u.UserName as FromUser,dm.FromId,dm.Subject,dm.Body,dm.DeletedDate,dm.Attachment From DeletedMail"
-                    + " dm inner join Users u on u.Id=dm.SendId where dm.SendId=?";
+            String query = "Select dm.Id,u.UserName as SendedUser,dm.SentId,dm.Subject,dm.Body,dm.DeletedDate,dm.Attachment From DeletedMail"
+                    + " dm inner join Users u on u.Id=dm.SenderId where dm.SenderId=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(userId));
             ResultSet rs = statement.executeQuery();
@@ -53,14 +53,16 @@ public class DeletedMailService {
                 statement = connection.prepareStatement(query2);
                 statement.setString(1, Integer.toString(fromId));
                 mail.setId(rs.getInt("Id"));
-                mail.setFromUser(rs.getString("FromUser"));
+                mail.setSentUser(rs.getString("SendedUser"));
                 mail.setSubject(rs.getString("Subject"));
                 mail.setBody(rs.getString("Body"));
-                mail.setDeletedDate(rs.getTimestamp("DeletedDate"));
+                //mail.setDeletedDate(rs.getTimestamp("DeletedDate"));//DateTimeFix
+                mail.setAttachment(rs.getBytes("Attachment"));
+                mail.setAttachmentType(rs.getString("AttachmentType"));
                 ResultSet rs2 = statement.executeQuery();
 
                 while (rs2.next()) {
-                    mail.setSendUser(rs2.getString("UserName"));
+                    mail.setSenderUser(rs2.getString("UserName"));
                 }
                 mails.add(mail);
             }
@@ -69,30 +71,31 @@ public class DeletedMailService {
             rs.close();
             return mails;
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println("Server Deleted Mail Service Exception : "+ex.toString());
             return mails;            
         }
     }
-    public void AddMail(DeletedMail mail){
+    public void addDeletedMail(DeletedMail mail){
         try {
             List<Integer> Id = new ArrayList<Integer>();
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();            
-            String deleteQuery="Insert into DeletedMail(FromId,SendId,Subject,Body,Attachment,DeletedDate)values(?,?,?,?,?,?)";
+            String deleteQuery="Insert into DeletedMail(SentId,SenderId,Subject,Body,Attachment,DeletedDate,AttachmentType)values(?,?,?,?,?,?,?)";
             statement = connection.prepareStatement(deleteQuery);            
-            statement.setString(1, mail.getFromUser());
-            statement.setString(2, mail.getSendUser());
+            statement.setString(1, mail.getSentUser());
+            statement.setString(2, mail.getSenderUser());
             statement.setString(3, mail.getSubject());
             statement.setString(4, mail.getBody());
             statement.setBytes(5, mail.getAttachment());
             statement.setTimestamp(6, mail.getDeletedDate());
+            statement.setString(7, mail.getAttachmentType());
             int a = statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + a);
             statement.close();
             connection.close();
         } catch (Exception e) {
-            System.out.println(""+e.toString());
+            System.out.println("Server Deleted Mail Service Exception : "+e.toString());
         }
     }
 }

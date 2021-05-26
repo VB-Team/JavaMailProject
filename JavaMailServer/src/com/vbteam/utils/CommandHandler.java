@@ -41,7 +41,7 @@ public class CommandHandler {
                 System.out.println("Mail Debug " + cmd.getMail());
                 emailList = new ArrayList<>();
                 emailList.add((SentMail) cmd.getMail());
-                sentMailService.AddMail(emailList);
+                sentMailService.addMail(emailList);
             }
             if (cmd.getType().equals("mail-get-sent")) {
                 System.out.println("Get Mail Debug - ID : " + cmd.getUser().getId());
@@ -49,7 +49,7 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-get-sent");
-                cmd.setMailList(sentMailService.GetFromMail(userId));
+                cmd.setMailList(sentMailService.getOutgoingMail(userId));
 
                 objOutput.writeObject(cmd);
             }
@@ -62,7 +62,7 @@ public class CommandHandler {
     private static void Auth(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         try {
             if (cmd.getType().equals("auth-exist")) {
-                boolean bool = authService.UserExist(cmd.getUser().getUserName());
+                boolean bool = authService.userExist(cmd.getUser().getUserName());
 
                 cmd = new Command();
                 cmd.setType("response");
@@ -71,7 +71,7 @@ public class CommandHandler {
                 objOutput.writeObject(cmd);
             }
             if (cmd.getType().equals("auth-register")) {
-                User _user = authService.Register(cmd.getUser());
+                User _user = authService.register(cmd.getUser());
                 System.out.println("register");
 
                 cmd = new Command();
@@ -83,7 +83,7 @@ public class CommandHandler {
             }
             if (cmd.getType().equals("auth-login")) {
                 try {
-                    User _user = authService.Login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
+                    User _user = authService.login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
                     System.out.println("login");
 
                     cmd = new Command();

@@ -12,7 +12,7 @@ import com.vbteam.models.User;
  * @author schea
  */
 public interface IAuthService {
-   public User Login(String UserName,String Password);
-   public User Register(User user);
-   public boolean UserExist(String UserName);
+   public User login(String UserName,String Password);
+   public User register(User user);
+   public boolean userExist(String UserName);
 }

@@ -13,13 +13,15 @@ public interface IMail {
 
     public int getId();
 
-    public String getFromUser();
+    public String getSentUser();
 
-    public String getSendUser();
+    public String getSenderUser();
 
     public String getSubject();
 
     public String getBody();
     
     public byte[] getAttachment();
+    
+    public String getAttachmentType();
 }

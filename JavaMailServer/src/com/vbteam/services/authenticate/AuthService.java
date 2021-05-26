@@ -23,7 +23,7 @@ public class AuthService implements IAuthService {
     Connection connection;
 
     @Override
-    public User Login(String UserName, String Password) {
+    public User login(String UserName, String Password) {
         try {
             PreparedStatement statement;
             context = new DbContext();
@@ -60,9 +60,9 @@ public class AuthService implements IAuthService {
             return null;
         }
     }
-
-    @Override
-    public User Register(User user) {
+    
+    @Override    
+    public User register(User user) {
         try {
             CallableStatement statement;
             context = new DbContext();
@@ -75,10 +75,9 @@ public class AuthService implements IAuthService {
             statement.setString(3, user.getUserName());
             statement.setString(4, hashPassword(user.getPassword()));
             statement.setString(5, user.getRole());
-            //statement.setObject(6, new java.util.Date());
-            user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
+            /*user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
             user.setRegisterDate(new java.sql.Date(new java.util.Date().getTime()));
-            System.out.println(user.getLastLogin());
+            System.out.println(user.getLastLogin());*/
 
             int affectedRow = statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
@@ -97,7 +96,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public boolean UserExist(String UserName) {
+    public boolean userExist(String UserName) {
         try {
             PreparedStatement statement;
             context = new DbContext();

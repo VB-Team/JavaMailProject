@@ -13,10 +13,10 @@ import java.util.List;
  * @author schea
  */
 public interface IUserManagementService {
-    public User AddUser(User user);
-    public boolean DeletedUser(int userId);
-    public User UpdateUser(User user);
-    public List<User> ListUser();
+    public User addUser(User user);
+    public boolean deletedUser(int userId);
+    public User updateUser(User user);
+    public List<User> listUser();
     public int FromUserMailCount(int userId);
     public int SendUserMailCount(int userId);
 

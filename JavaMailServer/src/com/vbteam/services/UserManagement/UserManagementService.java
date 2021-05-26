@@ -24,7 +24,7 @@ public class UserManagementService implements IUserManagementService {
     Connection connection;
 
     @Override
-    public User AddUser(User user) {
+    public User addUser(User user) {
         try {
             CallableStatement statement;
             context = new DbContext();
@@ -58,7 +58,7 @@ public class UserManagementService implements IUserManagementService {
     }
 
     @Override
-    public boolean DeletedUser(int userId) {
+    public boolean deletedUser(int userId) {
         try {
             CallableStatement statement;
             context = new DbContext();
@@ -82,7 +82,7 @@ public class UserManagementService implements IUserManagementService {
     }
 
     @Override
-    public User UpdateUser(User user) {
+    public User updateUser(User user) {
         try {
             CallableStatement statement;
             context = new DbContext();
@@ -110,7 +110,7 @@ public class UserManagementService implements IUserManagementService {
     }
 
     @Override
-    public List<User> ListUser() {
+    public List<User> listUser() {
         try{
         PreparedStatement statement;
             context = new DbContext();
