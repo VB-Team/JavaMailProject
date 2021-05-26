@@ -5,17 +5,21 @@
  */
 package com.vbteam.views;
 
-import com.vbteam.models.DraftMail;
+import com.vbteam.models.Command;
 import com.vbteam.models.IMail;
 import com.vbteam.models.SentMail;
 import com.vbteam.models.User;
+import com.vbteam.services.socket.ConnectionService;
+import static com.vbteam.views.FrmAuth.popupPanel;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.JPanel;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.table.AbstractTableModel;
@@ -27,7 +31,8 @@ import javax.swing.table.AbstractTableModel;
 public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     private AbstractTableModel tableModel;
-    private MailTableModel mailTableModel;
+    static FrmDialog popupPanel;
+
     CardLayout mainLayout;
     boolean maxCheck;
     int selectedRow;
@@ -39,6 +44,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     public FrmDashboard() {
         setTestMail();
 
+        popupPanel = new FrmDialog();
         tableModel = (AbstractTableModel) new MailTableModel(incomeMails);
 
         initGui();
@@ -63,6 +69,25 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         jTable2.setDefaultRenderer(Object.class, new TableRenderer());
     }
 
+    public static void popupDialog(String type, String message) {
+        popupPanel.setIcon(type);
+        popupPanel.setMessage(message);
+        popupPanel.setVisible(true);
+    }
+
+    public void sendEmail() {
+        SentMail mail = new SentMail();
+        if (!(mailgonder_field_baslik.getText().isEmpty() && mailgonder_field_icerik.getText().isEmpty() && mailgonder_field_kime.getText().isEmpty())) {
+            mail.setSubject(mailgonder_field_baslik.getText());
+            mail.setBody(mailgonder_field_icerik.getText());
+            mail.setFromUser(user.getUserName());
+            mail.setSendUser(mailgonder_field_kime.getText());
+        } else {
+            popupDialog("error", "Boşlukları doldurunuz lütfen.");
+        }
+        FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
+    }
+
     public void setUserDetails(User _user) {
         user = _user;
         welcomeText.setText("Hoşgeldin , " + user.getFirstName() + " " + user.getLastName());
@@ -71,6 +96,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     public MailTableModel getMailTable() {
         return (MailTableModel) tableModel;
+    }
+
+    public void hoverColor(Component jpanel, Color color) {
+        jpanel.setBackground(color);
     }
 
     public void setTestMail() {
@@ -89,7 +118,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         mail1.setFromUser("Veysel");
         mail1.setId(0);
         mail1.setSubject("Lorem ipsum");
-        
+
         SentMail mail2 = new SentMail();
         mail2.setBody("Losis suscipit, lorem ante efficitur velit, eu pulvinar augue nibh ut nisl. Sed pharetra sed diam eget commodo. Sed commodo ultricies metus, tincidunt sollicitudin lectus consequat ut. Nullam venenatis urna sed mi mollis ultrices. Duis ac nisi a turpis sagittis dapibus eget nec felis. Sed maximus vestibulum nunc vel auctor.\n");
         mail2.setFromUser("Batuhan");
@@ -135,10 +164,15 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         btn_mail_1.addMouseListener(this);
         btn_mail_2.addMouseListener(this);
 
+        mailgonder_btn_gonder.addMouseListener(this);
+        mailgonder_btn_dosyaekle.addMouseListener(this);
+
         jTable2.addMouseListener(this);
 
         gelenpanel.addMouseListener(this);
         gidenpanel.addMouseListener(this);
+
+        yenimailpanel.addMouseListener(this);
 
     }
 
@@ -158,6 +192,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent evt) {
+        
+        if(evt.getSource()==mailgonder_btn_gonder){
+            sendEmail();
+        }
+
+        if (evt.getSource() == yenimailpanel) {
+            mainLayout.show(cardPanel, "mailgonder");
+        }
 
         if (evt.getSource() == gelenpanel) {
             tableModel = (AbstractTableModel) new MailTableModel(incomeMails);
@@ -208,12 +250,24 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent evt) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (evt.getSource() == mailgonder_btn_gonder || evt.getSource() == mailgonder_btn_dosyaekle || evt.getSource() == btn_pnl_anasayfa || evt.getSource() == btn_pnl_ayarlar
+                || evt.getSource() == btn_pnl_mail || evt.getSource() == yenimailpanel
+                || evt.getSource() == gelenpanel || evt.getSource() == gidenpanel) {
+            JPanel panel = (JPanel) evt.getSource();
+            panel.setOpaque(true);
+            repaint();
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent evt) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (evt.getSource() == mailgonder_btn_gonder || evt.getSource() == mailgonder_btn_dosyaekle || evt.getSource() == btn_pnl_anasayfa
+                || evt.getSource() == btn_pnl_ayarlar || evt.getSource() == btn_pnl_mail || evt.getSource() == yenimailpanel
+                || evt.getSource() == gelenpanel || evt.getSource() == gidenpanel) {
+            JPanel panel = (JPanel) evt.getSource();
+            panel.setOpaque(false);
+            repaint();
+        }
     }
 
     /**
@@ -267,6 +321,22 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         coppanel = new javax.swing.JPanel();
         cop_Text = new javax.swing.JLabel();
         gelen_icon4 = new javax.swing.JLabel();
+        pnl_mail_gonder = new javax.swing.JPanel();
+        mailgonder_baslik = new javax.swing.JLabel();
+        pnl_mailgonder_icerik = new javax.swing.JPanel();
+        mailgonder_field_label_govde = new javax.swing.JLabel();
+        mailgonder_field_label_baslik = new javax.swing.JLabel();
+        mailgonder_field_baslik = new javax.swing.JTextField();
+        mailgonder_field_seperator = new javax.swing.JSeparator();
+        mailgonder_field_icerik_scrollpane = new javax.swing.JScrollPane();
+        mailgonder_field_icerik = new javax.swing.JTextArea();
+        mailgonder_btn_gonder = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        mailgonder_btn_dosyaekle = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        mailgonder_field_kime = new javax.swing.JTextField();
+        mailgonder_field_label_kime = new javax.swing.JLabel();
+        mailgonder_field_seperator1 = new javax.swing.JSeparator();
         pnl_mail = new javax.swing.JPanel();
         pnl_main_mail = new javax.swing.JPanel();
         pnl_gelen_splitpane = new javax.swing.JSplitPane();
@@ -416,12 +486,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_welcomer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         welcomeText.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        welcomeText.setForeground(new java.awt.Color(238, 217, 217));
         welcomeText.setText("Hoşgeldin , [User]");
         pnl_welcomer.add(welcomeText, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 580, 40));
 
         icon_sendMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/mail_menu_icon.png"))); // NOI18N
         pnl_welcomer.add(icon_sendMail, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 580, -1, -1));
 
+        txt_sendMail.setForeground(new java.awt.Color(238, 217, 217));
         txt_sendMail.setText("Mail Gönder");
         pnl_welcomer.add(txt_sendMail, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 580, 350, 20));
 
@@ -455,29 +527,32 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_category.setBackground(new java.awt.Color(20, 20, 22));
         pnl_mail_category.setLayout(new java.awt.GridLayout(1, 0));
 
-        yenimailpanel.setBackground(new java.awt.Color(20, 20, 22));
+        yenimailpanel.setBackground(new java.awt.Color(30, 29, 32));
+        yenimailpanel.setOpaque(false);
         yenimailpanel.setLayout(new java.awt.BorderLayout());
 
         yenimail_text.setForeground(new java.awt.Color(238, 217, 217));
         yenimail_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         yenimail_text.setText("Yeni Mail");
         yenimail_text.setPreferredSize(new java.awt.Dimension(300, 300));
-        yenimailpanel.add(yenimail_text, java.awt.BorderLayout.PAGE_END);
+        yenimailpanel.add(yenimail_text, java.awt.BorderLayout.CENTER);
 
         yenimail_icon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         yenimail_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/new-email.png"))); // NOI18N
-        yenimailpanel.add(yenimail_icon, java.awt.BorderLayout.CENTER);
+        yenimail_icon.setPreferredSize(new java.awt.Dimension(400, 400));
+        yenimailpanel.add(yenimail_icon, java.awt.BorderLayout.PAGE_START);
 
         pnl_mail_category.add(yenimailpanel);
 
-        gelenpanel.setBackground(new java.awt.Color(20, 20, 22));
+        gelenpanel.setBackground(new java.awt.Color(30, 29, 32));
+        gelenpanel.setOpaque(false);
         gelenpanel.setLayout(new java.awt.BorderLayout());
 
         gelen_Text.setForeground(new java.awt.Color(238, 217, 217));
         gelen_Text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         gelen_Text.setText("Gelen Kutusu");
         gelen_Text.setPreferredSize(new java.awt.Dimension(300, 300));
-        gelenpanel.add(gelen_Text, java.awt.BorderLayout.PAGE_END);
+        gelenpanel.add(gelen_Text, java.awt.BorderLayout.CENTER);
 
         gelen_icon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         gelen_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/mail_menu_icon.png"))); // NOI18N
@@ -487,13 +562,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_category.add(gelenpanel);
 
         gidenpanel.setBackground(new java.awt.Color(20, 20, 22));
+        gidenpanel.setOpaque(false);
         gidenpanel.setLayout(new java.awt.BorderLayout());
 
         giden_Text.setForeground(new java.awt.Color(238, 217, 217));
         giden_Text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         giden_Text.setText("Giden Kutusu");
         giden_Text.setPreferredSize(new java.awt.Dimension(300, 300));
-        gidenpanel.add(giden_Text, java.awt.BorderLayout.PAGE_END);
+        gidenpanel.add(giden_Text, java.awt.BorderLayout.CENTER);
 
         gelen_icon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         gelen_icon1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/mail_menu_icon_giden.png"))); // NOI18N
@@ -535,6 +611,83 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_category.add(coppanel);
 
         cardPanel.add(pnl_mail_category, "mailcategory");
+
+        pnl_mail_gonder.setBackground(new java.awt.Color(20, 20, 22));
+        pnl_mail_gonder.setLayout(new java.awt.BorderLayout());
+
+        mailgonder_baslik.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
+        mailgonder_baslik.setForeground(new java.awt.Color(238, 217, 217));
+        mailgonder_baslik.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        mailgonder_baslik.setText("Mail Gönder");
+        pnl_mail_gonder.add(mailgonder_baslik, java.awt.BorderLayout.PAGE_START);
+
+        pnl_mailgonder_icerik.setBackground(new java.awt.Color(20, 20, 22));
+        pnl_mailgonder_icerik.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        mailgonder_field_label_govde.setForeground(new java.awt.Color(238, 217, 217));
+        mailgonder_field_label_govde.setText("İçerik");
+        pnl_mailgonder_icerik.add(mailgonder_field_label_govde, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 200, -1, -1));
+
+        mailgonder_field_label_baslik.setForeground(new java.awt.Color(238, 217, 217));
+        mailgonder_field_label_baslik.setText("Başlık");
+        pnl_mailgonder_icerik.add(mailgonder_field_label_baslik, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 120, -1, -1));
+
+        mailgonder_field_baslik.setBackground(new java.awt.Color(20, 20, 22));
+        mailgonder_field_baslik.setForeground(new java.awt.Color(238, 217, 217));
+        mailgonder_field_baslik.setBorder(null);
+        pnl_mailgonder_icerik.add(mailgonder_field_baslik, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 820, 40));
+
+        mailgonder_field_seperator.setBackground(new java.awt.Color(25, 25, 28));
+        mailgonder_field_seperator.setForeground(new java.awt.Color(25, 25, 28));
+        pnl_mailgonder_icerik.add(mailgonder_field_seperator, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 110, 820, 40));
+
+        mailgonder_field_icerik.setBackground(new java.awt.Color(20, 20, 22));
+        mailgonder_field_icerik.setColumns(20);
+        mailgonder_field_icerik.setForeground(new java.awt.Color(238, 217, 217));
+        mailgonder_field_icerik.setRows(5);
+        mailgonder_field_icerik_scrollpane.setViewportView(mailgonder_field_icerik);
+
+        pnl_mailgonder_icerik.add(mailgonder_field_icerik_scrollpane, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 230, 820, 230));
+
+        mailgonder_btn_gonder.setBackground(new java.awt.Color(30, 29, 32));
+        mailgonder_btn_gonder.setOpaque(false);
+        mailgonder_btn_gonder.setLayout(new java.awt.BorderLayout());
+
+        jLabel3.setForeground(new java.awt.Color(238, 217, 217));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Gönder");
+        mailgonder_btn_gonder.add(jLabel3, java.awt.BorderLayout.CENTER);
+
+        pnl_mailgonder_icerik.add(mailgonder_btn_gonder, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 480, 110, 40));
+
+        mailgonder_btn_dosyaekle.setBackground(new java.awt.Color(30, 29, 32));
+        mailgonder_btn_dosyaekle.setOpaque(false);
+        mailgonder_btn_dosyaekle.setLayout(new java.awt.BorderLayout());
+
+        jLabel4.setBackground(new java.awt.Color(30, 29, 32));
+        jLabel4.setForeground(new java.awt.Color(238, 217, 217));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Dosya Ekle");
+        mailgonder_btn_dosyaekle.add(jLabel4, java.awt.BorderLayout.CENTER);
+
+        pnl_mailgonder_icerik.add(mailgonder_btn_dosyaekle, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 480, 110, 40));
+
+        mailgonder_field_kime.setBackground(new java.awt.Color(20, 20, 22));
+        mailgonder_field_kime.setForeground(new java.awt.Color(238, 217, 217));
+        mailgonder_field_kime.setBorder(null);
+        pnl_mailgonder_icerik.add(mailgonder_field_kime, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 70, 820, 40));
+
+        mailgonder_field_label_kime.setForeground(new java.awt.Color(238, 217, 217));
+        mailgonder_field_label_kime.setText("Kime");
+        pnl_mailgonder_icerik.add(mailgonder_field_label_kime, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, -1, -1));
+
+        mailgonder_field_seperator1.setBackground(new java.awt.Color(25, 25, 28));
+        mailgonder_field_seperator1.setForeground(new java.awt.Color(25, 25, 28));
+        pnl_mailgonder_icerik.add(mailgonder_field_seperator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 180, 820, 40));
+
+        pnl_mail_gonder.add(pnl_mailgonder_icerik, java.awt.BorderLayout.CENTER);
+
+        cardPanel.add(pnl_mail_gonder, "mailgonder");
 
         pnl_mail.setBackground(new java.awt.Color(20, 20, 22));
         pnl_mail.setLayout(new java.awt.BorderLayout());
@@ -769,7 +922,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         Menus.setOpaque(false);
         Menus.setLayout(new java.awt.BorderLayout());
 
-        btn_pnl_ayarlar.setBackground(new java.awt.Color(1, 0, 1));
+        btn_pnl_ayarlar.setBackground(new java.awt.Color(30, 29, 32));
+        btn_pnl_ayarlar.setOpaque(false);
         btn_pnl_ayarlar.setLayout(new java.awt.BorderLayout());
 
         txt_ayarlar.setForeground(new java.awt.Color(219, 218, 220));
@@ -780,7 +934,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         Menus.add(btn_pnl_ayarlar, java.awt.BorderLayout.LINE_END);
 
-        btn_pnl_anasayfa.setBackground(new java.awt.Color(1, 0, 1));
+        btn_pnl_anasayfa.setBackground(new java.awt.Color(30, 29, 32));
+        btn_pnl_anasayfa.setOpaque(false);
         btn_pnl_anasayfa.setLayout(new java.awt.BorderLayout());
 
         txt_anasayfa.setBackground(new java.awt.Color(1, 0, 1));
@@ -792,7 +947,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         Menus.add(btn_pnl_anasayfa, java.awt.BorderLayout.LINE_START);
 
-        btn_pnl_mail.setBackground(new java.awt.Color(1, 0, 1));
+        btn_pnl_mail.setBackground(new java.awt.Color(30, 29, 32));
+        btn_pnl_mail.setOpaque(false);
         btn_pnl_mail.setLayout(new java.awt.BorderLayout());
 
         txt_mailkutusu.setBackground(new java.awt.Color(1, 0, 1));
@@ -887,6 +1043,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -901,6 +1059,18 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JPanel mail_buttons;
     private javax.swing.JPanel mail_time;
     private javax.swing.JLabel mail_time_text;
+    private javax.swing.JLabel mailgonder_baslik;
+    private javax.swing.JPanel mailgonder_btn_dosyaekle;
+    private javax.swing.JPanel mailgonder_btn_gonder;
+    private javax.swing.JTextField mailgonder_field_baslik;
+    private javax.swing.JTextArea mailgonder_field_icerik;
+    private javax.swing.JScrollPane mailgonder_field_icerik_scrollpane;
+    private javax.swing.JTextField mailgonder_field_kime;
+    private javax.swing.JLabel mailgonder_field_label_baslik;
+    private javax.swing.JLabel mailgonder_field_label_govde;
+    private javax.swing.JLabel mailgonder_field_label_kime;
+    private javax.swing.JSeparator mailgonder_field_seperator;
+    private javax.swing.JSeparator mailgonder_field_seperator1;
     private javax.swing.JPanel pnl_anasayfa;
     private javax.swing.JPanel pnl_ayarlar;
     private javax.swing.JPanel pnl_btnclose;
@@ -922,7 +1092,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JPanel pnl_mail_detail_header;
     private javax.swing.JScrollPane pnl_mail_detail_header_scrollpane;
     private javax.swing.JTextArea pnl_mail_detail_header_text;
+    private javax.swing.JPanel pnl_mail_gonder;
     private javax.swing.JPanel pnl_mail_header;
+    private javax.swing.JPanel pnl_mailgonder_icerik;
     private javax.swing.JPanel pnl_mainIcon;
     private javax.swing.JPanel pnl_main_details;
     private javax.swing.JPanel pnl_main_mail;

@@ -5,6 +5,7 @@
  */
 package com.vbteam.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -12,7 +13,7 @@ import java.sql.Timestamp;
  *
  * @author schea
  */
-public class DraftMail implements IMail{
+public class DraftMail implements IMail,Serializable{
     private int Id;
     private String SendUser;
     private String FromUser;

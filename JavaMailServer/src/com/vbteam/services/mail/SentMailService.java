@@ -30,6 +30,7 @@ public class SentMailService {
             int affectedRow=0;
             PreparedStatement statement;
             context = new DbContext();
+<<<<<<< Updated upstream
             connection = context.getConnection();    
             int fromId, sendId;
             for (SentMail sentMail : mails) {            
@@ -43,6 +44,29 @@ public class SentMailService {
             statement.setString(4, sentMail.getBody());
             statement.setBytes(5, sentMail.getAttachment());
             affectedRow += statement.executeUpdate();
+=======
+            connection = context.getConnection();
+            String selectQuery = "Select u.Id from Users u where u.UserName=? or u.UserName=?";
+            statement = connection.prepareStatement(selectQuery);
+            statement.setString(1, mail.getFromUser());
+            statement.setString(2, mail.getSendUser());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Id.add(rs.getInt("Id"));
+            }
+            fromId = Id.get(0);
+            sendId = Id.get(1);
+            String insertQuery = "Insert into SentMail(FromId,SendId,Subject,Body,Attachment)values(?,?,?,?,?)";
+            statement = connection.prepareStatement(insertQuery);
+            statement.setInt(1, fromId);
+            statement.setInt(2, sendId);
+            statement.setString(3, mail.getSubject());
+            statement.setString(4, mail.getBody());
+            statement.setBytes(5, mail.getAttachment());
+            //statement.setTimestamp(6, new java.sql.Timestamp(new java.util.Date().getTime()));
+            int a = statement.executeUpdate();
+            System.out.println("Etkilenen satır sayısı " + a);
+>>>>>>> Stashed changes
             statement.close();
             }
             System.out.println("Etkilenen satır sayısı " + affectedRow);            

@@ -19,19 +19,25 @@ public class FrmDialog extends javax.swing.JFrame {
     public FrmDialog() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setBackground(new Color(0,0,0,0));
+        this.setBackground(new Color(0, 0, 0, 0));
     }
-    
-    public void setIcon(String type){
-       if(type.equals("confirm")){
-           icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/confirm.png")));
-       }
-       if(type.equals("error")){
-           icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/cancel.png")));
-       }    
+
+    public void setIcon(String type) {
+        if (type.equals("confirm")) {
+            btn_ok.setVisible(true);
+            icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/confirm.png")));
+        }
+        if (type.equals("error")) {
+            btn_ok.setVisible(true);
+            icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/cancel.png")));
+        }
+        if (type.equals("wait")) {
+            btn_ok.setVisible(false);
+            icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/time-left.png")));
+        }
     }
-    
-    public void setMessage(String message){
+
+    public void setMessage(String message) {
         text.setText(message);
     }
 

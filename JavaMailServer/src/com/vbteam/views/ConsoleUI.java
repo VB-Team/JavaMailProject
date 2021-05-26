@@ -13,7 +13,7 @@ public class ConsoleUI {
 
     public static void main(String args[]) {
         Server server = new Server();
-        //server.Connect();     
+        server.Connect();     
         /*AuthService service = new AuthService();
         User user = new User();
         user.setFirstName("Veysel");
@@ -22,6 +22,7 @@ public class ConsoleUI {
         user.setPassword("Veysel");
         user.setRole("Admin");
         User user2 = service.Login("Veysel","Veysel");
+<<<<<<< Updated upstream
         System.out.println(user2.getRegisterDate().toString());*/
         /*UserManagementService management=new UserManagementService();
         List<User> users=management.ListUser();
@@ -52,6 +53,15 @@ public class ConsoleUI {
             System.out.println(log1.getType());
         }*/
 
+=======
+        System.out.println(user2.getRegisterDate().toString());
+        UserManagementService management=new UserManagementService();
+        List<User> users=management.ListUser();
+        for (User user : users) {
+            System.out.println(user.getFirstName());
+        }
+        */
+>>>>>>> Stashed changes
     }
 
 }

@@ -5,12 +5,13 @@
  */
 package com.vbteam.models;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 /**
  *
  * @author schea
  */
-public class DeletedMail implements IMail{
+public class DeletedMail implements IMail,Serializable{
     private int Id;
     private String FromUser;
     private String SendUser;

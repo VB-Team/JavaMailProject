@@ -131,7 +131,6 @@ public class UserManagementService implements IUserManagementService {
                 user.setRole(rs.getString("Role"));
                 user.setRegisterDate(rs.getDate("RegisterDate"));
                 users.add(user);
-
             }
             statement.close();
             connection.close();
