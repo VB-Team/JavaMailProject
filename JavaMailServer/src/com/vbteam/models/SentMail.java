@@ -13,8 +13,12 @@ import java.sql.Timestamp;
  * @author schea
  */
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 public class SentMail implements IMail {
 
+=======
+public class SentMail implements IMail,Serializable{
+>>>>>>> Stashed changes
 =======
 public class SentMail implements IMail,Serializable{
 >>>>>>> Stashed changes

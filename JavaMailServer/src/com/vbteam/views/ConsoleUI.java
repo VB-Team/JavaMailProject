@@ -23,6 +23,7 @@ public class ConsoleUI {
         user.setRole("Admin");
         User user2 = service.Login("Veysel","Veysel");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         System.out.println(user2.getRegisterDate().toString());*/
         /*UserManagementService management=new UserManagementService();
         List<User> users=management.ListUser();
@@ -54,6 +55,8 @@ public class ConsoleUI {
         }*/
 
 =======
+=======
+>>>>>>> Stashed changes
         System.out.println(user2.getRegisterDate().toString());
         UserManagementService management=new UserManagementService();
         List<User> users=management.ListUser();
@@ -61,6 +64,9 @@ public class ConsoleUI {
             System.out.println(user.getFirstName());
         }
         */
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 
