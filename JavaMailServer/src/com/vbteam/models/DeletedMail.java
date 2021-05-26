@@ -17,7 +17,7 @@ public class DeletedMail implements IMail, Serializable {
     private static final long serialVersionUID = 45087847;
 
     private int Id;
-    private String SentUser;
+    private String RecipientUser;
     private String SenderUser;
     private String Subject;
     private Timestamp DeletedDate;
@@ -29,7 +29,7 @@ public class DeletedMail implements IMail, Serializable {
     }
 
     public DeletedMail(String SentUser, String SenderUser, String Subject, Timestamp DeletedDate, String Body, byte[] Attachment) {
-        this.SentUser = SentUser;
+        this.RecipientUser = SentUser;
         this.SenderUser = SenderUser;
         this.Subject = Subject;
         this.DeletedDate = DeletedDate;
@@ -52,17 +52,17 @@ public class DeletedMail implements IMail, Serializable {
     }
 
     /**
-     * @return the SentUser
+     * @return the RecipientUser
      */
-    public String getSentUser() {
-        return SentUser;
+    public String getRecipientUser() {
+        return RecipientUser;
     }
 
     /**
-     * @param FromUser the SentUser to set
+     * @param FromUser the RecipientUser to set
      */
-    public void setSentUser(String FromUser) {
-        this.SentUser = FromUser;
+    public void setRecipientUser(String FromUser) {
+        this.RecipientUser = FromUser;
     }
 
     /**

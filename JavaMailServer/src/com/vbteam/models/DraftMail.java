@@ -21,7 +21,7 @@ public class DraftMail implements IMail, Serializable {
     
     private int Id;
     private String SenderUser;
-    private String SentUser;
+    private String RecipientUser;
     private String Body;
     private byte[] Attachment;
     private String Subject;
@@ -33,7 +33,7 @@ public class DraftMail implements IMail, Serializable {
 
     public DraftMail(String SenderUser, String SentUser, String Body, byte[] Attachment, String Subject, Timestamp CreateDate) {
         this.SenderUser = SenderUser;
-        this.SentUser = SentUser;
+        this.RecipientUser = SentUser;
         this.Body = Body;
         this.Attachment = Attachment;
         this.Subject = Subject;
@@ -69,17 +69,17 @@ public class DraftMail implements IMail, Serializable {
     }
 
     /**
-     * @return the SentUser
+     * @return the RecipientUser
      */
-    public String getSentUser() {
-        return SentUser;
+    public String getRecipientUser() {
+        return RecipientUser;
     }
 
     /**
-     * @param FromUser the SentUser to set
+     * @param FromUser the RecipientUser to set
      */
-    public void setSentUser(String FromUser) {
-        this.SentUser = FromUser;
+    public void setRecipientUser(String FromUser) {
+        this.RecipientUser = FromUser;
     }
 
     /**

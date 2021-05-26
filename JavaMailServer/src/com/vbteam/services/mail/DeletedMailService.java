@@ -6,6 +6,7 @@
 package com.vbteam.services.mail;
 
 import com.vbteam.models.DeletedMail;
+import com.vbteam.models.IMail;
 import com.vbteam.utils.DbContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +21,7 @@ import java.sql.ResultSet;
 public class DeletedMailService {
     DbContext context;
     Connection connection;
-    List<DeletedMail> mails = new ArrayList<DeletedMail>();
+    List<IMail> mails = new ArrayList<IMail>();
     public void deleteMail(DeletedMail mail){
     try {            
             PreparedStatement statement;            
@@ -35,12 +36,12 @@ public class DeletedMailService {
             connection.close();
     }catch(Exception ex){System.out.println("Server Deleted Mail Service Exception : "+ex.toString());}
     }
-    public List<DeletedMail> getDeletedMail(int userId){
+    public List<IMail> getDeletedMail(int userId){
     try {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select dm.Id,u.UserName as SendedUser,dm.SentId,dm.Subject,dm.Body,dm.DeletedDate,dm.Attachment From DeletedMail"
+            String query = "Select dm.Id,u.UserName as RecipientUser,dm.RecipientId,dm.Subject,dm.Body,dm.DeletedDate,dm.Attachment,dm.AttachmentType From DeletedMail"
                     + " dm inner join Users u on u.Id=dm.SenderId where dm.SenderId=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(userId));
@@ -48,12 +49,12 @@ public class DeletedMailService {
             
             while (rs.next()) {
                 DeletedMail mail = new DeletedMail();
-                int fromId = rs.getInt("FromId");
+                int fromId = rs.getInt("RecipientId");
                 String query2 = "Select u.UserName from Users u where u.Id=?";
                 statement = connection.prepareStatement(query2);
                 statement.setString(1, Integer.toString(fromId));
                 mail.setId(rs.getInt("Id"));
-                mail.setSentUser(rs.getString("SendedUser"));
+                mail.setRecipientUser(rs.getString("RecipientUser"));
                 mail.setSubject(rs.getString("Subject"));
                 mail.setBody(rs.getString("Body"));
                 //mail.setDeletedDate(rs.getTimestamp("DeletedDate"));//DateTimeFix
@@ -81,9 +82,9 @@ public class DeletedMailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();            
-            String deleteQuery="Insert into DeletedMail(SentId,SenderId,Subject,Body,Attachment,DeletedDate,AttachmentType)values(?,?,?,?,?,?,?)";
+            String deleteQuery="Insert into DeletedMail(RecipientId,SenderId,Subject,Body,Attachment,DeletedDate,AttachmentType)values(?,?,?,?,?,?,?)";
             statement = connection.prepareStatement(deleteQuery);            
-            statement.setString(1, mail.getSentUser());
+            statement.setString(1, mail.getRecipientUser());
             statement.setString(2, mail.getSenderUser());
             statement.setString(3, mail.getSubject());
             statement.setString(4, mail.getBody());

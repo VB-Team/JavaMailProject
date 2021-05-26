@@ -18,7 +18,7 @@ public class SentMail implements IMail, Serializable {
     private static final long serialVersionUID = 45087845;
     
     private int Id;
-    private String SentUser;
+    private String RecipientUser;
     private String SenderUser;
     private String Subject;
     private Timestamp CreateDate;
@@ -31,7 +31,7 @@ public class SentMail implements IMail, Serializable {
 
     public SentMail( String SentUser, String SenderUser, String Subject, Timestamp SendDate, String Body, byte[] Attachment) {
         this.Id = Id;
-        this.SentUser = SentUser;
+        this.RecipientUser = SentUser;
         this.SenderUser = SenderUser;
         this.Subject = Subject;
         this.CreateDate = SendDate;
@@ -55,18 +55,18 @@ public class SentMail implements IMail, Serializable {
     }
 
     /**
-     * @return the SentUser
+     * @return the RecipientUser
      */
     @Override
-    public String getSentUser() {
-        return SentUser;
+    public String getRecipientUser() {
+        return RecipientUser;
     }
 
     /**
-     * @param FromUser the SentUser to set
+     * @param FromUser the RecipientUser to set
      */
-    public void setSentUser(String FromUser) {
-        this.SentUser = FromUser;
+    public void setRecipientUser(String FromUser) {
+        this.RecipientUser = FromUser;
     }
 
     /**

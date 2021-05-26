@@ -13,7 +13,7 @@ public interface IMail {
 
     public int getId();
 
-    public String getSentUser();
+    public String getRecipientUser();
 
     public String getSenderUser();
 

@@ -32,13 +32,13 @@ public class DraftMailService {
             
             context = new DbContext();
             connection = context.getConnection();
-            if (mail.getSentUser()!=null) {
-                fromId = context.getUser(mail.getSentUser());
+            if (mail.getRecipientUser()!=null) {
+                fromId = context.getUser(mail.getRecipientUser());
             }else if(mail.getSenderUser()!=null)
             {
                 sendId = context.getUser(mail.getSenderUser());    
             }                    
-            String insertQuery="Insert into DraftMail(SentId,SenderId,Subject,Body,Attachment,CreateDate,AttachmentType)values(?,?,?,?,?,?,?)";
+            String insertQuery="Insert into DraftMail(RecipientId,SenderId,Subject,Body,Attachment,CreateDate,AttachmentType)values(?,?,?,?,?,?,?)";
             statement = connection.prepareStatement(insertQuery);  
             if (fromId!=null) {
                 statement.setInt(1, fromId);
@@ -82,7 +82,7 @@ public class DraftMailService {
             DraftMail mail = new DraftMail();
             while (rs.next()) {                
                 mail.setId(rs.getInt("Id"));
-                mail.setSentUser(rs.getString("SentId"));
+                mail.setRecipientUser(rs.getString("RecipientId"));
                 mail.setSubject(rs.getString("Subject"));
                 mail.setBody(rs.getString("Body"));
                 //mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
@@ -96,7 +96,7 @@ public class DraftMailService {
             statement.executeUpdate();
             DeletedMail deleteMail = new DeletedMail();
             deleteMail.setId(mail.getId());
-            deleteMail.setSentUser(mail.getSentUser());
+            deleteMail.setRecipientUser(mail.getRecipientUser());
             deleteMail.setSenderUser(mail.getSenderUser());
             deleteMail.setBody(mail.getBody());
             deleteMail.setDeletedDate(new java.sql.Timestamp(new java.util.Date().getTime()));
@@ -114,7 +114,7 @@ public class DraftMailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select dm.Id,u.UserName as SendedUser,dm.SentId,dm.Subject,dm.Body,dm.CreateDate,dm.Attachment,dm.AttachmentType From DraftMail dm "
+            String query = "Select dm.Id,u.UserName as RecipientUser,dm.RecipientId,dm.Subject,dm.Body,dm.CreateDate,dm.Attachment,dm.AttachmentType From DraftMail dm "
                     + "inner join Users u on u.Id=dm.SenderId where dm.SenderId=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(userId));
@@ -122,12 +122,12 @@ public class DraftMailService {
             List<IMail> mails = new ArrayList<IMail>();
             while (rs.next()) {
                 DraftMail mail = new DraftMail();
-                int fromId = rs.getInt("SentId");
+                int fromId = rs.getInt("RecipientId");
                 String query2 = "Select u.UserName from Users u where u.Id=?";
                 statement = connection.prepareStatement(query2);
                 statement.setString(1, Integer.toString(fromId));
                 mail.setId(rs.getInt("Id"));
-                mail.setSentUser(rs.getString("SendedUser"));
+                mail.setRecipientUser(rs.getString("RecipientUser"));
                 mail.setSubject(rs.getString("Subject"));
                 mail.setBody(rs.getString("Body"));
                 //mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
