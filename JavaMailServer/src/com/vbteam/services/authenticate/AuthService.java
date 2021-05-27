@@ -28,7 +28,7 @@ public class AuthService implements IAuthService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select u.Id,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
+            String query = "Select u.Id,u.LastLoginDate,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
                     + "From Users u join UserDetail ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id \n"
                     + "where u.UserName=?";
@@ -37,6 +37,7 @@ public class AuthService implements IAuthService {
             ResultSet rs = statement.executeQuery();
             System.out.println("Etkilenen satır sayısı " + rs);
             User user = new User();
+            java.sql.Timestamp loginDate=null;
             while (rs.next()) {
                 user.setId(rs.getInt("Id"));
                 user.setFirstName(rs.getString("FirstName"));
@@ -45,10 +46,18 @@ public class AuthService implements IAuthService {
                 user.setPassword(rs.getString("Password"));
                 user.setRole(rs.getString("Role"));
                 user.setRegisterDate(rs.getDate("RegisterDate"));
-                //System.out.println((rs.getString("LastLogin"))); //AuthService Exception : The column name LastLogin is not valid.
+                loginDate=rs.getTimestamp("LastLoginDate");//AuthService Exception : The column name LastLogin is not valid.
             }
             if (BCrypt.checkpw(Password, user.getPassword())) {
-                return user;
+                if (UpdateLastLoginDate(UserName)) {
+                    System.out.println("asdasd");
+                    if (loginDate!=null) {
+                        System.out.println(loginDate+" login date");
+                        user.setLastLogin(loginDate);
+                    }                    
+                    return user;
+                }else
+                    return null;
             } else {
                 statement.close();
                 connection.close();
@@ -60,24 +69,46 @@ public class AuthService implements IAuthService {
             return null;
         }
     }
-    
-    @Override    
+
+    private boolean UpdateLastLoginDate(String userName) {
+        try {
+            CallableStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+            String updateQuery = "Update Users set LastLoginDate=? where Users.UserName=?";
+            statement = connection.prepareCall(updateQuery);
+            statement.setTimestamp(1, new java.sql.Timestamp(new java.util.Date().getTime()));
+            statement.setString(2, userName);
+            int affectedRow=statement.executeUpdate();
+            statement.close();
+            connection.close();
+            if (affectedRow>0) 
+                return true;
+            else
+                return false;
+            
+        } catch (Exception e) {
+            System.err.println("AuthService Exception : " + e.toString());
+            return false;
+        }
+
+    }
+
+    @Override
     public User register(User user) {
         try {
             CallableStatement statement;
             context = new DbContext();
             connection = context.getConnection();
 
-            String query = "{call AddUser(?,?,?,?,?)}";
+            String query = "{call AddUser(?,?,?,?,?,?)}";
             statement = connection.prepareCall(query);
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getUserName());
             statement.setString(4, hashPassword(user.getPassword()));
             statement.setString(5, user.getRole());
-            /*user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
-            user.setRegisterDate(new java.sql.Date(new java.util.Date().getTime()));
-            System.out.println(user.getLastLogin());*/
+            statement.setTimestamp(6, user.getLastLogin());
 
             int affectedRow = statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);

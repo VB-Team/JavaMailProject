@@ -4,6 +4,8 @@ import com.vbteam.models.DeletedMail;
 import com.vbteam.models.DraftMail;
 import com.vbteam.models.IMail;
 import com.vbteam.models.SentMail;
+import com.vbteam.models.User;
+import com.vbteam.services.authenticate.AuthService;
 import com.vbteam.services.mail.DeletedMailService;
 import com.vbteam.services.mail.DraftMailService;
 import com.vbteam.services.mail.SentMailService;
@@ -18,10 +20,21 @@ public class ConsoleUI {
 
     public static void main(String args[]) {
         Server server = new Server();
-        server.Connect();
+        //server.Connect();
         //DeleteMail();
         //SentMail();
         //DraftMail();
+        AuthService service = new AuthService();
+        User user= new User();
+        user.setUserName("Veysel2");
+        user.setPassword("2");
+        user.setFirstName("batu");
+        user.setLastName("batu");
+        user.setRole("Admin");  
+        //user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
+        //service.register(user);
+        user=service.login(user.getUserName(), user.getPassword());
+        System.out.println(user.getLastLogin());
     }
 
     private static void DraftMail() {
@@ -59,6 +72,11 @@ public class ConsoleUI {
         sm.addMail(mails);
         mails.clear();
         mails=sm.getIncomingMail(8);
+        for (IMail mail1 : mails) {
+            System.out.println(mail1.getRecipientUser());
+        }
+        mails.clear();
+        mails=sm.getOutgoingMail(8);
         for (IMail mail1 : mails) {
             System.out.println(mail1.getRecipientUser());
         }

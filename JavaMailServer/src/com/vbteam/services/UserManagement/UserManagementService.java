@@ -29,18 +29,14 @@ public class UserManagementService implements IUserManagementService {
             CallableStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "{call AddUser(?,?,?,?,?)}";
+            String query = "{call AddUser(?,?,?,?,?,?)}";
             statement = connection.prepareCall(query);
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getUserName());
             statement.setString(4, user.getPassword());
             statement.setString(5, user.getRole());
-            statement.setObject(6, new java.util.Date());
-            user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
-            user.setRegisterDate(new java.sql.Date(new java.util.Date().getTime()));
-            System.out.println(user.getLastLogin());
-
+            statement.setTimestamp(6, user.getLastLogin());
             int affectedRow = statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             statement.close();
