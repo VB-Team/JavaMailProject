@@ -10,6 +10,8 @@ import com.vbteam.models.IMail;
 import com.vbteam.models.SentMail;
 import com.vbteam.models.User;
 import com.vbteam.services.authenticate.AuthService;
+import com.vbteam.services.mail.DeletedMailService;
+import com.vbteam.services.mail.DraftMailService;
 import com.vbteam.services.mail.SentMailService;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,6 +26,9 @@ public class CommandHandler {
 
     private static AuthService authService = new AuthService();
     private static SentMailService sentMailService = new SentMailService();
+    private static DraftMailService draftMailService = new DraftMailService();
+    private static DeletedMailService deletedMailService = new DeletedMailService();
+
     private static List<IMail> emailList;
 
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
@@ -62,10 +67,31 @@ public class CommandHandler {
 
                 objOutput.writeObject(cmd);
             }
+
+            if (cmd.getType().equals("mail-draft")) {
+                System.out.println("Draft Mail Debug - ID : " + cmd.getUser().getId());
+                int userId = cmd.getUser().getId();
+
+                cmd = new Command();
+                cmd.setType("mail-draft");
+                cmd.setMailList(draftMailService.getDraftMails(userId));
+
+                objOutput.writeObject(cmd);
+            }
+
+            if (cmd.getType().equals("mail-trash")) {
+                System.out.println("Deleted Mail Debug - ID : " + cmd.getUser().getId());
+                int userId = cmd.getUser().getId();
+
+                cmd = new Command();
+                cmd.setType("mail-trash");
+                cmd.setMailList(deletedMailService.getDeletedMail(userId));
+
+                objOutput.writeObject(cmd);
+            }
         } catch (Exception ex) {
             System.out.println("Mail Delivery Service Exception : " + ex.getMessage());
         }
-
     }
 
     private static void Auth(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
