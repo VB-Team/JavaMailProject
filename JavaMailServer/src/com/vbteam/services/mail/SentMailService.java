@@ -37,7 +37,8 @@ public class SentMailService {
                 fromId = context.getUser(sentMail.getRecipientUser());
                 sendId = context.getUser(sentMail.getSenderUser());
 
-                String insertQuery = "Insert into SentMail(RecipientId,SenderId,Subject,Body,Attachment,AttachmentType)values(?,?,?,?,?,?)";
+                String insertQuery = "Insert into SentMail(RecipientId,SenderId,Subject,Body,Attachment,AttachmentDetail)values(?,?,?,?,?,?)";
+                
                 statement = connection.prepareStatement(insertQuery);
                 statement.setInt(1, fromId);
                 statement.setInt(2, sendId);
@@ -60,7 +61,7 @@ public class SentMailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select sm.Id,u.UserName as SendedUser,sm.RecipientId,sm.Subject,sm.Body,sm.CreateDate,sm.Attachment,sm.AttachmentType From SentMail sm "
+            String query = "Select sm.Id,u.UserName as SendedUser,sm.RecipientId,sm.Subject,sm.Body,sm.CreateDate,sm.Attachment,sm.AttachmentDetail From SentMail sm "
                     + "inner join Users u on u.Id=sm.SenderId where sm.SenderId=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(userId));
@@ -78,7 +79,7 @@ public class SentMailService {
                 mail.setBody(rs.getString("Body"));
                 //mail.setCreateDate(rs.getTimestamp("SendDate"));//DateTimeFix
                 mail.setAttachment(rs.getBytes("Attachment"));
-                mail.setAttachmentType(rs.getString("AttachmentType"));
+                mail.setAttachmentType(rs.getString("AttachmentDetail"));
                 ResultSet rs2 = statement.executeQuery();
 
                 while (rs2.next()) {
@@ -101,7 +102,7 @@ public class SentMailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select sm.Id,u.UserName as SendedUser,sm.RecipientId,sm.Subject,sm.Body,sm.CreateDate,sm.Attachment,sm.AttachmentType From SentMail sm "
+            String query = "Select sm.Id,u.UserName as SendedUser,sm.RecipientId,sm.Subject,sm.Body,sm.CreateDate,sm.Attachment,sm.AttachmentDetail From SentMail sm "
                     + "inner join Users u on u.Id=sm.SenderId where sm.RecipientId=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(userId));
@@ -118,7 +119,7 @@ public class SentMailService {
                 mail.setSubject(rs.getString("Subject"));
                 mail.setBody(rs.getString("Body"));
                 //mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
-                mail.setAttachmentType(rs.getString("AttachmentType"));
+                mail.setAttachmentType(rs.getString("AttachmentDetail"));
                 mail.setAttachment(rs.getBytes("Attachment"));
                 ResultSet rs2 = statement.executeQuery();
                 while (rs2.next()) {
@@ -154,7 +155,7 @@ public class SentMailService {
                 //mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
                 mail.setSenderUser(rs.getString("SendId"));
                 mail.setAttachment(rs.getBytes("Attachment"));
-                mail.setAttachmentType(rs.getString("AttachmentType"));
+                mail.setAttachmentType(rs.getString("AttachmentDetail"));
 
             }
             String deleteQuery = "Delete From SentMail where Id=?";
