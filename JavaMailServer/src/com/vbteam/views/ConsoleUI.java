@@ -1,16 +1,13 @@
 package com.vbteam.views;
 
-import com.vbteam.models.DeletedMail;
-import com.vbteam.models.DraftMail;
-import com.vbteam.models.IMail;
-import com.vbteam.models.SentMail;
 import com.vbteam.models.User;
 import com.vbteam.services.authenticate.AuthService;
-import com.vbteam.services.mail.DeletedMailService;
-import com.vbteam.services.mail.DraftMailService;
-import com.vbteam.services.mail.SentMailService;
 import java.util.ArrayList;
 import java.util.List;
+import com.vbteam.models.Mail;
+import com.vbteam.services.mail.MailService;
+import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  *
@@ -20,85 +17,102 @@ public class ConsoleUI {
 
     public static void main(String args[]) {
         Server server = new Server();
-        //server.Connect();
-        //DeleteMail();
+        server.Connect();
+        //DeleteMail(2);
         //SentMail();
         //DraftMail();
+        //LoginAndRegister();
+    }
+
+    private static void LoginAndRegister() {
+
         AuthService service = new AuthService();
-        User user= new User();
-        user.setUserName("Veysel2");
+        User user = new User();
+        user.setUserName("Batu");
         user.setPassword("2");
-        user.setFirstName("batu");
-        user.setLastName("batu");
-        user.setRole("Admin");  
-        //user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
-        //service.register(user);
-        user=service.login(user.getUserName(), user.getPassword());
+        user.setFirstName("Batu");
+        user.setLastName("Batu");
+        user.setRole("Admin");
+        user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
+        service.register(user);
+        user = service.login(user.getUserName(), user.getPassword());
         System.out.println(user.getLastLogin());
     }
 
     private static void DraftMail() {
-        DraftMail mail=new DraftMail();
-        mail.setAttachment(new byte[] { -56, -123, -109, -109, -106, 64, -26,
-            -106, -103, -109, -124, 90 });
-        mail.setAttachmentType("Deneme");
-        mail.setRecipientUser("capuluos");
-        mail.setSenderUser("asdasd");
+        Mail mail = new Mail();
+        mail.setAttachment(new byte[]{-56, -123, -109, -109, -106, 64, -26,
+            -106, -103, -109, -124, 90});
+        mail.setAttachmentDetail("Deneme");
+        mail.setRecipientUser("Veysel");
+        mail.setSenderUser("batu");
         mail.setBody("sdfsf");
         mail.setSubject("dnesdfsdfemee");
-        DraftMailService sm=new DraftMailService();
-        List<IMail> mails=new ArrayList<IMail>();
+        mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+        mail.setType("Draft");
+        mail.setState(true);
+        MailService sm = new MailService();
+        List<Mail> mails = new ArrayList<Mail>();
         mails.add(mail);
-        sm.addDraftMail(mail);
         mails.clear();
-        mails=sm.getDraftMails(8);
-        for (IMail mail1 : mails) {
-            System.out.println(mail1.getRecipientUser());
+        mails = sm.getAnyMails(2, "Draft");
+        System.out.println("---------------DRAFT MAİLS------------");
+        for (Mail mail1 : mails) {
+            System.out.println(mail1.getBody());
         }
     }
 
     private static void SentMail() {
-        SentMail mail=new SentMail();
-        mail.setAttachment(new byte[] { -56, -123, -109, -109, -106, 64, -26,
-            -106, -103, -109, -124, 90 });
-        mail.setAttachmentType("Deneme");
-        mail.setRecipientUser("capuluos");
-        mail.setSenderUser("asdasd");
+        Mail mail = new Mail();
+        mail.setAttachment(new byte[]{-56, -123, -109, -109, -106, 64, -26,
+            -106, -103, -109, -124, 90});
+        mail.setAttachmentDetail("Deneme");
+        mail.setRecipientUser("Veysel");
+        mail.setSenderUser("batu");
         mail.setBody("sdfsf");
         mail.setSubject("dnesdfsdfemee");
-        SentMailService sm=new SentMailService();
-        List<IMail> mails=new ArrayList<IMail>();
+        mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+        mail.setType("Normal");
+        mail.setState(true);
+        MailService sm = new MailService();
+        List<Mail> mails = new ArrayList<Mail>();
         mails.add(mail);
-        sm.addMail(mails);
         mails.clear();
-        mails=sm.getIncomingMail(8);
-        for (IMail mail1 : mails) {
-            System.out.println(mail1.getRecipientUser());
+        mails = sm.getIncomingMails(1);
+        System.out.println("---------------İNCOMİNG MAİLS------------");
+        for (Mail mail1 : mails) {
+            System.out.println(mail1.getBody());
         }
         mails.clear();
-        mails=sm.getOutgoingMail(8);
-        for (IMail mail1 : mails) {
-            System.out.println(mail1.getRecipientUser());
+        mails = sm.getOutgoingMails(1);
+        System.out.println("---------------OUTGOİNG MAİLS------------");
+        for (Mail mail1 : mails) {
+            System.out.println(mail1.getBody());
         }
     }
 
-    private static void DeleteMail() {
-        
-        DeletedMail mail=new DeletedMail();
-        mail.setAttachment(new byte[] { -56, -123, -109, -109, -106, 64, -26,
-            -106, -103, -109, -124, 90 });
-        mail.setAttachmentType("Deneme");
-        mail.setRecipientUser("capuluos");
-        mail.setSenderUser("asdasd");
+    private static void DeleteMail(int mailId) {
+
+        Mail mail = new Mail();
+        mail.setAttachment(new byte[]{-56, -123, -109, -109, -106, 64, -26,
+            -106, -103, -109, -124, 90});
+        mail.setAttachmentDetail("Deneme");
+        mail.setRecipientUser("Veysel");
+        mail.setSenderUser("batu");
         mail.setBody("sdfsf");
         mail.setSubject("dnesdfsdfemee");
-        DeletedMailService sm=new DeletedMailService();
-        List<IMail> mails=new ArrayList<IMail>();
+        mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+        mail.setType("delete");
+        mail.setState(true);
+        MailService sm = new MailService();
+        List<Mail> mails = new ArrayList<Mail>();
         mails.add(mail);
-        sm.addDeletedMail(mail);
-        mails=sm.getDeletedMail(8);
-        for (IMail mail1 : mails) {
-            System.out.println(mail1.getRecipientUser());
+        //sm.deleteMail(mailId);
+        mails.clear();
+        mails = sm.getAnyMails(mailId, "Normal");
+        System.out.println("---------------DELETED MAİLS------------");
+        for (Mail mail1 : mails) {
+            System.out.println(mail1.getBody());
         }
     }
 

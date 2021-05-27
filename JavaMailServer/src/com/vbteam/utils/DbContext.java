@@ -5,7 +5,7 @@
  */
 package com.vbteam.utils;
 
-import com.vbteam.models.SentMail;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,7 +28,7 @@ public class DbContext {
 
     public Connection getConnection() {
         try {
-            connection = DriverManager.getConnection(conurl, user, batuPass);
+            connection = DriverManager.getConnection(conurl, user, veyselPass);
             System.out.println("Bağlantı Kuruldu");
         } catch (SQLException e) {
             System.out.println("DbContext Exception : " + e.getMessage());
@@ -39,7 +39,7 @@ public class DbContext {
     public int getUser(String userName) {
         try {
             PreparedStatement statement;
-            connection = DriverManager.getConnection(conurl, user, batuPass);
+            connection = DriverManager.getConnection(conurl, user, veyselPass);
             String selectQuery = "Select u.Id from Users u where u.UserName=?";
             statement = connection.prepareStatement(selectQuery);
             statement.setString(1, userName);

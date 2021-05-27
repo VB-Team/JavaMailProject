@@ -49,12 +49,7 @@ public class AuthService implements IAuthService {
                 loginDate=rs.getTimestamp("LastLoginDate");//AuthService Exception : The column name LastLogin is not valid.
             }
             if (BCrypt.checkpw(Password, user.getPassword())) {
-                if (UpdateLastLoginDate(UserName)) {
-                    System.out.println("asdasd");
-                    if (loginDate!=null) {
-                        System.out.println(loginDate+" login date");
-                        user.setLastLogin(loginDate);
-                    }                    
+                if (UpdateLastLoginDate(UserName)) {               
                     return user;
                 }else
                     return null;

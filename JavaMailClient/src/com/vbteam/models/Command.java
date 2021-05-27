@@ -20,24 +20,24 @@ public class Command implements Serializable {
     private String type, commandText;
     private User user;
     private boolean boolResponse;
-    private IMail mail;
-    private List<IMail> mailList = new ArrayList();
+    private Mail mail;
+    private List<Mail> mailList = new ArrayList();
 
     public Command() {
     }
 
-    public Command(String type, String commandText, User user, IMail mail) {
+    public Command(String type, String commandText, User user, Mail mail) {
         this.type = type;
         this.commandText = commandText;
         this.user = user;
         this.mail = mail;
     }
 
-    public void setMailList(List<IMail> _mailList) {
+    public void setMailList(List<Mail> _mailList) {
         mailList = _mailList;
     }
 
-    public List<IMail> getMailList() {
+    public List<Mail> getMailList() {
         return mailList;
     }
 
@@ -94,14 +94,14 @@ public class Command implements Serializable {
     /**
      * @return the mail
      */
-    public IMail getMail() {
+    public Mail getMail() {
         return mail;
     }
 
     /**
      * @param mail the mail to set
      */
-    public void setMail(IMail mail) {
+    public void setMail(Mail mail) {
         this.mail = mail;
     }
 }

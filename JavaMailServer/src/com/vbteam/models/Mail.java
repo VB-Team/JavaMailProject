@@ -6,39 +6,38 @@
 package com.vbteam.models;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.sql.Timestamp;
 
 /**
  *
  * @author schea
  */
-public class DraftMail implements IMail, Serializable {
+public class Mail implements Serializable{
 
-  
+    /**
+     * @return the SenderUser
+     */
+    public String getSenderUser() {
+        return SenderUser;
+    }
 
-    private static final long serialVersionUID = 45087846;
-    
+    /**
+     * @param SenderUser the SenderUser to set
+     */
+    public void setSenderUser(String SenderUser) {
+        this.SenderUser = SenderUser;
+    }
+
     private int Id;
     private String SenderUser;
     private String RecipientUser;
+    private String Subject;
     private String Body;
     private byte[] Attachment;
-    private String Subject;
+    private String AttachmentDetail;
     private Timestamp CreateDate;
-    private String AttachmentType;
-
-    public DraftMail() {
-    }
-
-    public DraftMail(String SenderUser, String SentUser, String Body, byte[] Attachment, String Subject, Timestamp CreateDate) {
-        this.SenderUser = SenderUser;
-        this.RecipientUser = SentUser;
-        this.Body = Body;
-        this.Attachment = Attachment;
-        this.Subject = Subject;
-        this.CreateDate = CreateDate;
-    }
+    private String Type;
+    private boolean State;
 
     /**
      * @return the Id
@@ -55,17 +54,17 @@ public class DraftMail implements IMail, Serializable {
     }
 
     /**
-     * @return the SenderUser
+     * @return the Subject
      */
-    public String getSenderUser() {
-        return SenderUser;
+    public String getSubject() {
+        return Subject;
     }
 
     /**
-     * @param SendUser the SenderUser to set
+     * @param Subject the Subject to set
      */
-    public void setSenderUser(String SendUser) {
-        this.SenderUser = SendUser;
+    public void setSubject(String Subject) {
+        this.Subject = Subject;
     }
 
     /**
@@ -76,10 +75,10 @@ public class DraftMail implements IMail, Serializable {
     }
 
     /**
-     * @param FromUser the RecipientUser to set
+     * @param RecipientUser the RecipientUser to set
      */
-    public void setRecipientUser(String FromUser) {
-        this.RecipientUser = FromUser;
+    public void setRecipientUser(String RecipientUser) {
+        this.RecipientUser = RecipientUser;
     }
 
     /**
@@ -111,17 +110,17 @@ public class DraftMail implements IMail, Serializable {
     }
 
     /**
-     * @return the Subject
+     * @return the AttachmentDetail
      */
-    public String getSubject() {
-        return Subject;
+    public String getAttachmentDetail() {
+        return AttachmentDetail;
     }
 
     /**
-     * @param Subject the Subject to set
+     * @param AttachmentDetail the AttachmentDetail to set
      */
-    public void setSubject(String Subject) {
-        this.Subject = Subject;
+    public void setAttachmentDetail(String AttachmentDetail) {
+        this.AttachmentDetail = AttachmentDetail;
     }
 
     /**
@@ -137,18 +136,33 @@ public class DraftMail implements IMail, Serializable {
     public void setCreateDate(Timestamp CreateDate) {
         this.CreateDate = CreateDate;
     }
-      /**
-     * @return the AttachmentType
+
+    /**
+     * @return the Type
      */
-    public String getAttachmentType() {
-        return AttachmentType;
+    public String getType() {
+        return Type;
     }
 
     /**
-     * @param AttachmentType the AttachmentType to set
+     * @param Type the Type to set
      */
-    public void setAttachmentType(String AttachmentType) {
-        this.AttachmentType = AttachmentType;
+    public void setType(String Type) {
+        this.Type = Type;
     }
-}
 
+    /**
+     * @return the State
+     */
+    public boolean isState() {
+        return State;
+    }
+
+    /**
+     * @param State the State to set
+     */
+    public void setState(boolean State) {
+        this.State = State;
+    }
+
+}

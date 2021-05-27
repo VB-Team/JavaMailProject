@@ -6,17 +6,14 @@
 package com.vbteam.utils;
 
 import com.vbteam.models.Command;
-import com.vbteam.models.IMail;
-import com.vbteam.models.SentMail;
 import com.vbteam.models.User;
 import com.vbteam.services.authenticate.AuthService;
-import com.vbteam.services.mail.DeletedMailService;
-import com.vbteam.services.mail.DraftMailService;
-import com.vbteam.services.mail.SentMailService;
+import com.vbteam.services.mail.MailService;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import com.vbteam.models.Mail;
 
 /**
  *
@@ -25,11 +22,9 @@ import java.util.List;
 public class CommandHandler {
 
     private static AuthService authService = new AuthService();
-    private static SentMailService sentMailService = new SentMailService();
-    private static DraftMailService draftMailService = new DraftMailService();
-    private static DeletedMailService deletedMailService = new DeletedMailService();
+    private static MailService mailService = new MailService();
 
-    private static List<IMail> emailList;
+    private static List<Mail> emailList;
 
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         if (cmd.getType().indexOf("auth") == 0) {
@@ -45,7 +40,8 @@ public class CommandHandler {
             if (cmd.getType().equals("mail-send")) {
                 emailList = new ArrayList<>();
                 emailList.add(cmd.getMail());
-                sentMailService.addMail(emailList);
+                System.out.println(emailList.size());
+                mailService.addMails(emailList);
             }
             if (cmd.getType().equals("mail-income")) {
                 System.out.println("Income Mail Debug - ID : " + cmd.getUser().getId());
@@ -53,7 +49,8 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-income");
-                cmd.setMailList(sentMailService.getIncomingMail(userId));
+                List<Mail> mails=mailService.getIncomingMails(userId);
+                cmd.setMailList(mailService.getIncomingMails(userId));
 
                 objOutput.writeObject(cmd);
             }
@@ -63,7 +60,7 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-outgoing");
-                cmd.setMailList(sentMailService.getOutgoingMail(userId));
+                cmd.setMailList(mailService.getOutgoingMails(userId));
 
                 objOutput.writeObject(cmd);
             }
@@ -74,7 +71,7 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-draft");
-                cmd.setMailList(draftMailService.getDraftMails(userId));
+                cmd.setMailList(mailService.getAnyMails(userId,"Draft"));
 
                 objOutput.writeObject(cmd);
             }
@@ -85,7 +82,7 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-trash");
-                cmd.setMailList(deletedMailService.getDeletedMail(userId));
+                cmd.setMailList(mailService.getAnyMails(userId,"Deleted"));
 
                 objOutput.writeObject(cmd);
             }

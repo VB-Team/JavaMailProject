@@ -5,10 +5,10 @@
  */
 package com.vbteam.views;
 
-import com.vbteam.models.IMail;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import com.vbteam.models.Mail;
 
 /**
  *
@@ -17,13 +17,13 @@ import javax.swing.table.AbstractTableModel;
 public class MailTableModel extends AbstractTableModel {
 
     private String[] columnNames = {"Gönderen", "Konu", "İçerik", "Tarih"};
-    private List<IMail> myList = new ArrayList();
+    private List<Mail> myList = new ArrayList();
 
-    public MailTableModel(List<IMail> mailList) {
+    public MailTableModel(List<Mail> mailList) {
         myList = mailList;
     }
     
-    public List<IMail> getList(){
+    public List<Mail> getList(){
         return myList;
     }
 
@@ -50,7 +50,7 @@ public class MailTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        IMail mail = myList.get(row);
+        Mail mail = myList.get(row);
         switch (col) {
             case 0:
                 return mail.getRecipientUser();
@@ -59,7 +59,7 @@ public class MailTableModel extends AbstractTableModel {
             case 2:
                 return mail.getBody();
             case 3:
-                return null;
+                return mail.getCreateDate();
             case 4:
                 return mail.getId();
             default:

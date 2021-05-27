@@ -6,8 +6,6 @@
 package com.vbteam.views;
 
 import com.vbteam.models.Command;
-import com.vbteam.models.IMail;
-import com.vbteam.models.SentMail;
 import com.vbteam.models.User;
 import static com.vbteam.views.FrmAuth.conService;
 import java.awt.CardLayout;
@@ -27,6 +25,7 @@ import javax.swing.JPanel;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.table.AbstractTableModel;
+import com.vbteam.models.Mail;
 
 /**
  *
@@ -45,7 +44,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     byte[] fileByteArray;
     String fileTypeString;
 
-    List<IMail> mailList = new ArrayList<>();
+    List<Mail> mailList = new ArrayList<>();
 
     public FrmDashboard() {
 
@@ -84,14 +83,17 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     }
 
     public void sendEmail() {
-        SentMail mail = new SentMail();
+        Mail mail = new Mail();
         if (!(mailgonder_field_baslik.getText().isEmpty() || mailgonder_field_icerik.getText().isEmpty() || mailgonder_field_kime.getText().isEmpty())) {
             mail.setSubject(mailgonder_field_baslik.getText());
             mail.setBody(mailgonder_field_icerik.getText());
             mail.setSenderUser(user.getUserName());
             mail.setRecipientUser(mailgonder_field_kime.getText());
             mail.setAttachment(fileByteArray);
-            mail.setAttachmentType(fileTypeString);
+            mail.setAttachmentDetail(fileTypeString);
+            mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+            mail.setState(true);
+            mail.setType("Normal");
             FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
 
             mailgonder_label_dosyaismi.setVisible(false);
@@ -102,7 +104,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         }
     }
 
-    public List<IMail> getMails(String type) {
+    public List<Mail> getMails(String type) {
         try {
             if (type.equals("income")) {
                 FrmAuth.conService.SendCommand(new Command("mail-income", null, user, null));
@@ -227,8 +229,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     }
 
-    private IMail getMailFromId(List<IMail> list, int id) {
-        for (IMail mail : list) {
+    private Mail getMailFromId(List<Mail> list, int id) {
+        for (Mail mail : list) {
             if (mail.getId() == id) {
                 return mail;
             }
@@ -236,9 +238,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         return null;
     }
 
-    private void setMailCredentials(IMail mail) {
+    private void setMailCredentials(Mail mail) {
         mail_author_text.setText(mail.getRecipientUser());
         pnl_mail_body_text.setText(mail.getBody());
+        mail_time_text.setText(mail.getCreateDate().toString());
         pnl_mail_detail_header_text.setText(mail.getSubject());
     }
 
