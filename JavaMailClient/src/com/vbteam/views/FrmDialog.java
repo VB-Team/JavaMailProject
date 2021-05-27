@@ -20,6 +20,7 @@ public class FrmDialog extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setBackground(new Color(0, 0, 0, 0));
+        this.setAlwaysOnTop(true);
     }
 
     public void setIcon(String type) {

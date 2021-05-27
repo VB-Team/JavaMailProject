@@ -53,7 +53,7 @@ public class MailTableModel extends AbstractTableModel {
         IMail mail = myList.get(row);
         switch (col) {
             case 0:
-                return mail.getFromUser();
+                return mail.getRecipientUser();
             case 1:
                 return mail.getSubject();
             case 2:

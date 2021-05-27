@@ -17,17 +17,29 @@ public class DeletedMail implements IMail, Serializable {
     private static final long serialVersionUID = 45087847;
 
     private int Id;
-    private String FromUser;
-    private String SendUser;
+    private String RecipientUser;
+    private String SenderUser;
     private String Subject;
     private Timestamp DeletedDate;
     private String Body;
     private byte[] Attachment;
+    private String AttachmentType;
+
+    public DeletedMail() {
+    }
+
+    public DeletedMail(String SentUser, String SenderUser, String Subject, Timestamp DeletedDate, String Body, byte[] Attachment) {
+        this.RecipientUser = SentUser;
+        this.SenderUser = SenderUser;
+        this.Subject = Subject;
+        this.DeletedDate = DeletedDate;
+        this.Body = Body;
+        this.Attachment = Attachment;
+    }
 
     /**
      * @return the Id
      */
-    @Override
     public int getId() {
         return Id;
     }
@@ -40,31 +52,31 @@ public class DeletedMail implements IMail, Serializable {
     }
 
     /**
-     * @return the FromUser
+     * @return the RecipientUser
      */
-    public String getFromUser() {
-        return FromUser;
+    public String getRecipientUser() {
+        return RecipientUser;
     }
 
     /**
-     * @param FromUser the FromUser to set
+     * @param FromUser the RecipientUser to set
      */
-    public void setFromUser(String FromUser) {
-        this.FromUser = FromUser;
+    public void setRecipientUser(String FromUser) {
+        this.RecipientUser = FromUser;
     }
 
     /**
-     * @return the SendUser
+     * @return the SenderUser
      */
-    public String getSendUser() {
-        return SendUser;
+    public String getSenderUser() {
+        return SenderUser;
     }
 
     /**
-     * @param SendUser the SendUser to set
+     * @param SendUser the SenderUser to set
      */
-    public void setSendUser(String SendUser) {
-        this.SendUser = SendUser;
+    public void setSenderUser(String SendUser) {
+        this.SenderUser = SendUser;
     }
 
     /**
@@ -121,6 +133,20 @@ public class DeletedMail implements IMail, Serializable {
      */
     public void setAttachment(byte[] Attachment) {
         this.Attachment = Attachment;
+    }
+
+    /**
+     * @return the AttachmentType
+     */
+    public String getAttachmentType() {
+        return AttachmentType;
+    }
+
+    /**
+     * @param AttachmentType the AttachmentType to set
+     */
+    public void setAttachmentType(String AttachmentType) {
+        this.AttachmentType = AttachmentType;
     }
 
 }

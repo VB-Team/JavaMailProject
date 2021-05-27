@@ -15,20 +15,34 @@ import java.sql.Timestamp;
  */
 public class DraftMail implements IMail, Serializable {
 
-    private static final long serialVersionUID = 45087846;
+  
 
+    private static final long serialVersionUID = 45087846;
+    
     private int Id;
-    private String SendUser;
-    private String FromUser;
+    private String SenderUser;
+    private String RecipientUser;
     private String Body;
     private byte[] Attachment;
     private String Subject;
     private Timestamp CreateDate;
+    private String AttachmentType;
+
+    public DraftMail() {
+    }
+
+    public DraftMail(String SenderUser, String SentUser, String Body, byte[] Attachment, String Subject, Timestamp CreateDate) {
+        this.SenderUser = SenderUser;
+        this.RecipientUser = SentUser;
+        this.Body = Body;
+        this.Attachment = Attachment;
+        this.Subject = Subject;
+        this.CreateDate = CreateDate;
+    }
 
     /**
      * @return the Id
      */
-    @Override
     public int getId() {
         return Id;
     }
@@ -41,31 +55,31 @@ public class DraftMail implements IMail, Serializable {
     }
 
     /**
-     * @return the SendUser
+     * @return the SenderUser
      */
-    public String getSendUser() {
-        return SendUser;
+    public String getSenderUser() {
+        return SenderUser;
     }
 
     /**
-     * @param SendUser the SendUser to set
+     * @param SendUser the SenderUser to set
      */
-    public void setSendUser(String SendUser) {
-        this.SendUser = SendUser;
+    public void setSenderUser(String SendUser) {
+        this.SenderUser = SendUser;
     }
 
     /**
-     * @return the FromUser
+     * @return the RecipientUser
      */
-    public String getFromUser() {
-        return FromUser;
+    public String getRecipientUser() {
+        return RecipientUser;
     }
 
     /**
-     * @param FromUser the FromUser to set
+     * @param FromUser the RecipientUser to set
      */
-    public void setFromUser(String FromUser) {
-        this.FromUser = FromUser;
+    public void setRecipientUser(String FromUser) {
+        this.RecipientUser = FromUser;
     }
 
     /**
@@ -123,5 +137,18 @@ public class DraftMail implements IMail, Serializable {
     public void setCreateDate(Timestamp CreateDate) {
         this.CreateDate = CreateDate;
     }
+      /**
+     * @return the AttachmentType
+     */
+    public String getAttachmentType() {
+        return AttachmentType;
+    }
 
+    /**
+     * @param AttachmentType the AttachmentType to set
+     */
+    public void setAttachmentType(String AttachmentType) {
+        this.AttachmentType = AttachmentType;
+    }
 }
+

@@ -38,17 +38,26 @@ public class CommandHandler {
     private static void Mail(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         try {
             if (cmd.getType().equals("mail-send")) {
-                System.out.println("Mail Debug " + cmd.getMail());
                 emailList = new ArrayList<>();
-                emailList.add((SentMail) cmd.getMail());
+                emailList.add(cmd.getMail());
                 sentMailService.addMail(emailList);
             }
-            if (cmd.getType().equals("mail-get-sent")) {
-                System.out.println("Get Mail Debug - ID : " + cmd.getUser().getId());
+            if (cmd.getType().equals("mail-income")) {
+                System.out.println("Income Mail Debug - ID : " + cmd.getUser().getId());
                 int userId = cmd.getUser().getId();
 
                 cmd = new Command();
-                cmd.setType("mail-get-sent");
+                cmd.setType("mail-income");
+                cmd.setMailList(sentMailService.getIncomingMail(userId));
+
+                objOutput.writeObject(cmd);
+            }
+            if (cmd.getType().equals("mail-outgoing")) {
+                System.out.println("Outgoing Mail Debug - ID : " + cmd.getUser().getId());
+                int userId = cmd.getUser().getId();
+
+                cmd = new Command();
+                cmd.setType("mail-outgoing");
                 cmd.setMailList(sentMailService.getOutgoingMail(userId));
 
                 objOutput.writeObject(cmd);

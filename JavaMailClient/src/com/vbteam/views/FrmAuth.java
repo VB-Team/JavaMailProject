@@ -155,7 +155,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         }
 
         if (evt.getSource() == pnl_login_arrow) {
-            popupDialog("wait", "Lütfen bekleyiniz.");
+            //popupDialog("wait", "Lütfen bekleyiniz.");
             String username = login_field_username.getText();
             String password = new String(login_field_password.getPassword());
             if (!username.isEmpty() && !password.isEmpty()) {

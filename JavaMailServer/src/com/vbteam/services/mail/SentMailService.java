@@ -36,6 +36,7 @@ public class SentMailService {
             for (IMail sentMail : mails) {
                 fromId = context.getUser(sentMail.getRecipientUser());
                 sendId = context.getUser(sentMail.getSenderUser());
+
                 String insertQuery = "Insert into SentMail(RecipientId,SenderId,Subject,Body,Attachment,AttachmentType)values(?,?,?,?,?,?)";
                 statement = connection.prepareStatement(insertQuery);
                 statement.setInt(1, fromId);
