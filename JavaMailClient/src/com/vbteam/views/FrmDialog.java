@@ -13,29 +13,58 @@ import java.awt.Color;
  */
 public class FrmDialog extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrmDialog
-     */
+    FrmDashboard dashboardFrame;
+    String actionType;
+
     public FrmDialog() {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setBackground(new Color(0, 0, 0, 0));
         this.setAlwaysOnTop(true);
+
+        btn_first.setVisible(false);
+    }
+
+    public void attachDialogToFrame(FrmDashboard _dashboardFrame) {
+        dashboardFrame = _dashboardFrame;
     }
 
     public void setIcon(String type) {
         if (type.equals("confirm")) {
-            btn_ok.setVisible(true);
+            btn_first.setVisible(false);
+            btn_second.setText("OK");
+            btn_second.setVisible(true);
             icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/confirm.png")));
         }
         if (type.equals("error")) {
-            btn_ok.setVisible(true);
+            btn_first.setVisible(false);
+
+            btn_second.setText("OK");
+            btn_second.setVisible(true);
             icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/cancel.png")));
         }
         if (type.equals("wait")) {
-            btn_ok.setVisible(false);
+            btn_first.setVisible(false);
+
+            btn_second.setText("OK");
+            btn_second.setVisible(false);
             icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/time-left.png")));
         }
+        if (type.equals("boolean")) {
+            btn_first.setVisible(true);
+            btn_second.setVisible(true);
+
+            btn_first.setText("Evet");
+            btn_second.setText("Hayır");
+
+            icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/new-email.png")));
+
+        }
+    }
+
+    
+    public void setActionType(String text){
+        actionType = text;
     }
 
     public void setMessage(String message) {
@@ -53,7 +82,8 @@ public class FrmDialog extends javax.swing.JFrame {
 
         icon = new javax.swing.JLabel();
         text = new javax.swing.JLabel();
-        btn_ok = new javax.swing.JButton();
+        btn_first = new javax.swing.JButton();
+        btn_second = new javax.swing.JButton();
         background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -64,17 +94,32 @@ public class FrmDialog extends javax.swing.JFrame {
         icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/confirm.png"))); // NOI18N
         getContentPane().add(icon, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 130, 70));
 
-        text.setForeground(new java.awt.Color(255, 255, 255));
+        text.setForeground(new java.awt.Color(238, 217, 217));
         text.setText("Password Incorrect");
         getContentPane().add(text, new org.netbeans.lib.awtextra.AbsoluteConstraints(124, 160, 400, 60));
 
-        btn_ok.setText("OK");
-        btn_ok.addMouseListener(new java.awt.event.MouseAdapter() {
+        btn_first.setForeground(new java.awt.Color(0, 0, 0));
+        btn_first.setText("OK");
+        btn_first.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_okMouseClicked(evt);
+                btn_firstMouseClicked(evt);
             }
         });
-        getContentPane().add(btn_ok, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 250, 70, 40));
+        btn_first.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_firstActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_first, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 70, 40));
+
+        btn_second.setForeground(new java.awt.Color(0, 0, 0));
+        btn_second.setText("OK");
+        btn_second.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_secondMouseClicked(evt);
+            }
+        });
+        getContentPane().add(btn_second, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 250, 70, 40));
 
         background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/rect.png"))); // NOI18N
         getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -82,9 +127,21 @@ public class FrmDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_okMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_okMouseClicked
+    private void btn_firstMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_firstMouseClicked
+        if (dashboardFrame != null) {
+            dashboardFrame.dialogControl(actionType);
+        }
         setVisible(false);
-    }//GEN-LAST:event_btn_okMouseClicked
+    }//GEN-LAST:event_btn_firstMouseClicked
+
+    private void btn_secondMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_secondMouseClicked
+
+        setVisible(false);
+    }//GEN-LAST:event_btn_secondMouseClicked
+
+    private void btn_firstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_firstActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_firstActionPerformed
 
     /**
      * @param args the command line arguments
@@ -123,7 +180,8 @@ public class FrmDialog extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel background;
-    private javax.swing.JButton btn_ok;
+    private javax.swing.JButton btn_first;
+    private javax.swing.JButton btn_second;
     private javax.swing.JLabel icon;
     private javax.swing.JLabel text;
     // End of variables declaration//GEN-END:variables

@@ -44,12 +44,15 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     byte[] fileByteArray;
     String fileTypeString;
 
+    JPanel mailPanelState;
+
     List<Mail> mailList = new ArrayList<>();
 
     public FrmDashboard() {
 
         popupPanel = new FrmDialog();
-        tableModel = (AbstractTableModel) new MailTableModel(mailList);
+        popupPanel.attachDialogToFrame(this);
+        tableModel = (AbstractTableModel) new MailTableModel(mailList,null);
 
         initGui();
         initComponents();
@@ -76,9 +79,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         jTable2.setDefaultRenderer(Object.class, new TableRenderer());
     }
 
-    public static void popupDialog(String type, String message) {
+    public static void popupDialog(String type, String message, String actionType) {
         popupPanel.setIcon(type);
         popupPanel.setMessage(message);
+        popupPanel.setActionType(actionType);
         popupPanel.setVisible(true);
     }
 
@@ -98,9 +102,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
             mailgonder_label_dosyaismi.setVisible(false);
             mailgonder_label_dosyaismi.setText(null);
-            popupDialog("confirm", "Email gönderildi.");
+            popupDialog("confirm", "Email gönderildi.", null);
         } else {
-            popupDialog("error", "Boşlukları doldurunuz lütfen.");
+            popupDialog("error", "Boşlukları doldurunuz lütfen.", null);
         }
     }
 
@@ -139,13 +143,13 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     public void setUserDetails(User _user) {
         user = _user;
+
         welcomeText.setText("Hoşgeldin , " + user.getFirstName() + " " + user.getLastName());
         txt_LastTime.setText("Son Giriş Tarihi  : " + user.getLastLogin());
-        
-        
+
         profile_ad_text.setText(user.getFirstName());
         profile_soyad_text.setText(user.getLastName());
-        profile_username.setText(user.getUserName());
+        profile_username_text.setText(user.getUserName());
         profile_password_text.setText(user.getPassword());
     }
 
@@ -274,9 +278,31 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     }
 
+    public void saveDraft() {
+
+        Mail draftMail = new Mail();
+
+        draftMail.setSubject(mailgonder_field_baslik.getText());
+        draftMail.setBody(mailgonder_field_icerik.getText());
+        draftMail.setSenderUser(user.getUserName());
+        draftMail.setRecipientUser(mailgonder_field_kime.getText());
+        draftMail.setType("Draft");
+        draftMail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+
+        System.out.println("Taslak kaydedildi.");
+
+        FrmAuth.conService.SendCommand(new Command("mail-send", null, user, draftMail));
+
+    }
+
+    public void dialogControl(String type) {
+        if (type.equals("draft-mail-bool")) {
+            saveDraft();
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent evt) {
-
         if (evt.getSource() == mailgonder_btn_dosyaekle) {
             dosyaGonder();
         }
@@ -287,6 +313,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         if (evt.getSource() == yenimailpanel) {
             mainLayout.show(cardPanel, "mailgonder");
+            mailPanelState = pnl_mail_gonder;
         }
 
         if (evt.getSource() == btn_mail_1) {
@@ -302,37 +329,51 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             setMailCredentials(getMailFromId(getMailTable().getList(), (int) tableModel.getValueAt(selectedRow, 4)));
         }
         if (evt.getSource() == gidenpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("outgoing"));
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("outgoing"),"outgoing");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
+            mailPanelState = pnl_mail;
         }
 
         if (evt.getSource() == gelenpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("income"));
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("income"),"income");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
+            mailPanelState = pnl_mail;
         }
         if (evt.getSource() == taslakpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("draft"));
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("draft"),"draft");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
+            mailPanelState = pnl_mail;
         }
         if (evt.getSource() == coppanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("trash"));
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("trash"),"trash");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
+            mailPanelState = pnl_mail;
         }
         if (evt.getSource() == btn_pnl_anasayfa) {
+            if (mailPanelState == pnl_mail_gonder) {
+                popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+            }
             mainLayout.show(cardPanel, "anasayfa");
-        }
-        if (evt.getSource() == btn_pnl_ayarlar) {
-            mainLayout.show(cardPanel, "ayarlar");
+            mailPanelState = pnl_anasayfa;
+
         }
         if (evt.getSource() == btn_pnl_mail) {
             mainLayout.show(cardPanel, "mailcategory");
+            if (mailPanelState == pnl_mail_gonder) {
+                popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+            }
         }
-        if(evt.getSource() == Profile){
-            mainLayout.show(cardPanel,"profil");
+        if (evt.getSource() == Profile) {
+            if (mailPanelState == pnl_mail_gonder) {
+                popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+            }
+            mainLayout.show(cardPanel, "profil");
+            mailPanelState = pnl_profil;
+
         }
     }
 
@@ -895,6 +936,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_detail_header_text.setBackground(new java.awt.Color(20, 20, 22));
         pnl_mail_detail_header_text.setColumns(5);
         pnl_mail_detail_header_text.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        pnl_mail_detail_header_text.setForeground(new java.awt.Color(254, 254, 254));
         pnl_mail_detail_header_text.setLineWrap(true);
         pnl_mail_detail_header_text.setRows(2);
         pnl_mail_detail_header_text.setTabSize(2);

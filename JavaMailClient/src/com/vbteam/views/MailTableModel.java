@@ -18,9 +18,11 @@ public class MailTableModel extends AbstractTableModel {
 
     private String[] columnNames = {"Gönderen", "Konu", "İçerik", "Tarih"};
     private List<Mail> myList = new ArrayList();
+    private String type;
 
-    public MailTableModel(List<Mail> mailList) {
+    public MailTableModel(List<Mail> mailList,String _type) {
         myList = mailList;
+        type = _type;
     }
     
     public List<Mail> getList(){

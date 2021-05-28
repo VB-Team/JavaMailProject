@@ -62,7 +62,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                     conService = new ConnectionService("127.0.0.1");
                     conService.connectServer();
                 } catch (Exception ex) {
-                    System.out.println(ex.getLocalizedMessage());
+                    System.out.println(ex.getMessage());
                 }
             }
         };
@@ -179,7 +179,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                         popupDialog("error", "Giriş başarısız");
                     }
                 } catch (Exception ex) {
-                    System.out.println(ex.getLocalizedMessage());
+                    System.out.println(ex.getMessage());
                 }
             } else {               
                 popupDialog("error", "Kullanıcı adı ve şifre girdiğinizden emin olun.");
@@ -485,6 +485,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         register_username_input.add(register_username_label, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 110, -1, -1));
 
         register_field_username.setBackground(new java.awt.Color(20, 20, 22));
+        register_field_username.setForeground(new java.awt.Color(254, 254, 254));
         register_field_username.setBorder(null);
         register_username_input.add(register_field_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 130, 220, 40));
 
@@ -599,6 +600,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         register_screen.add(register_username, "username");
 
+        register_password.setForeground(new java.awt.Color(254, 254, 254));
         register_password.setOpaque(false);
         register_password.setLayout(new java.awt.BorderLayout());
 
@@ -646,11 +648,13 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jPanel8.setPreferredSize(new java.awt.Dimension(45, 45));
         jPanel8.setLayout(new java.awt.BorderLayout());
 
+        jLabel7.setForeground(new java.awt.Color(254, 254, 254));
         jLabel7.setText("Kullanıcı Adı");
         jLabel7.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanel8.add(jLabel7, java.awt.BorderLayout.CENTER);
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(254, 254, 254));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel8.setText("01   ");
         jLabel8.setPreferredSize(new java.awt.Dimension(200, 200));
@@ -719,6 +723,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         register_password_input.add(pnl_progress1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 1370, 70));
 
         register_password_field.setBackground(new java.awt.Color(20, 20, 22));
+        register_password_field.setForeground(new java.awt.Color(254, 254, 254));
         register_password_field.setBorder(null);
         register_password_input.add(register_password_field, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 220, 40));
 
@@ -783,6 +788,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         register_password_input1.add(register_detail_label_check, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 180, -1, -1));
 
         register_detail_field_name.setBackground(new java.awt.Color(20, 20, 22));
+        register_detail_field_name.setForeground(new java.awt.Color(254, 254, 254));
         register_detail_field_name.setBorder(null);
         register_password_input1.add(register_detail_field_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 130, 220, 40));
 
@@ -803,6 +809,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         register_password_input1.add(pnl_register_detail_arrow, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 130, 60, 110));
 
         register_detail_field_surname.setBackground(new java.awt.Color(20, 20, 22));
+        register_detail_field_surname.setForeground(new java.awt.Color(254, 254, 254));
         register_detail_field_surname.setBorder(null);
         register_password_input1.add(register_detail_field_surname, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 220, 40));
 
@@ -825,11 +832,13 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jPanel14.setPreferredSize(new java.awt.Dimension(45, 45));
         jPanel14.setLayout(new java.awt.BorderLayout());
 
+        jLabel13.setForeground(new java.awt.Color(254, 254, 254));
         jLabel13.setText("Kullanıcı Adı");
         jLabel13.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanel14.add(jLabel13, java.awt.BorderLayout.CENTER);
 
         jLabel14.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(254, 254, 254));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel14.setText("01   ");
         jLabel14.setPreferredSize(new java.awt.Dimension(200, 200));
@@ -845,6 +854,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         pnl_progress2.add(jPanel13, java.awt.BorderLayout.LINE_START);
 
+        jPanel15.setForeground(new java.awt.Color(254, 254, 254));
         jPanel15.setOpaque(false);
         jPanel15.setPreferredSize(new java.awt.Dimension(450, 450));
         jPanel15.setLayout(new java.awt.BorderLayout());
@@ -853,11 +863,13 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jPanel16.setPreferredSize(new java.awt.Dimension(45, 45));
         jPanel16.setLayout(new java.awt.BorderLayout());
 
+        jLabel15.setForeground(new java.awt.Color(254, 254, 254));
         jLabel15.setText("Şifre");
         jLabel15.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanel16.add(jLabel15, java.awt.BorderLayout.CENTER);
 
         jLabel16.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(254, 254, 254));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel16.setText("02   ");
         jLabel16.setPreferredSize(new java.awt.Dimension(200, 200));
@@ -1062,10 +1074,12 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         login_inputs.add(login_password_label, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 180, -1, -1));
 
         login_field_username.setBackground(new java.awt.Color(20, 20, 22));
+        login_field_username.setForeground(new java.awt.Color(254, 254, 254));
         login_field_username.setBorder(null);
         login_inputs.add(login_field_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 130, 220, 40));
 
         login_field_password.setBackground(new java.awt.Color(20, 20, 22));
+        login_field_password.setForeground(new java.awt.Color(254, 254, 254));
         login_field_password.setBorder(null);
         login_inputs.add(login_field_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 210, 220, 40));
 
