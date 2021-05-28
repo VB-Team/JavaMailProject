@@ -52,7 +52,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         popupPanel = new FrmDialog();
         popupPanel.attachDialogToFrame(this);
-        tableModel = (AbstractTableModel) new MailTableModel(mailList,null);
+        tableModel = (AbstractTableModel) new MailTableModel(mailList, null);
 
         initGui();
         initComponents();
@@ -63,6 +63,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         setListeners();
 
         mailgonder_label_dosyaismi.setVisible(false);
+        kullanici_bilgi_onaylama.setVisible(false);
 
         mainLayout = (CardLayout) cardPanel.getLayout();
     }
@@ -230,6 +231,11 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         Profile.addMouseListener(this);
 
         yenimailpanel.addMouseListener(this);
+        
+        pnl_mail_detail_attachment.addMouseListener(this);
+        
+        kullanici_bilgi_onaylama.addMouseListener(this);
+        kullanici_bilgi_degistir.addMouseListener(this);
 
     }
 
@@ -247,6 +253,12 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_body_text.setText(mail.getBody());
         mail_time_text.setText(mail.getCreateDate().toString());
         pnl_mail_detail_header_text.setText(mail.getSubject());
+
+        if (mail.getAttachment() != null) {
+            pnl_mail_detail_attachment.setVisible(true);
+        } else {
+            pnl_mail_detail_attachment.setVisible(false);
+        }
     }
 
     private void dosyaGonder() {
@@ -303,6 +315,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent evt) {
+        
+        if(evt.getSource() == kullanici_bilgi_degistir){
+            kullanici_bilgi_onaylama.setVisible(true);
+        }
+        if(evt.getSource()== kullanici_bilgi_onaylama){
+            System.out.println("bilgi değiştirildi");
+        }
+        
         if (evt.getSource() == mailgonder_btn_dosyaekle) {
             dosyaGonder();
         }
@@ -329,26 +349,26 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             setMailCredentials(getMailFromId(getMailTable().getList(), (int) tableModel.getValueAt(selectedRow, 4)));
         }
         if (evt.getSource() == gidenpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("outgoing"),"outgoing");
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("outgoing"), "outgoing");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
         }
 
         if (evt.getSource() == gelenpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("income"),"income");
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("income"), "income");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
         }
         if (evt.getSource() == taslakpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("draft"),"draft");
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("draft"), "draft");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
         }
         if (evt.getSource() == coppanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("trash"),"trash");
+            tableModel = (AbstractTableModel) new MailTableModel(getMails("trash"), "trash");
             jTable2.setModel(tableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
@@ -359,7 +379,6 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             }
             mainLayout.show(cardPanel, "anasayfa");
             mailPanelState = pnl_anasayfa;
-
         }
         if (evt.getSource() == btn_pnl_mail) {
             mainLayout.show(cardPanel, "mailcategory");
@@ -373,7 +392,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             }
             mainLayout.show(cardPanel, "profil");
             mailPanelState = pnl_profil;
-
+        }
+        if(evt.getSource() == pnl_mail_detail_attachment){
+            mainLayout.show(cardPanel,"attachment");
         }
     }
 
@@ -396,7 +417,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 || evt.getSource() == btn_pnl_mail || evt.getSource() == yenimailpanel
                 || evt.getSource() == gelenpanel || evt.getSource() == gidenpanel
                 || evt.getSource() == taslakpanel || evt.getSource() == coppanel
-                || evt.getSource() == Profile) {
+                || evt.getSource() == Profile || evt.getSource() == pnl_mail_detail_attachment
+                || evt.getSource() == kullanici_bilgi_degistir || evt.getSource() == kullanici_bilgi_onaylama) {
             JPanel panel = (JPanel) evt.getSource();
             panel.setOpaque(true);
             repaint();
@@ -409,7 +431,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 || evt.getSource() == btn_pnl_ayarlar || evt.getSource() == btn_pnl_mail || evt.getSource() == yenimailpanel
                 || evt.getSource() == gelenpanel || evt.getSource() == gidenpanel
                 || evt.getSource() == taslakpanel || evt.getSource() == coppanel
-                || evt.getSource() == Profile) {
+                || evt.getSource() == Profile || evt.getSource() == pnl_mail_detail_attachment
+                || evt.getSource() == kullanici_bilgi_degistir || evt.getSource() == kullanici_bilgi_onaylama) {
             JPanel panel = (JPanel) evt.getSource();
             panel.setOpaque(false);
             repaint();
@@ -504,6 +527,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_detail_header_text = new javax.swing.JTextArea();
         pnl_mail_detail_body = new javax.swing.JPanel();
         pnl_mail_detail_attachment = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         pnl_mail_body_scrollpane = new javax.swing.JScrollPane();
         pnl_mail_body_text = new javax.swing.JTextArea();
         pnl_main_mails = new javax.swing.JPanel();
@@ -525,6 +550,12 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         profile_ad_text = new javax.swing.JTextField();
         mailgonder_field_seperator5 = new javax.swing.JSeparator();
         profile_soyad_text = new javax.swing.JTextField();
+        kullanici_bilgi_degistir = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        kullanici_bilgi_onaylama = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        pnl_attachments = new javax.swing.JPanel();
+        attachment_baslik = new javax.swing.JLabel();
         bottomBar = new javax.swing.JPanel();
         Profile = new javax.swing.JPanel();
         profile_icon = new javax.swing.JLabel();
@@ -654,6 +685,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/clock.png"))); // NOI18N
         pnl_welcomer.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 40, 40));
 
+        txt_LastTime.setForeground(new java.awt.Color(254, 254, 254));
         txt_LastTime.setText("Son Giriş Tarihi  : ");
         pnl_welcomer.add(txt_LastTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 200, 410, 20));
 
@@ -908,6 +940,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         mail_time.setLayout(new java.awt.BorderLayout());
 
         mail_time_text.setBackground(new java.awt.Color(20, 20, 22));
+        mail_time_text.setForeground(new java.awt.Color(254, 254, 254));
         mail_time_text.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         mail_time_text.setText("[Time]");
         mail_time.add(mail_time_text, java.awt.BorderLayout.CENTER);
@@ -953,10 +986,20 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_detail_body.setPreferredSize(new java.awt.Dimension(50, 100));
         pnl_mail_detail_body.setLayout(new java.awt.BorderLayout());
 
-        pnl_mail_detail_attachment.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3), "Email Eki", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(165, 165, 172))); // NOI18N
+        pnl_mail_detail_attachment.setBackground(new java.awt.Color(30, 29, 32));
+        pnl_mail_detail_attachment.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(165, 165, 172))); // NOI18N
         pnl_mail_detail_attachment.setOpaque(false);
-        pnl_mail_detail_attachment.setPreferredSize(new java.awt.Dimension(60, 60));
+        pnl_mail_detail_attachment.setPreferredSize(new java.awt.Dimension(30, 30));
         pnl_mail_detail_attachment.setLayout(new java.awt.BorderLayout());
+
+        jLabel5.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel5.setText("Email Ekleri");
+        pnl_mail_detail_attachment.add(jLabel5, java.awt.BorderLayout.CENTER);
+
+        jLabel6.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel6.setText(">");
+        pnl_mail_detail_attachment.add(jLabel6, java.awt.BorderLayout.LINE_END);
+
         pnl_mail_detail_body.add(pnl_mail_detail_attachment, java.awt.BorderLayout.PAGE_END);
 
         pnl_mail_body_scrollpane.setBackground(new java.awt.Color(20, 20, 22));
@@ -966,15 +1009,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         pnl_mail_body_text.setEditable(false);
         pnl_mail_body_text.setBackground(new java.awt.Color(20, 20, 22));
-        pnl_mail_body_text.setColumns(5);
+        pnl_mail_body_text.setColumns(2);
         pnl_mail_body_text.setForeground(new java.awt.Color(165, 165, 172));
         pnl_mail_body_text.setLineWrap(true);
-        pnl_mail_body_text.setRows(2);
+        pnl_mail_body_text.setRows(10);
         pnl_mail_body_text.setTabSize(2);
         pnl_mail_body_text.setWrapStyleWord(true);
         pnl_mail_body_text.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
         pnl_mail_body_text.setOpaque(false);
-        pnl_mail_body_text.setPreferredSize(new java.awt.Dimension(90, 90));
         pnl_mail_body_scrollpane.setViewportView(pnl_mail_body_text);
 
         pnl_mail_detail_body.add(pnl_mail_body_scrollpane, java.awt.BorderLayout.CENTER);
@@ -1020,67 +1062,96 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         profile_ad.setForeground(new java.awt.Color(254, 254, 254));
         profile_ad.setText("Adı :");
-        profile_body.add(profile_ad, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, -1, -1));
+        profile_body.add(profile_ad, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 140, -1, -1));
 
         profile_username_text.setEditable(false);
         profile_username_text.setBackground(new java.awt.Color(20, 20, 22));
         profile_username_text.setForeground(new java.awt.Color(238, 217, 217));
         profile_username_text.setBorder(null);
-        profile_body.add(profile_username_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 210, 260, 40));
+        profile_body.add(profile_username_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 300, 260, 40));
 
         mailgonder_field_seperator2.setBackground(new java.awt.Color(25, 25, 28));
         mailgonder_field_seperator2.setForeground(new java.awt.Color(25, 25, 28));
-        profile_body.add(mailgonder_field_seperator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 250, 260, 40));
+        profile_body.add(mailgonder_field_seperator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 340, 260, 40));
 
         profile_username.setForeground(new java.awt.Color(254, 254, 254));
         profile_username.setText("Kullanıcı  :");
-        profile_body.add(profile_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 220, -1, -1));
+        profile_body.add(profile_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 310, -1, -1));
 
         profile_password_text.setEditable(false);
         profile_password_text.setBackground(new java.awt.Color(20, 20, 22));
         profile_password_text.setForeground(new java.awt.Color(238, 217, 217));
         profile_password_text.setBorder(null);
-        profile_body.add(profile_password_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 300, 260, 40));
+        profile_body.add(profile_password_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 390, 260, 40));
 
         register_seperator_password.setBackground(new java.awt.Color(25, 25, 28));
         register_seperator_password.setForeground(new java.awt.Color(25, 25, 28));
-        profile_body.add(register_seperator_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 340, 260, 40));
+        profile_body.add(register_seperator_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 260, 40));
 
         profile_password.setForeground(new java.awt.Color(254, 254, 254));
         profile_password.setText("Şifre :");
-        profile_body.add(profile_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 310, -1, -1));
+        profile_body.add(profile_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, -1, -1));
 
         profile_soyad.setForeground(new java.awt.Color(254, 254, 254));
         profile_soyad.setText("Soyadı  : ");
-        profile_body.add(profile_soyad, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 130, -1, -1));
+        profile_body.add(profile_soyad, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 220, -1, -1));
 
         mailgonder_field_seperator3.setBackground(new java.awt.Color(25, 25, 28));
         mailgonder_field_seperator3.setForeground(new java.awt.Color(25, 25, 28));
-        profile_body.add(mailgonder_field_seperator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 250, 260, 40));
+        profile_body.add(mailgonder_field_seperator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 250, 260, 40));
 
         mailgonder_field_seperator4.setBackground(new java.awt.Color(25, 25, 28));
         mailgonder_field_seperator4.setForeground(new java.awt.Color(25, 25, 28));
-        profile_body.add(mailgonder_field_seperator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 80, 260, 40));
+        profile_body.add(mailgonder_field_seperator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 260, 40));
 
         profile_ad_text.setEditable(false);
         profile_ad_text.setBackground(new java.awt.Color(20, 20, 22));
         profile_ad_text.setForeground(new java.awt.Color(238, 217, 217));
         profile_ad_text.setBorder(null);
-        profile_body.add(profile_ad_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 40, 260, 40));
+        profile_body.add(profile_ad_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 130, 260, 40));
 
         mailgonder_field_seperator5.setBackground(new java.awt.Color(25, 25, 28));
         mailgonder_field_seperator5.setForeground(new java.awt.Color(25, 25, 28));
-        profile_body.add(mailgonder_field_seperator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 160, 260, 40));
+        profile_body.add(mailgonder_field_seperator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 250, 260, 40));
 
         profile_soyad_text.setEditable(false);
         profile_soyad_text.setBackground(new java.awt.Color(20, 20, 22));
         profile_soyad_text.setForeground(new java.awt.Color(238, 217, 217));
         profile_soyad_text.setBorder(null);
-        profile_body.add(profile_soyad_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 120, 260, 40));
+        profile_body.add(profile_soyad_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 210, 260, 40));
+
+        kullanici_bilgi_degistir.setBackground(new java.awt.Color(30, 29, 32));
+        kullanici_bilgi_degistir.setOpaque(false);
+        kullanici_bilgi_degistir.setLayout(new java.awt.BorderLayout());
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("Kullanıcı Bilgilerini Değiştir");
+        kullanici_bilgi_degistir.add(jLabel7, java.awt.BorderLayout.CENTER);
+
+        profile_body.add(kullanici_bilgi_degistir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 500, 230, 50));
+
+        kullanici_bilgi_onaylama.setBackground(new java.awt.Color(30, 29, 32));
+        kullanici_bilgi_onaylama.setOpaque(false);
+        kullanici_bilgi_onaylama.setLayout(new java.awt.BorderLayout());
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Onayla");
+        kullanici_bilgi_onaylama.add(jLabel11, java.awt.BorderLayout.CENTER);
+
+        profile_body.add(kullanici_bilgi_onaylama, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 450, 400, 40));
 
         pnl_profil.add(profile_body, java.awt.BorderLayout.CENTER);
 
         cardPanel.add(pnl_profil, "profil");
+
+        pnl_attachments.setBackground(new java.awt.Color(20, 20, 22));
+        pnl_attachments.setLayout(new java.awt.BorderLayout());
+
+        attachment_baslik.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        attachment_baslik.setText("Mail Ekleri");
+        pnl_attachments.add(attachment_baslik, java.awt.BorderLayout.PAGE_START);
+
+        cardPanel.add(pnl_attachments, "attachment");
 
         getContentPane().add(cardPanel, java.awt.BorderLayout.CENTER);
 
@@ -1192,6 +1263,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Menus;
     private javax.swing.JPanel Profile;
+    private javax.swing.JLabel attachment_baslik;
     private javax.swing.JPanel bottomBar;
     private javax.swing.JButton btn_close;
     private javax.swing.JLabel btn_mail_1;
@@ -1217,14 +1289,20 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel icon_sendMail;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
+    private javax.swing.JPanel kullanici_bilgi_degistir;
+    private javax.swing.JPanel kullanici_bilgi_onaylama;
     private javax.swing.JPanel mail_author;
     private javax.swing.JLabel mail_author_text;
     private javax.swing.JPanel mail_body_message;
@@ -1249,6 +1327,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JSeparator mailgonder_field_seperator5;
     private javax.swing.JLabel mailgonder_label_dosyaismi;
     private javax.swing.JPanel pnl_anasayfa;
+    private javax.swing.JPanel pnl_attachments;
     private javax.swing.JPanel pnl_btnclose;
     private javax.swing.JPanel pnl_btnmaximize;
     private javax.swing.JPanel pnl_btnminimize;

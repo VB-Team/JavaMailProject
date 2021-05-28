@@ -45,7 +45,8 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         setLocationRelativeTo(null);
         this.setSize(1366, 768);
-
+        pack();
+        
         mainLayout = (CardLayout) cardPanel.getLayout();
         registerLayout = (CardLayout) register_screen.getLayout();
     }
