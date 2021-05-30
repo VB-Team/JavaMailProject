@@ -5,7 +5,9 @@
  */
 package com.vbteam.views;
 
+import com.vbteam.models.Attachment;
 import com.vbteam.models.Command;
+import com.vbteam.models.Header;
 import com.vbteam.models.User;
 import static com.vbteam.views.FrmAuth.conService;
 import java.awt.CardLayout;
@@ -89,16 +91,24 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     public void sendEmail() {
         Mail mail = new Mail();
+        List<Header> headers=new ArrayList<Header>();
+        Header header =new Header();     
+        List<Attachment> attachments=new ArrayList<Attachment>();
+        Attachment attachment =new Attachment();    
         if (!(mailgonder_field_baslik.getText().isEmpty() || mailgonder_field_icerik.getText().isEmpty() || mailgonder_field_kime.getText().isEmpty())) {
             mail.setSubject(mailgonder_field_baslik.getText());
-            mail.setBody(mailgonder_field_icerik.getText());
-            mail.setSenderUser(user.getUserName());
-            mail.setRecipientUser(mailgonder_field_kime.getText());
-            mail.setAttachment(fileByteArray);
-            mail.setAttachmentDetail(fileTypeString);
+            mail.setBody(mailgonder_field_icerik.getText());            
+            header.setSenderUser(user.getUserName());
+            header.setRecipientUser(mailgonder_field_kime.getText());
+            header.setState(true);
+            header.setType("Normal");
+            attachment.setAttachmentContent(fileByteArray);
+            attachment.setAttachmentName(fileTypeString);
+            attachments.add(attachment);
+            headers.add(header);
+            mail.setAttachments(attachments);
+            mail.setHeaders(headers);
             mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
-            mail.setState(true);
-            mail.setType("Normal");
             FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
 
             mailgonder_label_dosyaismi.setVisible(false);
@@ -114,8 +124,12 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             if (type.equals("income")) {
                 FrmAuth.conService.SendCommand(new Command("mail-income", null, user, null));
                 Command _command = (Command) conService.getInputStream().readObject();
-
                 mailList = _command.getMailList();
+
+                for (Mail mail : mailList) {
+                    System.out.println(mail.getBody());
+                }
+
             }
             if (type.equals("outgoing")) {
                 FrmAuth.conService.SendCommand(new Command("mail-outgoing", null, user, null));
@@ -231,9 +245,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         Profile.addMouseListener(this);
 
         yenimailpanel.addMouseListener(this);
-        
+
         pnl_mail_detail_attachment.addMouseListener(this);
-        
+
         kullanici_bilgi_onaylama.addMouseListener(this);
         kullanici_bilgi_degistir.addMouseListener(this);
 
@@ -249,12 +263,16 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     }
 
     private void setMailCredentials(Mail mail) {
-        mail_author_text.setText(mail.getRecipientUser());
+        String recipientUsers = "";
+        for (Header header : mail.getHeaders()) {
+            recipientUsers += header.getRecipientUser()+" , ";
+        }
+        mail_author_text.setText(recipientUsers);
         pnl_mail_body_text.setText(mail.getBody());
         mail_time_text.setText(mail.getCreateDate().toString());
         pnl_mail_detail_header_text.setText(mail.getSubject());
 
-        if (mail.getAttachment() != null) {
+        if (mail.isAttachmentState() != false) {
             pnl_mail_detail_attachment.setVisible(true);
         } else {
             pnl_mail_detail_attachment.setVisible(false);
@@ -270,7 +288,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             if (jfc.showDialog(this, "Dosya Seç") == JFileChooser.APPROVE_OPTION) {
                 fileByteArray = Files.readAllBytes(Paths.get(jfc.getSelectedFile().getPath()));
                 fileTypeString = jfc.getSelectedFile().getName();
-
+                System.out.println(fileTypeString);
                 mailgonder_label_dosyaismi.setVisible(true);
                 mailgonder_label_dosyaismi.setText(jfc.getSelectedFile().getName());
 
@@ -293,13 +311,16 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     public void saveDraft() {
 
         Mail draftMail = new Mail();
-
+        List<Header> headers=new ArrayList<Header>();
+        Header header =new Header();
         draftMail.setSubject(mailgonder_field_baslik.getText());
         draftMail.setBody(mailgonder_field_icerik.getText());
-        draftMail.setSenderUser(user.getUserName());
-        draftMail.setRecipientUser(mailgonder_field_kime.getText());
-        draftMail.setType("Draft");
+        header.setSenderUser(user.getUserName());
+        header.setRecipientUser(mailgonder_field_kime.getText());
+        header.setType("Draft");
         draftMail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+        headers.add(header);
+        draftMail.setHeaders(headers);
 
         System.out.println("Taslak kaydedildi.");
 
@@ -315,14 +336,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent evt) {
-        
-        if(evt.getSource() == kullanici_bilgi_degistir){
+
+        if (evt.getSource() == kullanici_bilgi_degistir) {
             kullanici_bilgi_onaylama.setVisible(true);
         }
-        if(evt.getSource()== kullanici_bilgi_onaylama){
+        if (evt.getSource() == kullanici_bilgi_onaylama) {
             System.out.println("bilgi değiştirildi");
         }
-        
+
         if (evt.getSource() == mailgonder_btn_dosyaekle) {
             dosyaGonder();
         }
@@ -393,8 +414,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             mainLayout.show(cardPanel, "profil");
             mailPanelState = pnl_profil;
         }
-        if(evt.getSource() == pnl_mail_detail_attachment){
-            mainLayout.show(cardPanel,"attachment");
+        if (evt.getSource() == pnl_mail_detail_attachment) {
+            mainLayout.show(cardPanel, "attachment");
         }
     }
 

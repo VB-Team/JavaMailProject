@@ -5,6 +5,7 @@
  */
 package com.vbteam.views;
 
+import com.vbteam.models.Header;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -55,7 +56,11 @@ public class MailTableModel extends AbstractTableModel {
         Mail mail = myList.get(row);
         switch (col) {
             case 0:
-                return mail.getRecipientUser();
+                String recipientUser="";
+                for (Header header : mail.getHeaders()) {
+                    recipientUser+=header.getRecipientUser()+" , ";
+                }
+                return recipientUser;
             case 1:
                 return mail.getSubject();
             case 2:

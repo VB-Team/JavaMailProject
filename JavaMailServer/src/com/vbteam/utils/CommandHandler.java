@@ -49,8 +49,12 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-income");
-                List<Mail> mails=mailService.getIncomingMails(userId);
-                cmd.setMailList(mailService.getIncomingMails(userId));
+                List<Mail> mails = mailService.getIncomingMails(userId);
+                for (Mail mail : mails) {
+                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                }
+                cmd.setMailList(mails);
 
                 objOutput.writeObject(cmd);
             }
@@ -60,7 +64,12 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-outgoing");
-                cmd.setMailList(mailService.getOutgoingMails(userId));
+                List<Mail> mails = mailService.getOutgoingMails(userId);
+                for (Mail mail : mails) {
+                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                }
+                cmd.setMailList(mails);
 
                 objOutput.writeObject(cmd);
             }
@@ -71,7 +80,12 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-draft");
-                cmd.setMailList(mailService.getAnyMails(userId,"Draft"));
+                List<Mail> mails = mailService.getAnyMails(userId, "Draft");
+                for (Mail mail : mails) {
+                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                }
+                cmd.setMailList(mails);
 
                 objOutput.writeObject(cmd);
             }
@@ -82,7 +96,12 @@ public class CommandHandler {
 
                 cmd = new Command();
                 cmd.setType("mail-trash");
-                cmd.setMailList(mailService.getAnyMails(userId,"Deleted"));
+                List<Mail> mails = mailService.getAnyMails(userId, "Deleted");
+                for (Mail mail : mails) {
+                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                }
+                cmd.setMailList(mails);
 
                 objOutput.writeObject(cmd);
             }

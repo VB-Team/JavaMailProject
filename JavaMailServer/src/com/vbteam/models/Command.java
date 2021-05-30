@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Command implements Serializable {
 
-    private static final long serialVersionUID = 45087848;
+    private static final long serialVersionUID = 45087845;
 
     private String type, commandText;
     private User user;

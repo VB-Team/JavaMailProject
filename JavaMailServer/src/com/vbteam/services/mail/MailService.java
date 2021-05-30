@@ -5,6 +5,8 @@
  */
 package com.vbteam.services.mail;
 
+import com.vbteam.models.Attachment;
+import com.vbteam.models.Header;
 import com.vbteam.utils.DbContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,103 +32,49 @@ public class MailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            int fromId, sendId;
+            int recipientId, senderId;
+
             for (Mail mail : mails) {
-                fromId = context.getUser(mail.getRecipientUser());
-                sendId = context.getUser(mail.getSenderUser());
+                recipientId = context.getUserId(mail.getHeaders().get(0).getRecipientUser());
+                senderId = context.getUserId(mail.getHeaders().get(0).getSenderUser());
 
-                String insertQuery = "Insert into Mails"
-                        + "(RecipientId,SenderId,Subject,Body,Attachment,AttachmentDetail,CreateDate,Type,State"
-                        + ")values(?,?,?,?,?,?,?,?,?)";
-                statement = connection.prepareStatement(insertQuery);
-                statement.setInt(1, fromId);
-                statement.setInt(2, sendId);
-                statement.setString(3, mail.getSubject());
-                statement.setString(4, mail.getBody());
-                statement.setBytes(5, mail.getAttachment());
-                statement.setString(6, mail.getAttachmentDetail());
-                statement.setTimestamp(7, mail.getCreateDate());
-                statement.setString(8, mail.getType());
-                statement.setBoolean(9, mail.isState());
+                String mailInsertQuery = "Insert into Mails (Subject,Body,AttachmentState,CreateDate) values(?,?,?,?);";
+                statement = connection.prepareStatement(mailInsertQuery);
+
+                statement.setString(1, mail.getSubject());
+                statement.setString(2, mail.getBody());
+                statement.setBoolean(3, mail.isAttachmentState());
+                statement.setTimestamp(4, mail.getCreateDate());
                 affectedRow += statement.executeUpdate();
+                for (Attachment attachment : mail.getAttachments()) {
+
+                    String attachmentInsertQuery = "Insert INTO Attachments(MailId,AttachmentName,AttachmentType,AttachmentSize,AttachmentContent) values ((Select IDENT_CURRENT('Mails')),?,?,?,?)";
+                    statement = connection.prepareStatement(attachmentInsertQuery);
+
+                    statement.setString(1, attachment.getAttachmentName());
+                    statement.setString(2, attachment.getAttachmentType());
+                    statement.setInt(3, attachment.getAttachmentSize());
+                    statement.setBytes(4, attachment.getAttachmentContent());
+                    affectedRow += statement.executeUpdate();
+                }
+                for (Header header : mail.getHeaders()) {
+                    String attachmentInsertQuery = "Insert INTO Headers(MailId,RecipientId,SenderId,Type,State) values ((Select IDENT_CURRENT('Mails')),?,?,?,?)";
+                    statement = connection.prepareStatement(attachmentInsertQuery);
+                    recipientId = context.getUserId(header.getRecipientUser());
+                    senderId = context.getUserId(header.getSenderUser());
+                    statement.setInt(1, recipientId);
+                    statement.setInt(2, senderId);
+                    statement.setString(3, header.getType());
+                    statement.setBoolean(4, header.isState());
+                    affectedRow += statement.executeUpdate();
+                }
                 statement.close();
             }
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             connection.close();
         } catch (Exception ex) {
-            System.out.println("Server Sent Mail Service Exception : " + ex.getLocalizedMessage());
+            System.out.println("Server Sent Mail Service Exception : " + ex.toString());
         }
-    }
-
-    public void addRandomMails(int mailCount) {
-        try {
-
-            int affectedRow = 0;
-            PreparedStatement statement;
-            context = new DbContext();
-            connection = context.getConnection();
-            int fromId, sendId;
-            for (int i = 0; i < mailCount; i++) {
-                RandomBytes();
-
-                String insertQuery = "Insert into Mails"
-                        + "(RecipientId,SenderId,Subject,Body,Attachment,AttachmentDetail,CreateDate,Type,State"
-                        + ")values(?,?,?,?,?,?,?,?,?)";
-                statement = connection.prepareStatement(insertQuery);
-                if (i % 3 == 0) {
-                    statement.setInt(1, 1);
-                    statement.setInt(2, 2);
-                } else {
-                    statement.setInt(1, 2);
-                    statement.setInt(2, 1);
-                }
-                String[] mailType=new String[3];
-                mailType[0]="Normal";
-                mailType[1]="Deleted";
-                mailType[2]="Draft";
-                Random rnd=new Random();
-                statement.setString(3, RandomString(108));
-                statement.setString(4, RandomString(200));
-                statement.setBytes(5, RandomBytes());
-                statement.setString(6, RandomString(100));
-                statement.setTimestamp(7, new java.sql.Timestamp(new java.util.Date().getTime()));
-                statement.setString(8, mailType[rnd.nextInt(3)]);
-                if (i % 2 == 0) {
-                    statement.setBoolean(9, true);
-                } else {
-                    statement.setBoolean(9, false);
-                }
-
-                affectedRow += statement.executeUpdate();
-                statement.close();
-            }
-            System.out.println("Etkilenen satır sayısı " + affectedRow);
-            connection.close();
-        } catch (Exception ex) {
-            System.err.println("Server Mail Service Exception : " + ex.getLocalizedMessage());
-        }
-    }
-
-    private byte[] RandomBytes() {
-        byte[] array = new byte[7]; // length is bounded by 7
-        return array;
-    }
-
-    private String RandomString(int length) {
-        //fromId = context.getUser(mail.getRecipientUser());
-        //sendId = context.getUser(mail.getSenderUser());
-        int leftLimit = 97; // letter 'a'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = length;
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-        for (int j = 0; j < targetStringLength; j++) {
-            int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
-        }
-        String generatedString = buffer.toString();
-
-        return generatedString;
     }
 
     public List<Mail> getOutgoingMails(int userId) {
@@ -134,28 +82,40 @@ public class MailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select u.UserName,m.* From Mails m inner join Users u on u.Id=RecipientId where m.SenderId=? AND m.State=1 AND m.Type='Normal' ";
-            statement = connection.prepareStatement(query);
+
+            String headerMailIdQuery = " Select h.MailId from Headers h ,Users u where h.SenderId=? and u.Id=h.RecipientId and h.Type='Normal' and h.State=1";
+            String mailSelectQuery = "Select * From Mails m where m.Id=?";
+
+            statement = connection.prepareStatement(headerMailIdQuery);
             statement.setString(1, Integer.toString(userId));
-            ResultSet rs = statement.executeQuery();
+            ResultSet headerMailIdResultSet = statement.executeQuery();
             List<Mail> mails = new ArrayList<Mail>();
-            while (rs.next()) {
-                Mail mail = new Mail();
-                mail.setId(rs.getInt("Id"));
-                mail.setRecipientUser(rs.getString("UserName"));
-                mail.setSubject(rs.getString("Subject"));
-                mail.setBody(rs.getString("Body"));
-                mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
-                mail.setAttachment(rs.getBytes("Attachment"));
-                mail.setAttachmentDetail(rs.getString("AttachmentDetail"));
-                mails.add(mail);
+            int mailId = 0;
+            while (headerMailIdResultSet.next()) {
+                if (mailId != headerMailIdResultSet.getInt("MailId")) {
+                    mailId = headerMailIdResultSet.getInt("MailId");
+
+                    statement = connection.prepareStatement(mailSelectQuery);
+                    statement.setInt(1, mailId);
+                    ResultSet mailResultSet = statement.executeQuery();
+                    while (mailResultSet.next()) {
+                        Mail mail = new Mail();
+                        mail.setId(mailResultSet.getInt(1));
+                        mail.setSubject(mailResultSet.getString(2));
+                        mail.setBody(mailResultSet.getString(3));
+                        mail.setCreateDate(mailResultSet.getTimestamp("CreateDate"));
+                        mail.setAttachmentState(mailResultSet.getBoolean(4));
+                        mails.add(mail);
+                    }
+                    mailResultSet.close();
+                }
             }
             statement.close();
             connection.close();
-            rs.close();
+            headerMailIdResultSet.close();
             return mails;
         } catch (Exception ex) {
-            System.out.println("Get Sent Mail Exception : " + ex.getMessage());
+            System.out.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -165,28 +125,97 @@ public class MailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select u.UserName,m.* From Mails m inner join Users u on u.Id=SenderId where m.RecipientId=? AND m.State=1 AND m.Type='Normal'";
-            statement = connection.prepareStatement(query);
+
+            String headerMailIdQuery = " Select h.MailId from Headers h ,Users u where h.RecipientId=? and u.Id=h.SenderId and h.Type='Normal' and h.State=1";
+            String mailSelectQuery = "Select * From Mails m where m.Id=?";
+
+            statement = connection.prepareStatement(headerMailIdQuery);
             statement.setString(1, Integer.toString(userId));
-            ResultSet rs = statement.executeQuery();
+            ResultSet headerMailIdResultSet = statement.executeQuery();
             List<Mail> mails = new ArrayList<Mail>();
+            int mailId = 0;
+            while (headerMailIdResultSet.next()) {
+                if (mailId != headerMailIdResultSet.getInt("MailId")) {
+                    mailId = headerMailIdResultSet.getInt("MailId");
+
+                    statement = connection.prepareStatement(mailSelectQuery);
+                    statement.setInt(1, mailId);
+                    ResultSet mailResultSet = statement.executeQuery();
+                    while (mailResultSet.next()) {
+                        Mail mail = new Mail();
+                        mail.setId(mailResultSet.getInt(1));
+                        mail.setSubject(mailResultSet.getString(2));
+                        mail.setBody(mailResultSet.getString(3));
+                        mail.setCreateDate(mailResultSet.getTimestamp("CreateDate"));
+                        mail.setAttachmentState(mailResultSet.getBoolean(4));
+                        mails.add(mail);
+                    }
+                    mailResultSet.close();
+                }
+            }
+            statement.close();
+            connection.close();
+            headerMailIdResultSet.close();
+            return mails;
+        } catch (Exception ex) {
+            System.out.println("Get From Mail Exception : " + ex.getMessage());
+            return null;
+        }
+    }
+
+    public List<Header> getMailHeaders(int mailId) {
+        try {
+            String headerSelectQuery = " Select u.UserName,h.*  from Headers h ,Users u where u.Id=RecipientId and h.MailId=? and h.State=1";
+            PreparedStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+            List<Header> headers = new ArrayList<Header>();
+            statement = connection.prepareStatement(headerSelectQuery);
+            statement.setInt(1, mailId);
+            ResultSet headerResultSet = statement.executeQuery();
+            while (headerResultSet.next()) {
+                Header header = new Header();
+                header.setSenderUser(context.getUserName(headerResultSet.getInt("SenderId")));
+                header.setId(headerResultSet.getInt("Id"));
+                header.setMailId(headerResultSet.getInt("MailId"));
+                header.setRecipientUser(headerResultSet.getString("UserName"));
+                header.setType(headerResultSet.getString("Type"));
+                header.setState(headerResultSet.getBoolean("State"));
+                headers.add(header);
+            }
+            statement.close();
+            connection.close();
+            headerResultSet.close();
+            return headers;
+        } catch (Exception ex) {
+            System.out.println("Get From Mail Exception : " + ex.getMessage());
+            return null;
+        }
+    }
+
+    public List<Attachment> getMailAttachments(int mailId) {
+        try {
+            PreparedStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+            String query = "Select * From Attachments a where a.MailId=?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, Integer.toString(mailId));
+            ResultSet rs = statement.executeQuery();
+            List<Attachment> attachments = new ArrayList<Attachment>();
             while (rs.next()) {
-                Mail mail = new Mail();
-                mail.setId(rs.getInt("Id"));
-                mail.setRecipientUser(rs.getString("UserName"));
-                mail.setSubject(rs.getString("Subject"));
-                mail.setBody(rs.getString("Body"));
-                mail.setCreateDate(rs.getTimestamp("CreateDate"));//DateTimeFix
-                mail.setAttachmentDetail(rs.getString("AttachmentDetail"));
-                mail.setAttachment(rs.getBytes("Attachment"));
-                mail.setType(rs.getString("Type"));
-                mail.setState(rs.getBoolean("State"));
-                mails.add(mail);
+                Attachment attachment = new Attachment();
+                attachment.setId(rs.getInt("Id"));
+                attachment.setAttachmentContent(rs.getBytes("AttachmentContent"));
+                attachment.setAttachmentType(rs.getString("AttachmentType"));
+                attachment.setAttachmentSize(rs.getInt("AttachmentSize"));
+                attachment.setAttachmentName(rs.getString("AttachmentName"));
+                attachments.add(attachment);
             }
             statement.close();
             connection.close();
             rs.close();
-            return mails;
+            return attachments;
         } catch (Exception ex) {
             System.out.println("Get From Mail Exception : " + ex.getMessage());
             return null;
@@ -198,30 +227,41 @@ public class MailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String selectQuery = "Select u.UserName,m.* From Mails m inner join Users u on u.Id=RecipientId where m.SenderId=? AND m.State=1 AND m.Type=?";
-            statement = connection.prepareStatement(selectQuery);
-            statement.setInt(1, userId);
+
+            String headerMailIdQuery = " Select h.MailId from Headers h ,Users u where h.RecipientId=? and u.Id=h.SenderId and h.Type=? and h.State=1";
+            String mailSelectQuery = "Select * From Mails m where m.Id=?";
+
+            statement = connection.prepareStatement(headerMailIdQuery);
+            statement.setString(1, Integer.toString(userId));
             statement.setString(2, mailType);
+            ResultSet headerMailIdResultSet = statement.executeQuery();
             List<Mail> mails = new ArrayList<Mail>();
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Mail mail = new Mail();
-                mail.setId(resultSet.getInt("Id"));
-                mail.setRecipientUser(resultSet.getString("UserName"));
-                mail.setSubject(resultSet.getString("Subject"));
-                mail.setBody(resultSet.getString("Body"));
-                mail.setCreateDate(resultSet.getTimestamp("CreateDate"));//DateTimeFix
-                mail.setAttachmentDetail(resultSet.getString("AttachmentDetail"));
-                mail.setAttachment(resultSet.getBytes("Attachment"));
-                mail.setType(resultSet.getString("Type"));
-                mail.setState(resultSet.getBoolean("State"));
-                mails.add(mail);
+            int mailId = 0;
+            while (headerMailIdResultSet.next()) {
+                if (mailId != headerMailIdResultSet.getInt("MailId")) {
+                    mailId = headerMailIdResultSet.getInt("MailId");
+
+                    statement = connection.prepareStatement(mailSelectQuery);
+                    statement.setInt(1, mailId);
+                    ResultSet mailResultSet = statement.executeQuery();
+                    while (mailResultSet.next()) {
+                        Mail mail = new Mail();
+                        mail.setId(mailResultSet.getInt(1));
+                        mail.setSubject(mailResultSet.getString(2));
+                        mail.setBody(mailResultSet.getString(3));
+                        mail.setCreateDate(mailResultSet.getTimestamp("CreateDate"));
+                        mail.setAttachmentState(mailResultSet.getBoolean(4));
+                        mails.add(mail);
+                    }
+                    mailResultSet.close();
+                }
             }
-            connection.close();
             statement.close();
+            connection.close();
+            headerMailIdResultSet.close();
             return mails;
-        } catch (Exception e) {
-            System.out.println("Mail Service Exception : " + e.getLocalizedMessage());
+        } catch (Exception ex) {
+            System.out.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
 
@@ -232,33 +272,27 @@ public class MailService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String selectQuery = "Select * From Mails m where m.Id=?";
+            String selectQuery = "Select * From Headers h where h.MailId=?";
             String deleteQuery = "Delete From Mails where Id=?";
-            String updateQuery = "Update Mails set Mails.Type='Deleted' where Mails.Id=?";
+            String updateQuery = "Update Headers set Headers.Type='Deleted' where Headers.MailId=?";
             statement = connection.prepareStatement(selectQuery);
             statement.setString(1, Integer.toString(mailId));
             ResultSet rs = statement.executeQuery();
-            Mail mail = new Mail();
+            Header header = new Header();
             while (rs.next()) {
-                /* mail.setId(rs.getInt("Id"));
-                mail.setRecipientUser(rs.getString("RecipientId"));
-                mail.setSubject(rs.getString("Subject"));
-                mail.setBody(rs.getString("Body"));
-                mail.setCreateDate(rs.getTimestamp("CreateDate"));
-                mail.setSenderUser(rs.getString("SendId"));
-                mail.setAttachment(rs.getBytes("Attachment"));
-                mail.setAttachmentDetail(rs.getString("AttachmentDetail"));*/
-                mail.setType(rs.getString("Type"));
+                header.setMailId(rs.getInt("MailId"));
+                header.setType(rs.getString("Type"));
 
             }
-            if (mail.getType().equals("Deleted")) {
+            if (header.getType().equals("Deleted")) {
                 statement = connection.prepareStatement(deleteQuery);
                 statement.setInt(1, mailId);
                 int affectedRow = statement.executeUpdate();
                 System.out.println(affectedRow);
-            } else {                
-                statement = connection.prepareStatement(updateQuery);     
-                statement.setInt(1, mailId);                
+            } else {
+                System.out.println("asd");
+                statement = connection.prepareStatement(updateQuery);
+                statement.setInt(1, mailId);
                 int affectedRow = statement.executeUpdate();
             }
             connection.close();

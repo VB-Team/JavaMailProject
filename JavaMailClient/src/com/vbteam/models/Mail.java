@@ -7,38 +7,22 @@ package com.vbteam.models;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
+import java.util.List;
 
 /**
  *
- * @author BatuPC
+ * @author schea
  */
-public class Mail implements Serializable{
 
-     /**
-     * @return the SenderUser
-     */
-    public String getSenderUser() {
-        return SenderUser;
-    }
-
-    /**
-     * @param SenderUser the SenderUser to set
-     */
-    public void setSenderUser(String SenderUser) {
-        this.SenderUser = SenderUser;
-    }
-
-    private int Id;
-    private String SenderUser;
-    private String RecipientUser;
+public class Mail implements Serializable {        
+private static final long serialVersionUID = 45087842;
+    private int Id;    
+    private boolean AttachmentState;
     private String Subject;
-    private String Body;
-    private byte[] Attachment;
-    private String AttachmentDetail;
+    private String Body;  
     private Timestamp CreateDate;
-    private String Type;
-    private boolean State;
+    private List<Attachment> Attachments;
+    private List<Header> Headers;
 
     /**
      * @return the Id
@@ -67,21 +51,45 @@ public class Mail implements Serializable{
     public void setSubject(String Subject) {
         this.Subject = Subject;
     }
-
     /**
-     * @return the RecipientUser
+     * @return the Attachments
      */
-    public String getRecipientUser() {
-        return RecipientUser;
+    public List<Attachment> getAttachments() {
+        return Attachments;
     }
 
     /**
-     * @param RecipientUser the RecipientUser to set
+     * @param Attachments the Attachments to set
      */
-    public void setRecipientUser(String RecipientUser) {
-        this.RecipientUser = RecipientUser;
+    public void setAttachments(List<Attachment> Attachments) {
+        this.Attachments = Attachments;
+    }
+    /**
+     * @return the AttachmentState
+     */
+    public boolean isAttachmentState() {
+        return AttachmentState;
     }
 
+    /**
+     * @param AttachmentState the AttachmentState to set
+     */
+    public void setAttachmentState(boolean AttachmentState) {
+        this.AttachmentState = AttachmentState;
+    }
+    /**
+     * @return the Headers
+     */
+    public List<Header> getHeaders() {
+        return Headers;
+    }
+
+    /**
+     * @param Headers the Headers to set
+     */
+    public void setHeaders(List<Header> Headers) {
+        this.Headers = Headers;
+    }
     /**
      * @return the Body
      */
@@ -95,35 +103,6 @@ public class Mail implements Serializable{
     public void setBody(String Body) {
         this.Body = Body;
     }
-
-    /**
-     * @return the Attachment
-     */
-    public byte[] getAttachment() {
-        return Attachment;
-    }
-
-    /**
-     * @param Attachment the Attachment to set
-     */
-    public void setAttachment(byte[] Attachment) {
-        this.Attachment = Attachment;
-    }
-
-    /**
-     * @return the AttachmentDetail
-     */
-    public String getAttachmentDetail() {
-        return AttachmentDetail;
-    }
-
-    /**
-     * @param AttachmentDetail the AttachmentDetail to set
-     */
-    public void setAttachmentDetail(String AttachmentDetail) {
-        this.AttachmentDetail = AttachmentDetail;
-    }
-
     /**
      * @return the CreateDate
      */
@@ -138,31 +117,4 @@ public class Mail implements Serializable{
         this.CreateDate = CreateDate;
     }
 
-    /**
-     * @return the Type
-     */
-    public String getType() {
-        return Type;
-    }
-
-    /**
-     * @param Type the Type to set
-     */
-    public void setType(String Type) {
-        this.Type = Type;
-    }
-
-    /**
-     * @return the State
-     */
-    public boolean isState() {
-        return State;
-    }
-
-    /**
-     * @param State the State to set
-     */
-    public void setState(boolean State) {
-        this.State = State;
-    }
 }

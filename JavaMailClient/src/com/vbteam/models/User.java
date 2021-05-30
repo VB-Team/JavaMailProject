@@ -8,23 +8,38 @@ package com.vbteam.models;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+
 /**
  *
  * @author schea
  */
-public class User implements Serializable{    
+public class User implements Serializable {
     
-    private static final long serialVersionUID = 45087844;
-    
+    private static final long serialVersionUID = 45087841;
+
     private int Id;
     private String Role;
-    private String UserName;    
-    private String Password;    
+    private String UserName;
+    private String Password;
     private Date RegisterDate;
     private Timestamp LastLogin;
     private String FirstName;
     private String LastName;
-    
+
+    public User() {
+    }
+
+    public User(int Id, String Role, String UserName, String Password, Date RegisterDate, Timestamp LastLogin, String FirstName, String LastName) {
+        this.Id = Id;
+        this.Role = Role;
+        this.UserName = UserName;
+        this.Password = Password;
+        this.RegisterDate = RegisterDate;
+        this.LastLogin = LastLogin;
+        this.FirstName = FirstName;
+        this.LastName = LastName;
+    }
+
     /**
      * @return the FirstName
      */
@@ -52,7 +67,7 @@ public class User implements Serializable{
     public void setLastName(String LastName) {
         this.LastName = LastName;
     }
-    
+
     /**
      * @return the Id
      */

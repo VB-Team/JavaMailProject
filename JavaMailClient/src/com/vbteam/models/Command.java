@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class Command implements Serializable {
 
-    private static final long serialVersionUID = 45087848;
+    private static final long serialVersionUID = 45087845;
 
     private String type, commandText;
     private User user;
     private boolean boolResponse;
     private Mail mail;
-    private List<Mail> mailList = new ArrayList();
+    private List<Mail> mailList = new ArrayList<Mail>();
 
     public Command() {
     }
@@ -36,8 +36,8 @@ public class Command implements Serializable {
     public void setMailList(List<Mail> _mailList) {
         mailList = _mailList;
     }
-
-    public List<Mail> getMailList() {
+    
+    public List<Mail> getMailList(){
         return mailList;
     }
 

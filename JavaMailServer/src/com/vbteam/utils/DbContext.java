@@ -19,8 +19,8 @@ import java.sql.SQLException;
 public class DbContext {
 
     static Connection connection;
-    static String fullurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;user=sa;password=6165";
-    static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer";
+    static String fullurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer;user=sa;password=6165";
+    static String conurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer";
 
     static String user = "sa";
     static String batuPass = "Password1!";
@@ -36,7 +36,7 @@ public class DbContext {
         return connection;
     }
 
-    public int getUser(String userName) {
+    public int getUserId(String userName) {
         try {
             PreparedStatement statement;
             connection = DriverManager.getConnection(conurl, user, batuPass);
@@ -51,6 +51,23 @@ public class DbContext {
         } catch (Exception e) {
              System.out.println("DbContext Exception : " + e.getMessage());
              return -1;
+        }
+    }
+     public String getUserName(int userId) {
+        try {
+            PreparedStatement statement;
+            connection = DriverManager.getConnection(conurl, user, batuPass);
+            String selectQuery = "Select u.UserName from Users u where u.Id=?";
+            statement = connection.prepareStatement(selectQuery);
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) 
+                return rs.getString("UserName");
+            else
+                return null;
+        } catch (Exception e) {
+             System.out.println("DbContext Exception : " + e.getMessage());
+             return null;
         }
     }
 }

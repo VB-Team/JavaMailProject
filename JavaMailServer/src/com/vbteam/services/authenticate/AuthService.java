@@ -29,7 +29,7 @@ public class AuthService implements IAuthService {
             context = new DbContext();
             connection = context.getConnection();
             String query = "Select u.Id,u.LastLoginDate,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
-                    + "From Users u join UserDetail ud on ud.UserId=u.Id\n"
+                    + "From Users u join UserDetails ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id \n"
                     + "where u.UserName=?";
             statement = connection.prepareStatement(query);
