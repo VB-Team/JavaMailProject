@@ -26,15 +26,6 @@ public class MailService {
     private Connection connection;
     private static MailService instance=null;
 
-    private MailService() {
-        instance=new MailService();
-    }
-    public static MailService getInstance(){
-        if (instance==null) 
-            instance=new MailService();
-            
-        return instance;
-    }
     public void addMails(Mail mail) {
         try {
             int affectedRow = 0;

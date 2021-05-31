@@ -23,17 +23,6 @@ public class AuthService implements IAuthService {
     Connection connection;
     private static AuthService instance = null;
 
-    private AuthService() {
-        instance = new AuthService();
-    }
-
-    public static AuthService getInstance() {
-        if (instance == null) {
-            instance = new AuthService();
-        }
-
-        return instance;
-    }
 
     @Override
     public User login(String UserName, String Password) {
@@ -167,7 +156,7 @@ public class AuthService implements IAuthService {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    @Override
+
     public User updateUser(User user) {
         try {
             CallableStatement statement;

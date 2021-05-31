@@ -5,6 +5,7 @@
  */
 package com.vbteam.views;
 
+import com.vbteam.models.Attachment;
 import com.vbteam.models.Mail;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +15,20 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author ubuntu
  */
-public class AttachmentTableModel {
+public class AttachmentTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"Dosya Adı", "Dosya Tipi", "Dosya boyutu", "Tarih"};
-    
-    /*private List<Attachment> myList = new ArrayList();
+    private String[] columnNames = {"Dosya Adı", "Dosya Tipi", "Dosya boyutu"};
 
-    public AttachmentTableModel(List<Attachment> mailList) {
-        myList = mailList;
+    private List<Attachment> myList = new ArrayList();
+
+    public AttachmentTableModel(List<Attachment> attachmentList) {
+        myList = attachmentList;
     }
-    
-    
-    public List<Mail> getList(){
+
+    public List<Attachment> getList() {
         return myList;
     }
-    
+
     @Override
     public String getColumnName(int col) {
         return columnNames[col];
@@ -52,22 +52,22 @@ public class AttachmentTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        Mail mail = myList.get(row);
+        Attachment attachment = myList.get(row);
         switch (col) {
             case 0:
-                return mail.getRecipientUser();
+                return attachment.getAttachmentName();
             case 1:
-                return mail.getSubject();
+                return attachment.getAttachmentType();
             case 2:
-                return mail.getBody();
+                return attachment.getAttachmentSize();
             case 3:
-                return mail.getCreateDate();
+                return attachment.getAttachmentContent();
             case 4:
-                return mail.getId();
+                return attachment.getId();
             default:
                 break;
         }
-        return mail;
+        return attachment;
     }
-    */
+
 }

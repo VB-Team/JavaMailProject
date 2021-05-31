@@ -24,17 +24,6 @@ public class UserManagementService implements IUserManagementService {
     Connection connection;
     private static UserManagementService instance = null;
 
-    private UserManagementService() {
-        instance = new UserManagementService();
-    }
-
-    public static UserManagementService getInstance() {
-        if (instance == null) {
-            instance = new UserManagementService();
-        }
-
-        return instance;
-    }
 
     @Override
     public User addUser(User user) {

@@ -46,7 +46,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         setLocationRelativeTo(null);
         this.setSize(1366, 768);
         pack();
-        
+
         mainLayout = (CardLayout) cardPanel.getLayout();
         registerLayout = (CardLayout) register_screen.getLayout();
     }
@@ -165,14 +165,18 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                     user.setPassword(password);
                     user.setRole("User");
                     conService.SendCommand(new Command("auth-login", null, user, null));
-
+                    
+                    System.out.println("Login işlemi " + System.currentTimeMillis());
+                    
                     Command _command = (Command) conService.getInputStream().readObject();
+                    
+                    System.out.println("Login tamamlandı işlemi " + System.currentTimeMillis());
+                    
                     //login control
                     user = _command.getUser();
                     if (!(user == null)) {
                         dashboard = new FrmDashboard();
                         dashboard.setUserDetails(user);
-
 
                         popupPanel.setVisible(false);
                         this.setVisible(false);
@@ -180,9 +184,9 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                         popupDialog("error", "Giriş başarısız");
                     }
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
-            } else {               
+            } else {
                 popupDialog("error", "Kullanıcı adı ve şifre girdiğinizden emin olun.");
             }
 

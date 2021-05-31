@@ -5,28 +5,24 @@
  */
 package com.vbteam.views;
 
-import com.vbteam.models.Header;
+import com.vbteam.models.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import com.vbteam.models.Mail;
 
 /**
  *
  * @author ubuntu
  */
-public class MailTableModel extends AbstractTableModel {
+public class UserTableModel extends AbstractTableModel{
+    private String[] columnNames = {"Adı", "Soyadı","Kayıt Tarihi", "Rolü","Şifresi"};
+    private List<User> myList = new ArrayList();
 
-    private String[] columnNames = {"Gönderen", "Konu", "İçerik", "Tarih"};
-    private List<Mail> myList = new ArrayList();
-    private String type;
-
-    public MailTableModel(List<Mail> mailList, String _type) {
-        myList = mailList;
-        type = _type;
+    public UserTableModel(List<User> userList) {
+        myList = userList;
     }
 
-    public List<Mail> getList() {
+    public List<User> getList() {
         return myList;
     }
 
@@ -53,27 +49,24 @@ public class MailTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        Mail mail = myList.get(row);
+        User user = myList.get(row);
         switch (col) {
             case 0:
-                String recipientUser = "";
-                for (Header header : mail.getHeaders()) {
-                    recipientUser += header.getRecipientUser() + " , ";
-                }
-                return recipientUser;
+                return user.getFirstName();
             case 1:
-                return mail.getSubject();
+                return user.getLastName();
             case 2:
-                return mail.getBody();
+                return user.getRegisterDate();
             case 3:
-                return mail.getCreateDate();
+                return user.getRole();
             case 4:
-                return mail.getId();
+                return user.getPassword();
             case 5:
-                return mail.getAttachments();
+                return user.getId();
             default:
                 break;
         }
-        return mail;
+        return user;
     }
+    
 }
