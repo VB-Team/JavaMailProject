@@ -27,7 +27,6 @@ public class MailService {
 
     public void addMails(Mail mail) {
         try {
-
             int affectedRow = 0;
             PreparedStatement statement;
             context = new DbContext();
@@ -66,7 +65,7 @@ public class MailService {
                     affectedRow += statement.executeUpdate();
                     }
                 }                
-                statement.close();            
+                statement.close();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             connection.close();
         } catch (Exception ex) {

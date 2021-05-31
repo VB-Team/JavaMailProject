@@ -26,8 +26,10 @@ public class AuthService implements IAuthService {
     public User login(String UserName, String Password) {
         try {
             PreparedStatement statement;
+            
             context = new DbContext();
             connection = context.getConnection();
+            
             String query = "Select u.Id,u.LastLoginDate,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
                     + "From Users u join UserDetails ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id \n"
@@ -35,7 +37,6 @@ public class AuthService implements IAuthService {
             statement = connection.prepareStatement(query);
             statement.setString(1, UserName);
             ResultSet rs = statement.executeQuery();
-            System.out.println("Etkilenen satır sayısı " + rs);
             User user = new User();
             while (rs.next()) {
                 user.setId(rs.getInt("Id"));
@@ -45,10 +46,10 @@ public class AuthService implements IAuthService {
                 user.setPassword(rs.getString("Password"));
                 user.setRole(rs.getString("Role"));
                 user.setRegisterDate(rs.getDate("RegisterDate"));
-                user.setLastLogin(rs.getTimestamp("LastLoginDate"));//AuthService Exception : The column name LastLogin is not valid.
+                user.setLastLogin(rs.getTimestamp("LastLoginDate"));
             }
             if (BCrypt.checkpw(Password, user.getPassword())) {
-                if (UpdateLastLoginDate(UserName)) {               
+                if (UpdateLastLoginDate(UserName)) {    
                     return user;
                 }else
                     return null;
@@ -149,5 +150,34 @@ public class AuthService implements IAuthService {
 
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    @Override
+    public User updateUser(User user) {
+        try {
+            CallableStatement statement;
+            context = new DbContext();
+            connection = context.getConnection();
+            String query = "{call UpdateUser(?,?,?,?,?,?)}";
+            statement = connection.prepareCall(query);
+            statement.setInt(1, user.getId());
+            statement.setString(2, user.getFirstName());
+            statement.setString(3, user.getLastName());
+            statement.setString(4, user.getUserName());
+            statement.setString(5, user.getPassword());
+            statement.setString(6, "User");
+            int affectedRow = statement.executeUpdate();
+            System.out.println("Etkilenen satır sayısı " + affectedRow);
+            statement.close();
+            connection.close();
+            if (affectedRow > 0) {
+                return user;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("User Manager Service Exception : " + e.getMessage());
+            return null;
+        }
     }
 }
