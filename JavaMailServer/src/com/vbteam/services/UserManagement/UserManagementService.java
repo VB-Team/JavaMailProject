@@ -22,6 +22,19 @@ public class UserManagementService implements IUserManagementService {
 
     DbContext context;
     Connection connection;
+    private static UserManagementService instance = null;
+
+    private UserManagementService() {
+        instance = new UserManagementService();
+    }
+
+    public static UserManagementService getInstance() {
+        if (instance == null) {
+            instance = new UserManagementService();
+        }
+
+        return instance;
+    }
 
     @Override
     public User addUser(User user) {
@@ -145,7 +158,7 @@ public class UserManagementService implements IUserManagementService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String headerQuery = "Select h.MailId from Headers h ,Users u where h.SenderId=? and u.Id=h.RecipientId and h.State=1";
+            String headerQuery = "Select h.MailId from Headers h ,Users u where h.RecipientId=? and u.Id=h.RecipientId and h.State=1";
             String mailSelectQuery = "Select * From Mails m where m.Id=?";
             statement = connection.prepareStatement(headerQuery);
             statement.setInt(1, userId);
@@ -159,7 +172,7 @@ public class UserManagementService implements IUserManagementService {
                     statement.setInt(1, mailId);
                     ResultSet mailResultSet = statement.executeQuery();
                     while (mailResultSet.next()) {
-                    mailCount++;
+                        mailCount++;
                     }
                 }
             }
@@ -179,17 +192,27 @@ public class UserManagementService implements IUserManagementService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select Count(*) as TotalMail From SentMail sm where sm.SendId=?";
-            statement = connection.prepareStatement(query);
+            String headerQuery = "Select h.MailId from Headers h ,Users u where h.SenderId=? and u.Id=h.RecipientId and h.State=1";
+            String mailSelectQuery = "Select * From Mails m where m.Id=?";
+            statement = connection.prepareStatement(headerQuery);
             statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
+            ResultSet headerResultSet = statement.executeQuery();
+            int mailId = 0;
             int mailCount = 0;
-            while (rs.next()) {
-                mailCount = rs.getInt("TotalMail");
+            while (headerResultSet.next()) {
+                if (mailId != headerResultSet.getInt("MailId")) {
+                    mailId = headerResultSet.getInt("MailId");
+                    statement = connection.prepareStatement(mailSelectQuery);
+                    statement.setInt(1, mailId);
+                    ResultSet mailResultSet = statement.executeQuery();
+                    while (mailResultSet.next()) {
+                        mailCount++;
+                    }
+                }
             }
             statement.close();
             connection.close();
-            rs.close();
+            headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
             System.err.println("AuthService Exception : " + ex.getMessage());

@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import com.vbteam.models.Mail;
+import com.vbteam.services.UserManagement.UserManagementService;
 
 /**
  *
@@ -21,8 +22,9 @@ import com.vbteam.models.Mail;
  */
 public class CommandHandler {
 
-    private static AuthService authService = new AuthService();
-    private static MailService mailService = new MailService();
+    private static AuthService authService = AuthService.getInstance();
+    private static MailService mailService = MailService.getInstance();
+    private static UserManagementService managerService = UserManagementService.getInstance();
 
     private static List<Mail> emailList;
 
@@ -32,6 +34,9 @@ public class CommandHandler {
         }
         if (cmd.getType().indexOf("mail") == 0) {
             Mail(objInput, objOutput, cmd);
+        }
+        if (cmd.getType().indexOf("manager") == 0) {
+            Manager(objInput, objOutput, cmd);
         }
     }
 
@@ -143,6 +148,91 @@ public class CommandHandler {
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getLocalizedMessage());
+        }
+    }
+
+    private static void Manager(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
+        try {
+            switch (cmd.getType().toString()) {
+                case "manager-adduser":
+                    User addUser = managerService.addUser(cmd.getUser());
+                    cmd = new Command();
+                    if (addUser == null) {
+                        cmd.setType("response-error");
+                        cmd.setBoolResponse(false);
+                    } else {
+                        cmd.setType("response-ok");
+                        cmd.setBoolResponse(true);
+                        cmd.setUser(addUser);
+                    }
+                    objOutput.writeObject(cmd);
+                    break;
+                case "manager-deleteuser":
+                    boolean bool = managerService.deletedUser(cmd.getUser().getId());
+                    cmd = new Command();
+                    cmd.setType("response");
+                    cmd.setBoolResponse(bool);
+                    objOutput.writeObject(cmd);
+                    break;
+                case "manager-updateuser":
+                    try {
+                    User user = managerService.updateUser(cmd.getUser());
+                    cmd = new Command();
+                    if (user == null) {
+                        cmd.setType("response-error");
+                        cmd.setBoolResponse(false);
+                    } else {
+                        cmd.setType("response-ok");
+                        cmd.setBoolResponse(true);
+                        cmd.setUser(user);
+                    }
+                    objOutput.writeObject(cmd);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+                break;
+                case "manager-listuser":
+                    try {
+                    List<User> users;
+                    users = managerService.listUser();
+                    cmd = new Command();
+                    if (users == null) {
+                        cmd.setType("response-error");
+                        cmd.setBoolResponse(false);
+                    } else {
+                        cmd.setType("response-ok");
+                        cmd.setBoolResponse(true);
+                    }
+                    objOutput.writeObject(cmd);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+                break;
+                case "manager-income":
+                    try {
+                    int mailCount = managerService.IncomingMailCount(cmd.getUser().getId());
+                    cmd = new Command();
+                    cmd.setType("response-ok");
+                    objOutput.writeObject(cmd);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+                break;
+                case "manager-outgoing":
+                    try {
+                    int mailCount = managerService.IncomingMailCount(cmd.getUser().getId());
+                    cmd = new Command();
+                    cmd.setType("response-ok");
+                    objOutput.writeObject(cmd);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+                break;
+                default:
+                    break;
             }
         } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage());

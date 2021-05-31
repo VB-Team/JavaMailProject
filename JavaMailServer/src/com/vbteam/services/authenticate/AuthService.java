@@ -21,15 +21,28 @@ public class AuthService implements IAuthService {
 
     DbContext context;
     Connection connection;
+    private static AuthService instance = null;
+
+    private AuthService() {
+        instance = new AuthService();
+    }
+
+    public static AuthService getInstance() {
+        if (instance == null) {
+            instance = new AuthService();
+        }
+
+        return instance;
+    }
 
     @Override
     public User login(String UserName, String Password) {
         try {
             PreparedStatement statement;
-            
+
             context = new DbContext();
             connection = context.getConnection();
-            
+
             String query = "Select u.Id,u.LastLoginDate,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
                     + "From Users u join UserDetails ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id \n"
@@ -49,10 +62,11 @@ public class AuthService implements IAuthService {
                 user.setLastLogin(rs.getTimestamp("LastLoginDate"));
             }
             if (BCrypt.checkpw(Password, user.getPassword())) {
-                if (UpdateLastLoginDate(UserName)) {    
+                if (UpdateLastLoginDate(UserName)) {
                     return user;
-                }else
+                } else {
                     return null;
+                }
             } else {
                 statement.close();
                 connection.close();
@@ -74,14 +88,15 @@ public class AuthService implements IAuthService {
             statement = connection.prepareCall(updateQuery);
             statement.setTimestamp(1, new java.sql.Timestamp(new java.util.Date().getTime()));
             statement.setString(2, userName);
-            int affectedRow=statement.executeUpdate();
+            int affectedRow = statement.executeUpdate();
             statement.close();
             connection.close();
-            if (affectedRow>0) 
+            if (affectedRow > 0) {
                 return true;
-            else
+            } else {
                 return false;
-            
+            }
+
         } catch (Exception e) {
             System.err.println("AuthService Exception : " + e.toString());
             return false;
