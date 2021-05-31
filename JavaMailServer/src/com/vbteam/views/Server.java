@@ -6,8 +6,6 @@
 package com.vbteam.views;
 
 import com.vbteam.utils.ClientListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -42,7 +40,7 @@ public class Server {
                 new Thread(new ClientListener(objInStream, objOutStream)).start();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 }

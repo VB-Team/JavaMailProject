@@ -5,7 +5,6 @@
  */
 package com.vbteam.views;
 
-import com.vbteam.models.Attachment;
 import com.vbteam.models.Mail;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +14,21 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author ubuntu
  */
-public class AttachmentTableModel extends AbstractTableModel {
+public class AttachmentTableModel {
 
-    private String[] columnNames = {"Dosya Adı", "Dosya Tipi", "Dosya boyutu"};
+    private String[] columnNames = {"Dosya Adı", "Dosya Tipi", "Dosya boyutu", "Tarih"};
+    
+    /*private List<Attachment> myList = new ArrayList();
 
-    private List<Attachment> myList = new ArrayList();
-
-    public AttachmentTableModel(List<Attachment> attachmentList) {
-        myList = attachmentList;
+    public AttachmentTableModel(List<Attachment> mailList) {
+        myList = mailList;
     }
-
-    public List<Attachment> getList() {
+    
+    
+    public List<Mail> getList(){
         return myList;
     }
-
+    
     @Override
     public String getColumnName(int col) {
         return columnNames[col];
@@ -52,22 +52,22 @@ public class AttachmentTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        Attachment attachment = myList.get(row);
+        Mail mail = myList.get(row);
         switch (col) {
             case 0:
-                return attachment.getAttachmentName();
+                return mail.getRecipientUser();
             case 1:
-                return attachment.getAttachmentType();
+                return mail.getSubject();
             case 2:
-                return attachment.getAttachmentSize();
+                return mail.getBody();
             case 3:
-                return attachment.getAttachmentContent();
+                return mail.getCreateDate();
             case 4:
-                return attachment.getId();
+                return mail.getId();
             default:
                 break;
         }
-        return attachment;
+        return mail;
     }
-
+    */
 }

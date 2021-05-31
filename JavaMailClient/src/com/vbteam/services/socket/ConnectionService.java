@@ -8,8 +8,6 @@ package com.vbteam.services.socket;
 import com.vbteam.models.Command;
 import com.vbteam.models.User;
 import com.vbteam.services.controller.ConnectionController;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -37,13 +35,11 @@ public class ConnectionService {
     public void connectServer() {
         try {
             clientSocket = new Socket(hostName, socketPort);
-            clientSocket.setTcpNoDelay(true);
-            clientSocket.setSendBufferSize(1024);
             OutputStream outputStream = clientSocket.getOutputStream();
             InputStream inputStream = clientSocket.getInputStream();
 
-            objOutStream = new ObjectOutputStream(new BufferedOutputStream(outputStream));
-            objInStream = new ObjectInputStream(new BufferedInputStream(inputStream));
+            objOutStream = new ObjectOutputStream(outputStream);
+            objInStream = new ObjectInputStream(inputStream);
         } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage());
         }
@@ -74,7 +70,6 @@ public class ConnectionService {
     public void SendCommand(Command command) {
         try {
             objOutStream.writeObject(command);
-            objOutStream.flush();
         }catch(Exception ex){
             System.out.println(ex.getLocalizedMessage());
         }

@@ -22,7 +22,6 @@ public class DbContext {
     // DB Exception , Port check
     static Connection connection;
     static String fullurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;user=sa;password=6165";
-
     static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer";
 
     static String user = "sa";

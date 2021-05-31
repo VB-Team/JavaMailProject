@@ -22,41 +22,48 @@ import java.util.Random;
  */
 public class MailService {
 
-    DbContext context;
-    Connection connection;
+    private DbContext context;
+    private Connection connection;
+    private static MailService instance=null;
 
+    private MailService() {
+        instance=new MailService();
+    }
+    public static MailService getInstance(){
+        if (instance==null) 
+            instance=new MailService();
+            
+        return instance;
+    }
     public void addMails(Mail mail) {
         try {
-
             int affectedRow = 0;
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
             int recipientId, senderId;
-            String mailInsertQuery = "Insert into Mails (Subject,Body,AttachmentState,CreateDate) values(?,?,?,?);";
-            statement = connection.prepareStatement(mailInsertQuery);
-            statement.setString(1, mail.getSubject());
-            statement.setString(2, mail.getBody());
-            statement.setBoolean(3, mail.isAttachmentState());
-            statement.setTimestamp(4, mail.getCreateDate());
-            affectedRow += statement.executeUpdate();
-
-            for (Attachment attachment : mail.getAttachments()) {
-
-                String attachmentInsertQuery = "Insert INTO Attachments(MailId,AttachmentName,AttachmentType,AttachmentSize,AttachmentContent) values ((Select IDENT_CURRENT('Mails')),?,?,?,?)";
-                statement = connection.prepareStatement(attachmentInsertQuery);
-
-                statement.setString(1, attachment.getAttachmentName());
-                statement.setString(2, attachment.getAttachmentType());
-                statement.setInt(3, attachment.getAttachmentSize());
-                statement.setBytes(4, attachment.getAttachmentContent());
+                String mailInsertQuery = "Insert into Mails (Subject,Body,AttachmentState,CreateDate) values(?,?,?,?);";
+                statement = connection.prepareStatement(mailInsertQuery);
+                statement.setString(1, mail.getSubject());
+                statement.setString(2, mail.getBody());
+                statement.setBoolean(3, mail.isAttachmentState());
+                statement.setTimestamp(4, mail.getCreateDate());
                 affectedRow += statement.executeUpdate();
-            }
-            for (Header header : mail.getHeaders()) {
+                for (Attachment attachment : mail.getAttachments()) {
 
-                recipientId = context.getUserId(header.getRecipientUser());
-                senderId = context.getUserId(header.getSenderUser());
-                if (recipientId != -1) {
+                    String attachmentInsertQuery = "Insert INTO Attachments(MailId,AttachmentName,AttachmentType,AttachmentSize,AttachmentContent) values ((Select IDENT_CURRENT('Mails')),?,?,?,?)";
+                    statement = connection.prepareStatement(attachmentInsertQuery);
+
+                    statement.setString(1, attachment.getAttachmentName());
+                    statement.setString(2, attachment.getAttachmentType());
+                    statement.setInt(3, attachment.getAttachmentSize());
+                    statement.setBytes(4, attachment.getAttachmentContent());
+                    affectedRow += statement.executeUpdate();
+                }
+                for (Header header : mail.getHeaders()) {
+                    recipientId=context.getUserId(header.getRecipientUser());
+                    senderId=context.getUserId(header.getSenderUser());
+                    if (recipientId!=-1) {  
                     String attachmentInsertQuery = "Insert INTO Headers(MailId,RecipientId,SenderId,Type,State) values ((Select IDENT_CURRENT('Mails')),?,?,?,?)";
                     statement = connection.prepareStatement(attachmentInsertQuery);
                     recipientId = context.getUserId(header.getRecipientUser());
@@ -66,9 +73,9 @@ public class MailService {
                     statement.setString(3, header.getType());
                     statement.setBoolean(4, header.isState());
                     affectedRow += statement.executeUpdate();
-                }
-            }
-            statement.close();
+                    }
+                }                
+                statement.close();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             connection.close();
         } catch (Exception ex) {

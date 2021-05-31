@@ -22,6 +22,19 @@ public class UserManagementService implements IUserManagementService {
 
     DbContext context;
     Connection connection;
+    private static UserManagementService instance = null;
+
+    private UserManagementService() {
+        instance = new UserManagementService();
+    }
+
+    public static UserManagementService getInstance() {
+        if (instance == null) {
+            instance = new UserManagementService();
+        }
+
+        return instance;
+    }
 
     @Override
     public User addUser(User user) {
@@ -89,6 +102,7 @@ public class UserManagementService implements IUserManagementService {
             statement.setString(2, user.getFirstName());
             statement.setString(3, user.getLastName());
             statement.setString(4, user.getUserName());
+            statement.setString(5, user.getPassword());
             statement.setString(6, user.getRole());
             int affectedRow = statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
@@ -107,18 +121,18 @@ public class UserManagementService implements IUserManagementService {
 
     @Override
     public List<User> listUser() {
-        try{
-        PreparedStatement statement;
+        try {
+            PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-        String query="Select u.Id,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role\n" +
-                "From Users u join UserDetail ud on ud.UserId=u.Id\n" +
-                "join UserRoles ur on u.RoleId=ur.Id ";
-        statement = connection.prepareStatement(query);        
-            ResultSet rs = statement.executeQuery();    
-             List<User> users=new ArrayList<User>();
+            String query = "Select u.Id,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role\n"
+                    + "From Users u join UserDetail ud on ud.UserId=u.Id\n"
+                    + "join UserRoles ur on u.RoleId=ur.Id ";
+            statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            List<User> users = new ArrayList<User>();
             while (rs.next()) {
-                User user = new User(); 
+                User user = new User();
                 user.setId(rs.getInt("Id"));
                 user.setFirstName(rs.getString("FirstName"));
                 user.setLastName(rs.getString("LastName"));
@@ -139,22 +153,32 @@ public class UserManagementService implements IUserManagementService {
     }
 
     @Override
-    public int FromUserMailCount(int userId) {
-        try{
-        PreparedStatement statement;
+    public int IncomingMailCount(int userId) {
+        try {
+            PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-        String query="Select Count(*) as TotalMail From SentMail sm where sm.FromId=?";        
-        statement = connection.prepareStatement(query);     
-        statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
-            int mailCount=0;
-            while (rs.next()) {
-                mailCount=rs.getInt("TotalMail");
+            String headerQuery = "Select h.MailId from Headers h ,Users u where h.RecipientId=? and u.Id=h.RecipientId and h.State=1";
+            String mailSelectQuery = "Select * From Mails m where m.Id=?";
+            statement = connection.prepareStatement(headerQuery);
+            statement.setInt(1, userId);
+            ResultSet headerResultSet = statement.executeQuery();
+            int mailId = 0;
+            int mailCount = 0;
+            while (headerResultSet.next()) {
+                if (mailId != headerResultSet.getInt("MailId")) {
+                    mailId = headerResultSet.getInt("MailId");
+                    statement = connection.prepareStatement(mailSelectQuery);
+                    statement.setInt(1, mailId);
+                    ResultSet mailResultSet = statement.executeQuery();
+                    while (mailResultSet.next()) {
+                        mailCount++;
+                    }
+                }
             }
             statement.close();
             connection.close();
-            rs.close();
+            headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
             System.err.println("AuthService Exception : " + ex.getMessage());
@@ -163,22 +187,32 @@ public class UserManagementService implements IUserManagementService {
     }
 
     @Override
-    public int SendUserMailCount(int userId) {
-       try{
-        PreparedStatement statement;
+    public int OutgoingMailCount(int userId) {
+        try {
+            PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-        String query="Select Count(*) as TotalMail From SentMail sm where sm.SendId=?";        
-        statement = connection.prepareStatement(query);     
-        statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
-            int mailCount=0;
-            while (rs.next()) {
-                mailCount=rs.getInt("TotalMail");
+            String headerQuery = "Select h.MailId from Headers h ,Users u where h.SenderId=? and u.Id=h.RecipientId and h.State=1";
+            String mailSelectQuery = "Select * From Mails m where m.Id=?";
+            statement = connection.prepareStatement(headerQuery);
+            statement.setInt(1, userId);
+            ResultSet headerResultSet = statement.executeQuery();
+            int mailId = 0;
+            int mailCount = 0;
+            while (headerResultSet.next()) {
+                if (mailId != headerResultSet.getInt("MailId")) {
+                    mailId = headerResultSet.getInt("MailId");
+                    statement = connection.prepareStatement(mailSelectQuery);
+                    statement.setInt(1, mailId);
+                    ResultSet mailResultSet = statement.executeQuery();
+                    while (mailResultSet.next()) {
+                        mailCount++;
+                    }
+                }
             }
             statement.close();
             connection.close();
-            rs.close();
+            headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
             System.err.println("AuthService Exception : " + ex.getMessage());
