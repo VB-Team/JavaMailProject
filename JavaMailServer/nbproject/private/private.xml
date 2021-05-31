@@ -52,9 +52,15 @@
         </group>
         <group name="Mail">
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/ClientListener.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/MailServerDbGenerateScript.sql</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/DbContext.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/mail/MailService.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/models/User.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/views/Server.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/authenticate/AuthService.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/CommandHandler.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/authenticate/IAuthService.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/views/ConsoleUI.java</file>
         </group>
     </open-files>
 </project-private>

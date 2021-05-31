@@ -128,20 +128,26 @@ public class CommandHandler {
                 cmd.setUser(_user);
 
                 objOutput.writeObject(cmd);
-
+                objOutput.flush();
             }
             if (cmd.getType().equals("auth-login")) {
                 try {
+                    System.out.println("Socket login metodu işlemi " + System.currentTimeMillis());
+                    
                     User _user = authService.login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
                     System.out.println("login");
 
                     cmd = new Command();
                     cmd.setType("response");
                     cmd.setUser(_user);
+                    
+                    System.out.println(_user.getFirstName());
 
                     objOutput.writeObject(cmd);
+                    System.out.println("Socket login tamamlandı işlemi " + System.currentTimeMillis());
+
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
+                    e.printStackTrace();
                 }
             }
         } catch (Exception ex) {

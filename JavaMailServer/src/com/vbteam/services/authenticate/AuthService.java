@@ -26,6 +26,7 @@ public class AuthService implements IAuthService {
     public User login(String UserName, String Password) {
         try {
             PreparedStatement statement;
+            
             context = new DbContext();
             connection = context.getConnection();
             String query = "Select u.Id,u.LastLoginDate,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
@@ -35,6 +36,7 @@ public class AuthService implements IAuthService {
             statement = connection.prepareStatement(query);
             statement.setString(1, UserName);
             ResultSet rs = statement.executeQuery();
+            rs.setFetchSize(100);
             System.out.println("Etkilenen satır sayısı " + rs);
             User user = new User();
             while (rs.next()) {
