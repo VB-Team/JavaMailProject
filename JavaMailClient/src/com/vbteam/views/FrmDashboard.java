@@ -5,10 +5,8 @@
  */
 package com.vbteam.views;
 
-import com.vbteam.models.Attachment;
-import com.vbteam.models.Command;
-import com.vbteam.models.Header;
-import com.vbteam.models.User;
+import com.vbteam.models.*;
+
 import static com.vbteam.views.FrmAuth.conService;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -28,6 +26,8 @@ import javax.swing.JPanel;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.table.AbstractTableModel;
 import com.vbteam.models.Mail;
+import java.io.File;
+
 
 /**
  *
@@ -49,6 +49,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     JPanel mailPanelState;
 
     List<Mail> mailList = new ArrayList<>();
+    List<Attachment> attachments = new ArrayList<Attachment>();
 
     public FrmDashboard() {
 
@@ -89,33 +90,41 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         popupPanel.setVisible(true);
     }
 
+    //Multi - user 
     public void sendEmail() {
         Mail mail = new Mail();
-        List<Header> headers=new ArrayList<Header>();
-        Header header =new Header();     
-        List<Attachment> attachments=new ArrayList<Attachment>();
-        Attachment attachment =new Attachment();    
+        List<Header> headers = new ArrayList<Header>();
+
+        Attachment attachment = new Attachment();
         if (!(mailgonder_field_baslik.getText().isEmpty() || mailgonder_field_icerik.getText().isEmpty() || mailgonder_field_kime.getText().isEmpty())) {
             mail.setSubject(mailgonder_field_baslik.getText());
-            mail.setBody(mailgonder_field_icerik.getText());            
-            header.setSenderUser(user.getUserName());
-            header.setRecipientUser(mailgonder_field_kime.getText());
-            header.setState(true);
-            header.setType("Normal");
-            attachment.setAttachmentContent(fileByteArray);
-            attachment.setAttachmentName(fileTypeString);
-            attachments.add(attachment);
-            headers.add(header);
+            mail.setBody(mailgonder_field_icerik.getText());
+
+            String[] userSplit = mailgonder_field_kime.getText().split(", ");
+
+            for (int i = 0; i < userSplit.length; i++) {
+                Header header = new Header();
+                header.setSenderUser(user.getUserName());
+                header.setRecipientUser(userSplit[i]);
+                header.setState(true);
+                header.setType("Normal");
+                headers.add(header);
+            }
+
             mail.setAttachments(attachments);
             mail.setHeaders(headers);
             mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+
             FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
 
             mailgonder_label_dosyaismi.setVisible(false);
             mailgonder_label_dosyaismi.setText(null);
             popupDialog("confirm", "Email gönderildi.", null);
+
+            attachments.clear();
         } else {
             popupDialog("error", "Boşlukları doldurunuz lütfen.", null);
+            attachments.clear();
         }
     }
 
@@ -265,7 +274,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private void setMailCredentials(Mail mail) {
         String recipientUsers = "";
         for (Header header : mail.getHeaders()) {
-            recipientUsers += header.getRecipientUser()+" , ";
+            recipientUsers += header.getRecipientUser() + " , ";
         }
         mail_author_text.setText(recipientUsers);
         pnl_mail_body_text.setText(mail.getBody());
@@ -283,15 +292,34 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         try {
             JFileChooser jfc = new JFileChooser(System.getProperty("user.dir", "."));
 
+            jfc.setMultiSelectionEnabled(true);
+
             jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
 
             if (jfc.showDialog(this, "Dosya Seç") == JFileChooser.APPROVE_OPTION) {
-                fileByteArray = Files.readAllBytes(Paths.get(jfc.getSelectedFile().getPath()));
-                fileTypeString = jfc.getSelectedFile().getName();
-                System.out.println(fileTypeString);
-                mailgonder_label_dosyaismi.setVisible(true);
-                mailgonder_label_dosyaismi.setText(jfc.getSelectedFile().getName());
 
+                File[] files = jfc.getSelectedFiles();
+                for (int i = 0; i < files.length; i++) {
+                    Attachment _attachment = new Attachment();
+
+                    fileByteArray = Files.readAllBytes(Paths.get(files[i].getPath()));
+                    fileTypeString = files[i].getName();
+
+                    System.out.println(fileTypeString);
+
+                    String[] extension = fileTypeString.split("\\.(?=[^\\.]+$)");
+                    
+
+                    _attachment.setAttachmentContent(fileByteArray);
+                    
+                    _attachment.setAttachmentName(extension[0]);
+                    _attachment.setAttachmentType(extension[1]);
+                    
+                    attachments.add(_attachment);
+                }
+
+                //mailgonder_label_dosyaismi.setVisible(true);
+                //mailgonder_label_dosyaismi.setText(jfc.getSelectedFile().getName());
                 repaint();
 
                 /*
@@ -311,8 +339,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     public void saveDraft() {
 
         Mail draftMail = new Mail();
-        List<Header> headers=new ArrayList<Header>();
-        Header header =new Header();
+        List<Header> headers = new ArrayList<Header>();
+        Header header = new Header();
         draftMail.setSubject(mailgonder_field_baslik.getText());
         draftMail.setBody(mailgonder_field_icerik.getText());
         header.setSenderUser(user.getUserName());
