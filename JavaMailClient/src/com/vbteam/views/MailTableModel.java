@@ -21,12 +21,12 @@ public class MailTableModel extends AbstractTableModel {
     private List<Mail> myList = new ArrayList();
     private String type;
 
-    public MailTableModel(List<Mail> mailList,String _type) {
+    public MailTableModel(List<Mail> mailList, String _type) {
         myList = mailList;
         type = _type;
     }
-    
-    public List<Mail> getList(){
+
+    public List<Mail> getList() {
         return myList;
     }
 
@@ -56,9 +56,9 @@ public class MailTableModel extends AbstractTableModel {
         Mail mail = myList.get(row);
         switch (col) {
             case 0:
-                String recipientUser="";
+                String recipientUser = "";
                 for (Header header : mail.getHeaders()) {
-                    recipientUser+=header.getRecipientUser()+" , ";
+                    recipientUser += header.getRecipientUser() + " , ";
                 }
                 return recipientUser;
             case 1:
@@ -69,6 +69,8 @@ public class MailTableModel extends AbstractTableModel {
                 return mail.getCreateDate();
             case 4:
                 return mail.getId();
+            case 5:
+                return mail.getAttachments();
             default:
                 break;
         }

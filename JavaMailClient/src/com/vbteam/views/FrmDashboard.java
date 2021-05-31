@@ -27,62 +27,74 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.table.AbstractTableModel;
 import com.vbteam.models.Mail;
 import java.io.File;
-
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author BatuPC
  */
 public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
-
-    private AbstractTableModel tableModel;
+    
+    private AbstractTableModel mailTableModel, attachmentTableModel;
     static FrmDialog popupPanel;
-
+    
     CardLayout mainLayout;
     boolean maxCheck;
     int selectedRow, pX, pY;
     User user;
-
+    
     byte[] fileByteArray;
     String fileTypeString;
-
+    
     JPanel mailPanelState;
-
+    
     List<Mail> mailList = new ArrayList<>();
     List<Attachment> attachments = new ArrayList<Attachment>();
-
+    
     public FrmDashboard() {
-
+        
         popupPanel = new FrmDialog();
         popupPanel.attachDialogToFrame(this);
-        tableModel = (AbstractTableModel) new MailTableModel(mailList, null);
-
+        mailTableModel = (AbstractTableModel) new MailTableModel(mailList, null);
+        attachmentTableModel = (AbstractTableModel) new AttachmentTableModel(attachments);
+        
         initGui();
         initComponents();
         customizeTable();
         moveTitlebar();
-
+        
         centerLocationAndSetSize();
         setListeners();
-
+        
         mailgonder_label_dosyaismi.setVisible(false);
         kullanici_bilgi_onaylama.setVisible(false);
-
+        
         mainLayout = (CardLayout) cardPanel.getLayout();
     }
-
+    
     public void customizeTable() {
-
+        
         jScrollPane2.getViewport().setBackground(new Color(30, 30, 30));
         jScrollPane2.getViewport().setForeground(new Color(30, 30, 30));
-
-        jTable2.setForeground(new Color(255, 215, 0));
-        jTable2.setOpaque(false);
-        jTable2.setBorder(null);
-
-        jTable2.setDefaultRenderer(Object.class, new TableRenderer());
+        
+        jScrollPane1.getViewport().setBackground(new Color(30, 30, 30));
+        jScrollPane1.getViewport().setForeground(new Color(30, 30, 30));
+        
+        mailTable.setForeground(new Color(255, 215, 0));
+        mailTable.setOpaque(false);
+        mailTable.setBorder(null);
+        
+        attachmentTable.setForeground(new Color(255, 215, 0));
+        attachmentTable.setOpaque(false);
+        attachmentTable.setBorder(null);
+        
+        mailTable.setDefaultRenderer(Object.class, new TableRenderer());
+        attachmentTable.setDefaultRenderer(Object.class, new TableRenderer());
     }
-
+    
     public static void popupDialog(String type, String message, String actionType) {
         popupPanel.setIcon(type);
         popupPanel.setMessage(message);
@@ -94,14 +106,13 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     public void sendEmail() {
         Mail mail = new Mail();
         List<Header> headers = new ArrayList<Header>();
-
-        Attachment attachment = new Attachment();
+        
         if (!(mailgonder_field_baslik.getText().isEmpty() || mailgonder_field_icerik.getText().isEmpty() || mailgonder_field_kime.getText().isEmpty())) {
             mail.setSubject(mailgonder_field_baslik.getText());
             mail.setBody(mailgonder_field_icerik.getText());
-
-            String[] userSplit = mailgonder_field_kime.getText().split(", ");
-
+            
+            String[] userSplit = mailgonder_field_kime.getText().split(",");
+            
             for (int i = 0; i < userSplit.length; i++) {
                 Header header = new Header();
                 header.setSenderUser(user.getUserName());
@@ -110,52 +121,63 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 header.setType("Normal");
                 headers.add(header);
             }
-
+            
             mail.setAttachments(attachments);
             mail.setHeaders(headers);
             mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
-
+            
             FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
-
+            
             mailgonder_label_dosyaismi.setVisible(false);
             mailgonder_label_dosyaismi.setText(null);
+            
             popupDialog("confirm", "Email gönderildi.", null);
-
-            attachments.clear();
+            
+            mailPanelState = null;
+            clearMailSection();
+            
         } else {
             popupDialog("error", "Boşlukları doldurunuz lütfen.", null);
             attachments.clear();
         }
     }
-
+    
+    private void clearMailSection() {
+        mailgonder_field_baslik.setText("");
+        mailgonder_field_icerik.setText("");
+        mailgonder_field_kime.setText("");
+        
+        attachments.clear();
+    }
+    
     public List<Mail> getMails(String type) {
         try {
             if (type.equals("income")) {
                 FrmAuth.conService.SendCommand(new Command("mail-income", null, user, null));
                 Command _command = (Command) conService.getInputStream().readObject();
                 mailList = _command.getMailList();
-
+                
                 for (Mail mail : mailList) {
                     System.out.println(mail.getBody());
                 }
-
+                
             }
             if (type.equals("outgoing")) {
                 FrmAuth.conService.SendCommand(new Command("mail-outgoing", null, user, null));
                 Command _command = (Command) conService.getInputStream().readObject();
-
+                
                 mailList = _command.getMailList();
             }
             if (type.equals("draft")) {
                 FrmAuth.conService.SendCommand(new Command("mail-draft", null, user, null));
                 Command _command = (Command) conService.getInputStream().readObject();
-
+                
                 mailList = _command.getMailList();
             }
             if (type.equals("trash")) {
                 FrmAuth.conService.SendCommand(new Command("mail-trash", null, user, null));
                 Command _command = (Command) conService.getInputStream().readObject();
-
+                
                 mailList = _command.getMailList();
             }
             return mailList;
@@ -164,23 +186,23 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             return null;
         }
     }
-
+    
     public void setUserDetails(User _user) {
         user = _user;
-
+        
         welcomeText.setText("Hoşgeldin , " + user.getFirstName() + " " + user.getLastName());
         txt_LastTime.setText("Son Giriş Tarihi  : " + user.getLastLogin());
-
+        
         profile_ad_text.setText(user.getFirstName());
         profile_soyad_text.setText(user.getLastName());
         profile_username_text.setText(user.getUserName());
         profile_password_text.setText(user.getPassword());
     }
-
+    
     public MailTableModel getMailTable() {
-        return (MailTableModel) tableModel;
+        return (MailTableModel) mailTableModel;
     }
-
+    
     public void moveTitlebar() {
         titlebar.addMouseListener(new MouseAdapter() {
             @Override
@@ -190,14 +212,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                     maximize();
                 }
             }
-
+            
             @Override
             public void mousePressed(MouseEvent e) {
                 pX = e.getX();
                 pY = e.getY();
             }
         });
-
+        
         titlebar.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent evt) {
@@ -205,7 +227,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             }
         });
     }
-
+    
     private void centerLocationAndSetSize() {
         this.setSize(1366, 768);
         final Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -214,7 +236,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         final int y = (screenSize.height - this.getHeight()) / 2;
         this.setLocation(x, y);
     }
-
+    
     private void maximize() {
         if (maxCheck) {
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -227,41 +249,44 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         }
         maxCheck = !maxCheck;
     }
-
+    
     private void initGui() {
         this.setUndecorated(true); // title barı kaldırıyor
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
-
+        
     }
-
+    
     private void setListeners() {
         btn_pnl_anasayfa.addMouseListener(this);
         btn_pnl_mail.addMouseListener(this);
         btn_pnl_ayarlar.addMouseListener(this);
         btn_mail_1.addMouseListener(this);
         btn_mail_2.addMouseListener(this);
-
+        
         mailgonder_btn_gonder.addMouseListener(this);
         mailgonder_btn_dosyaekle.addMouseListener(this);
-
-        jTable2.addMouseListener(this);
-
+        
+        mailTable.addMouseListener(this);
+        attachmentTable.addMouseListener(this);
+        
+        kaydet.addMouseListener(this);
+        
         gelenpanel.addMouseListener(this);
         gidenpanel.addMouseListener(this);
         taslakpanel.addMouseListener(this);
         coppanel.addMouseListener(this);
         Profile.addMouseListener(this);
-
+        
         yenimailpanel.addMouseListener(this);
-
+        
         pnl_mail_detail_attachment.addMouseListener(this);
-
+        
         kullanici_bilgi_onaylama.addMouseListener(this);
         kullanici_bilgi_degistir.addMouseListener(this);
-
+        
     }
-
+    
     private Mail getMailFromId(List<Mail> list, int id) {
         for (Mail mail : list) {
             if (mail.getId() == id) {
@@ -270,7 +295,16 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         }
         return null;
     }
-
+    
+    private Attachment getAttachmentFromId(int id) {
+        for (Attachment attachment : attachments) {
+            if (attachment.getId() == id) {
+                return attachment;
+            }
+        }
+        return null;
+    }
+    
     private void setMailCredentials(Mail mail) {
         String recipientUsers = "";
         for (Header header : mail.getHeaders()) {
@@ -280,40 +314,58 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_body_text.setText(mail.getBody());
         mail_time_text.setText(mail.getCreateDate().toString());
         pnl_mail_detail_header_text.setText(mail.getSubject());
-
+        
         if (mail.isAttachmentState() != false) {
             pnl_mail_detail_attachment.setVisible(true);
         } else {
             pnl_mail_detail_attachment.setVisible(false);
         }
     }
-
+    
+    private void setAttachmentCredentials(Attachment _attachment) {
+        attachment_adi_field.setText(_attachment.getAttachmentName());
+        attachment_tipi_field.setText(_attachment.getAttachmentType());
+        attachment_boyutu_field.setText(_attachment.getAttachmentSize()+" MB");
+    }
+    
+    private void dosyaKaydet(Attachment _attachment) {
+        try {
+            FileOutputStream fos = new FileOutputStream(_attachment.getAttachmentName() + _attachment.getAttachmentType());
+            fos.write(_attachment.getAttachmentContent());
+            fos.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     private void dosyaGonder() {
         try {
+            attachments.clear();
+            
             JFileChooser jfc = new JFileChooser(System.getProperty("user.dir", "."));
-
+            
             jfc.setMultiSelectionEnabled(true);
-
+            
             jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
-
+            
             if (jfc.showDialog(this, "Dosya Seç") == JFileChooser.APPROVE_OPTION) {
-
+                
                 File[] files = jfc.getSelectedFiles();
                 for (int i = 0; i < files.length; i++) {
                     Attachment _attachment = new Attachment();
-
+                    
                     fileByteArray = Files.readAllBytes(Paths.get(files[i].getPath()));
                     fileTypeString = files[i].getName();
-
+                    
                     System.out.println(fileTypeString);
-
+                    
                     String[] extension = fileTypeString.split("\\.(?=[^\\.]+$)");
                     
-
                     _attachment.setAttachmentContent(fileByteArray);
                     
                     _attachment.setAttachmentName(extension[0]);
                     _attachment.setAttachmentType(extension[1]);
+                    _attachment.setAttachmentSize((int) (files[i].length()/1024L * 1024L));
                     
                     attachments.add(_attachment);
                 }
@@ -321,23 +373,18 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 //mailgonder_label_dosyaismi.setVisible(true);
                 //mailgonder_label_dosyaismi.setText(jfc.getSelectedFile().getName());
                 repaint();
-
-                /*
-                FileOutputStream fos = new FileOutputStream("veyselicintumturkiye.tar.xz");
-                fos.write(array);
-                fos.close();
-                 */
+                
             }
-
+            
         } catch (Exception ex) {
             mailgonder_label_dosyaismi.setVisible(false);
             System.out.println("File Transfer Exception : " + ex.getMessage());
         }
-
+        
     }
-
+    
     public void saveDraft() {
-
+        
         Mail draftMail = new Mail();
         List<Header> headers = new ArrayList<Header>();
         Header header = new Header();
@@ -349,76 +396,74 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         draftMail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
         headers.add(header);
         draftMail.setHeaders(headers);
-
-        System.out.println("Taslak kaydedildi.");
-
+        
         FrmAuth.conService.SendCommand(new Command("mail-send", null, user, draftMail));
-
+        
     }
-
+    
     public void dialogControl(String type) {
         if (type.equals("draft-mail-bool")) {
             saveDraft();
         }
     }
-
+    
     @Override
     public void mouseClicked(MouseEvent evt) {
-
+        
         if (evt.getSource() == kullanici_bilgi_degistir) {
             kullanici_bilgi_onaylama.setVisible(true);
         }
         if (evt.getSource() == kullanici_bilgi_onaylama) {
             System.out.println("bilgi değiştirildi");
         }
-
+        
         if (evt.getSource() == mailgonder_btn_dosyaekle) {
             dosyaGonder();
         }
-
+        
         if (evt.getSource() == mailgonder_btn_gonder) {
             sendEmail();
         }
-
+        
         if (evt.getSource() == yenimailpanel) {
             mainLayout.show(cardPanel, "mailgonder");
             mailPanelState = pnl_mail_gonder;
         }
-
+        
         if (evt.getSource() == btn_mail_1) {
             if (!(selectedRow == 0)) {
                 selectedRow--;
             }
-            setMailCredentials(getMailFromId(getMailTable().getList(), (int) tableModel.getValueAt(selectedRow, 4)));
+            setMailCredentials(getMailFromId(getMailTable().getList(), (int) mailTableModel.getValueAt(selectedRow, 4)));
         }
         if (evt.getSource() == btn_mail_2) {
-            if (!(selectedRow == tableModel.getRowCount() - 1)) {
+            if (!(selectedRow == mailTableModel.getRowCount() - 1)) {
                 selectedRow++;
             }
-            setMailCredentials(getMailFromId(getMailTable().getList(), (int) tableModel.getValueAt(selectedRow, 4)));
+            setMailCredentials(getMailFromId(getMailTable().getList(), (int) mailTableModel.getValueAt(selectedRow, 4)));
         }
         if (evt.getSource() == gidenpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("outgoing"), "outgoing");
-            jTable2.setModel(tableModel);
+            mailTableModel = (AbstractTableModel) new MailTableModel(getMails("outgoing"), "outgoing");
+            mailTable.setModel(mailTableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
         }
-
+        
         if (evt.getSource() == gelenpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("income"), "income");
-            jTable2.setModel(tableModel);
+            mailTableModel = (AbstractTableModel) new MailTableModel(getMails("income"), "income");
+            mailTable.setModel(mailTableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
         }
         if (evt.getSource() == taslakpanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("draft"), "draft");
-            jTable2.setModel(tableModel);
+            mailTableModel = (AbstractTableModel) new MailTableModel(getMails("draft"), "draft");
+            mailTable.setModel(mailTableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
         }
         if (evt.getSource() == coppanel) {
-            tableModel = (AbstractTableModel) new MailTableModel(getMails("trash"), "trash");
-            jTable2.setModel(tableModel);
+            mailTableModel = (AbstractTableModel) new MailTableModel(getMails("trash"), "trash");
+            mailTable.setModel(mailTableModel);
             mainLayout.show(cardPanel, "mail");
             mailPanelState = pnl_mail;
         }
@@ -443,23 +488,34 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             mailPanelState = pnl_profil;
         }
         if (evt.getSource() == pnl_mail_detail_attachment) {
+            attachments = (List<Attachment>) mailTableModel.getValueAt(selectedRow, 5);
+            
+            attachmentTableModel = (AbstractTableModel) new AttachmentTableModel(attachments);
+            attachmentTable.setModel(attachmentTableModel);
             mainLayout.show(cardPanel, "attachment");
         }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent evt) {
-        if (evt.getSource() == jTable2) {
-            selectedRow = jTable2.getSelectedRow();
-            setMailCredentials(getMailFromId(getMailTable().getList(), (int) tableModel.getValueAt(selectedRow, 4)));
+        
+        if (evt.getSource() == kaydet) {
+            dosyaKaydet((Attachment) attachmentTableModel.getValueAt(attachmentTable.getSelectedRow(), 5));
         }
     }
-
+    
+    @Override
+    public void mousePressed(MouseEvent evt) {
+        if (evt.getSource() == mailTable) {
+            selectedRow = mailTable.getSelectedRow();
+            setMailCredentials(getMailFromId(getMailTable().getList(), (int) mailTableModel.getValueAt(selectedRow, 4)));
+        }
+        if (evt.getSource() == attachmentTable) {
+            setAttachmentCredentials(getAttachmentFromId((int) attachmentTableModel.getValueAt(attachmentTable.getSelectedRow(), 4)));
+        }
+    }
+    
     @Override
     public void mouseReleased(MouseEvent evt) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void mouseEntered(MouseEvent evt) {
         if (evt.getSource() == mailgonder_btn_gonder || evt.getSource() == mailgonder_btn_dosyaekle || evt.getSource() == btn_pnl_anasayfa || evt.getSource() == btn_pnl_ayarlar
@@ -467,13 +523,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 || evt.getSource() == gelenpanel || evt.getSource() == gidenpanel
                 || evt.getSource() == taslakpanel || evt.getSource() == coppanel
                 || evt.getSource() == Profile || evt.getSource() == pnl_mail_detail_attachment
-                || evt.getSource() == kullanici_bilgi_degistir || evt.getSource() == kullanici_bilgi_onaylama) {
+                || evt.getSource() == kullanici_bilgi_degistir || evt.getSource() == kullanici_bilgi_onaylama
+                || evt.getSource() == kaydet) {
             JPanel panel = (JPanel) evt.getSource();
             panel.setOpaque(true);
             repaint();
         }
     }
-
+    
     @Override
     public void mouseExited(MouseEvent evt) {
         if (evt.getSource() == mailgonder_btn_gonder || evt.getSource() == mailgonder_btn_dosyaekle || evt.getSource() == btn_pnl_anasayfa
@@ -481,7 +538,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 || evt.getSource() == gelenpanel || evt.getSource() == gidenpanel
                 || evt.getSource() == taslakpanel || evt.getSource() == coppanel
                 || evt.getSource() == Profile || evt.getSource() == pnl_mail_detail_attachment
-                || evt.getSource() == kullanici_bilgi_degistir || evt.getSource() == kullanici_bilgi_onaylama) {
+                || evt.getSource() == kullanici_bilgi_degistir || evt.getSource() == kullanici_bilgi_onaylama
+                || evt.getSource() == kaydet) {
             JPanel panel = (JPanel) evt.getSource();
             panel.setOpaque(false);
             repaint();
@@ -582,7 +640,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_mail_body_text = new javax.swing.JTextArea();
         pnl_main_mails = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        mailTable = new javax.swing.JTable();
         pnl_profil = new javax.swing.JPanel();
         profile_top_text = new javax.swing.JLabel();
         profile_body = new javax.swing.JPanel();
@@ -605,6 +663,17 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         jLabel11 = new javax.swing.JLabel();
         pnl_attachments = new javax.swing.JPanel();
         attachment_baslik = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        attachmentTable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        attachment_adi = new javax.swing.JLabel();
+        attachment_tipi = new javax.swing.JLabel();
+        attachment_boyutu = new javax.swing.JLabel();
+        kaydet = new javax.swing.JPanel();
+        kaydet_text = new javax.swing.JLabel();
+        attachment_boyutu_field = new javax.swing.JLabel();
+        attachment_adi_field = new javax.swing.JLabel();
+        attachment_tipi_field = new javax.swing.JLabel();
         bottomBar = new javax.swing.JPanel();
         Profile = new javax.swing.JPanel();
         profile_icon = new javax.swing.JLabel();
@@ -1083,9 +1152,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         pnl_main_mails.setPreferredSize(new java.awt.Dimension(700, 750));
         pnl_main_mails.setLayout(new java.awt.BorderLayout());
 
-        jTable2.setModel(tableModel);
-        jTable2.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable2);
+        mailTable.setModel(mailTableModel);
+        mailTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(mailTable);
 
         pnl_main_mails.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
@@ -1173,6 +1242,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         kullanici_bilgi_degistir.setOpaque(false);
         kullanici_bilgi_degistir.setLayout(new java.awt.BorderLayout());
 
+        jLabel7.setForeground(new java.awt.Color(254, 254, 254));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("Kullanıcı Bilgilerini Değiştir");
         kullanici_bilgi_degistir.add(jLabel7, java.awt.BorderLayout.CENTER);
@@ -1183,6 +1253,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         kullanici_bilgi_onaylama.setOpaque(false);
         kullanici_bilgi_onaylama.setLayout(new java.awt.BorderLayout());
 
+        jLabel11.setForeground(new java.awt.Color(254, 254, 254));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("Onayla");
         kullanici_bilgi_onaylama.add(jLabel11, java.awt.BorderLayout.CENTER);
@@ -1199,6 +1270,50 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         attachment_baslik.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         attachment_baslik.setText("Mail Ekleri");
         pnl_attachments.add(attachment_baslik, java.awt.BorderLayout.PAGE_START);
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(1300, 1300));
+
+        attachmentTable.setModel(attachmentTableModel);
+        jScrollPane1.setViewportView(attachmentTable);
+
+        pnl_attachments.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPanel2.setBackground(new java.awt.Color(20, 20, 22));
+        jPanel2.setPreferredSize(new java.awt.Dimension(300, 300));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        attachment_adi.setForeground(new java.awt.Color(254, 254, 254));
+        attachment_adi.setText("Adı : ");
+        jPanel2.add(attachment_adi, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        attachment_tipi.setForeground(new java.awt.Color(254, 254, 254));
+        attachment_tipi.setText("Dosya tipi :");
+        jPanel2.add(attachment_tipi, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+
+        attachment_boyutu.setForeground(new java.awt.Color(254, 254, 254));
+        attachment_boyutu.setText("Dosya boyutu :");
+        jPanel2.add(attachment_boyutu, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
+
+        kaydet.setBackground(new java.awt.Color(30, 29, 32));
+        kaydet.setOpaque(false);
+        kaydet.setLayout(new java.awt.BorderLayout());
+
+        kaydet_text.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        kaydet_text.setText("Kaydet");
+        kaydet.add(kaydet_text, java.awt.BorderLayout.CENTER);
+
+        jPanel2.add(kaydet, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 300, 80));
+
+        attachment_boyutu_field.setForeground(new java.awt.Color(254, 254, 254));
+        jPanel2.add(attachment_boyutu_field, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 150, -1));
+
+        attachment_adi_field.setForeground(new java.awt.Color(254, 254, 254));
+        jPanel2.add(attachment_adi_field, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 210, -1));
+
+        attachment_tipi_field.setForeground(new java.awt.Color(254, 254, 254));
+        jPanel2.add(attachment_tipi_field, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 180, -1));
+
+        pnl_attachments.add(jPanel2, java.awt.BorderLayout.LINE_END);
 
         cardPanel.add(pnl_attachments, "attachment");
 
@@ -1312,7 +1427,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Menus;
     private javax.swing.JPanel Profile;
+    private javax.swing.JTable attachmentTable;
+    private javax.swing.JLabel attachment_adi;
+    private javax.swing.JLabel attachment_adi_field;
     private javax.swing.JLabel attachment_baslik;
+    private javax.swing.JLabel attachment_boyutu;
+    private javax.swing.JLabel attachment_boyutu_field;
+    private javax.swing.JLabel attachment_tipi;
+    private javax.swing.JLabel attachment_tipi_field;
     private javax.swing.JPanel bottomBar;
     private javax.swing.JButton btn_close;
     private javax.swing.JLabel btn_mail_1;
@@ -1348,10 +1470,14 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JPanel kaydet;
+    private javax.swing.JLabel kaydet_text;
     private javax.swing.JPanel kullanici_bilgi_degistir;
     private javax.swing.JPanel kullanici_bilgi_onaylama;
+    private javax.swing.JTable mailTable;
     private javax.swing.JPanel mail_author;
     private javax.swing.JLabel mail_author_text;
     private javax.swing.JPanel mail_body_message;
