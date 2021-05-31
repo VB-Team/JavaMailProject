@@ -37,7 +37,6 @@ public class AuthService implements IAuthService {
             ResultSet rs = statement.executeQuery();
             System.out.println("Etkilenen satır sayısı " + rs);
             User user = new User();
-            java.sql.Timestamp loginDate=null;
             while (rs.next()) {
                 user.setId(rs.getInt("Id"));
                 user.setFirstName(rs.getString("FirstName"));
@@ -46,7 +45,7 @@ public class AuthService implements IAuthService {
                 user.setPassword(rs.getString("Password"));
                 user.setRole(rs.getString("Role"));
                 user.setRegisterDate(rs.getDate("RegisterDate"));
-                loginDate=rs.getTimestamp("LastLoginDate");//AuthService Exception : The column name LastLogin is not valid.
+                user.setLastLogin(rs.getTimestamp("LastLoginDate"));//AuthService Exception : The column name LastLogin is not valid.
             }
             if (BCrypt.checkpw(Password, user.getPassword())) {
                 if (UpdateLastLoginDate(UserName)) {               
