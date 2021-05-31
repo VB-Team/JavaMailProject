@@ -22,7 +22,11 @@ public class DbContext {
     // DB Exception , Port check
     static Connection connection;
     static String fullurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;user=sa;password=6165";
+<<<<<<< Updated upstream
     static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;sendStringParametersAsUnicode=false;";
+=======
+    static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer";
+>>>>>>> Stashed changes
 
     static String user = "sa";
     static String batuPass = "Password1!";
