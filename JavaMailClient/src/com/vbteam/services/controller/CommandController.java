@@ -25,7 +25,6 @@ public class CommandController {
         }
         
     }
-
     private static void Auth(Command command, ObjectOutputStream objOutputStream, ObjectInputStream objInputStream) {
         try {
             command = (Command) objInputStream.readObject();

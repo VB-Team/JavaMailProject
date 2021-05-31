@@ -13,19 +13,16 @@ import java.util.List;
  *
  * @author schea
  */
+public class Mail implements Serializable {
 
-public class Mail implements Serializable {    
-
-    
-private static final long serialVersionUID = 45087842;
-    
+    private static final long serialVersionUID = 45087842;
 
     private int Id;
     private List<Attachment> Attachments;
     private List<Header> Headers;
     private boolean AttachmentState;
     private String Subject;
-    private String Body;  
+    private String Body;
     private Timestamp CreateDate;
 
     /**
@@ -55,6 +52,7 @@ private static final long serialVersionUID = 45087842;
     public void setSubject(String Subject) {
         this.Subject = Subject;
     }
+
     /**
      * @return the Attachments
      */
@@ -68,6 +66,7 @@ private static final long serialVersionUID = 45087842;
     public void setAttachments(List<Attachment> Attachments) {
         this.Attachments = Attachments;
     }
+
     /**
      * @return the AttachmentState
      */
@@ -81,6 +80,7 @@ private static final long serialVersionUID = 45087842;
     public void setAttachmentState(boolean AttachmentState) {
         this.AttachmentState = AttachmentState;
     }
+
     /**
      * @return the Headers
      */
@@ -94,6 +94,7 @@ private static final long serialVersionUID = 45087842;
     public void setHeaders(List<Header> Headers) {
         this.Headers = Headers;
     }
+
     /**
      * @return the Body
      */
@@ -107,6 +108,7 @@ private static final long serialVersionUID = 45087842;
     public void setBody(String Body) {
         this.Body = Body;
     }
+
     /**
      * @return the CreateDate
      */
@@ -120,5 +122,4 @@ private static final long serialVersionUID = 45087842;
     public void setCreateDate(Timestamp CreateDate) {
         this.CreateDate = CreateDate;
     }
-
 }

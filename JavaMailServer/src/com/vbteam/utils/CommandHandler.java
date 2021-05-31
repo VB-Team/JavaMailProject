@@ -39,9 +39,7 @@ public class CommandHandler {
         try {
             if (cmd.getType().equals("mail-send")) {
                 emailList = new ArrayList<>();
-                emailList.add(cmd.getMail());
-                System.out.println(emailList.size());
-                mailService.addMails(emailList);
+                mailService.addMails(cmd.getMail());
             }
             if (cmd.getType().equals("mail-income")) {
                 System.out.println("Income Mail Debug - ID : " + cmd.getUser().getId());

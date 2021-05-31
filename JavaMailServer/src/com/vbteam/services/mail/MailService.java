@@ -25,7 +25,7 @@ public class MailService {
     DbContext context;
     Connection connection;
 
-    public void addMails(List<Mail> mails) {
+    public void addMails(Mail mail) {
         try {
 
             int affectedRow = 0;
@@ -33,8 +33,6 @@ public class MailService {
             context = new DbContext();
             connection = context.getConnection();
             int recipientId, senderId;
-
-            for (Mail mail : mails) {
                 recipientId = context.getUserId(mail.getHeaders().get(0).getRecipientUser());
                 senderId = context.getUserId(mail.getHeaders().get(0).getSenderUser());
 
@@ -69,7 +67,7 @@ public class MailService {
                     affectedRow += statement.executeUpdate();
                 }
                 statement.close();
-            }
+            
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             connection.close();
         } catch (Exception ex) {
