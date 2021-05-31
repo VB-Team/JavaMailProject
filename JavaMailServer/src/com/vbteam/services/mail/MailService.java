@@ -35,7 +35,7 @@ public class MailService {
             int recipientId, senderId;
                 recipientId = context.getUserId(mail.getHeaders().get(0).getRecipientUser());
                 senderId = context.getUserId(mail.getHeaders().get(0).getSenderUser());
-
+                if (recipientId!=-1) {            
                 String mailInsertQuery = "Insert into Mails (Subject,Body,AttachmentState,CreateDate) values(?,?,?,?);";
                 statement = connection.prepareStatement(mailInsertQuery);
 
@@ -66,8 +66,9 @@ public class MailService {
                     statement.setBoolean(4, header.isState());
                     affectedRow += statement.executeUpdate();
                 }
+                
                 statement.close();
-            
+            }
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             connection.close();
         } catch (Exception ex) {

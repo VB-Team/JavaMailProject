@@ -17,7 +17,6 @@ import java.sql.SQLException;
  * @author schea
  */
 public class DbContext {
-
     static Connection connection;
     static String fullurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer;user=sa;password=6165";
     static String conurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer";
