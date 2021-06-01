@@ -455,7 +455,6 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     }
 
     public void saveDraft() {
-
         Mail draftMail = new Mail();
         List<Header> headers = new ArrayList<Header>();
         Header header = new Header();
@@ -466,9 +465,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         header.setType("Draft");
         draftMail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
         headers.add(header);
-        draftMail.setHeaders(headers);
-
-        FrmAuth.conService.SendCommand(new Command("mail-send", null, user, draftMail));
+        draftMail.setHeaders(headers);        
+        FrmAuth.conService.SendCommand(new Command("mail-add-draft", null, user, draftMail));
 
     }
 
