@@ -21,14 +21,12 @@ public class CommandController {
     private static FrmAuth authFrame;
 
     public static void Handler(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, Command command, JFrame frame) {
-        System.out.println("handler");
+        System.out.println(command.getType());
         authFrame = (FrmAuth)frame;
         if (command.getType().indexOf("response") == 0) {
-            System.out.println("response");
             Auth(command, frame);
         }
         if (command.getType().indexOf("mail") == 0) {
-            System.out.println("mail box");
             Mail(command, frame);
         }
         if(command.getType().indexOf("manager")== 0){
@@ -90,6 +88,12 @@ public class CommandController {
                 authFrame.uihandler.mailSentResponse(command.getBoolResponse());
             }if (command.getType().equals("mail-box-response")) {
                 authFrame.uihandler.setMailResponse(command);
+            }if(command.getType().equals("mail-delete-response")){
+                if(command.getBoolResponse()){
+                    authFrame.uihandler.popupMessage("confirm", "Mail başarıyla silindi.");
+                }else{
+                    authFrame.uihandler.popupMessage("error", "Mail silinemedi.");
+                }
             }
         }catch(Exception ex){
             ex.printStackTrace();

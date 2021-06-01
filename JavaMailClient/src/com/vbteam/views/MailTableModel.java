@@ -25,6 +25,10 @@ public class MailTableModel extends AbstractTableModel {
         myList = mailList;
         type = _type;
     }
+    
+    public String getType(){
+        return type;
+    }
 
     public List<Mail> getList() {
         return myList;

@@ -13,13 +13,14 @@
         <group name="Mail">
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/MailServerDbGenerateScript.sql</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/DbContext.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/socket/ClientListener.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/socket/Server.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/UserManagement/IUserManagementService.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/UserManagement/UserManagementService.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/mail/MailService.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/models/Command.java</file>
+            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/socket/CommandHandler.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/authenticate/AuthService.java</file>
-            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/CommandHandler.java</file>
-            <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/views/ConsoleUI.java</file>
         </group>
     </open-files>
 </project-private>

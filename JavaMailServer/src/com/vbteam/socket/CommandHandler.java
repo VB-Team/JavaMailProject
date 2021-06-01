@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.utils;
+package com.vbteam.socket;
 
 import com.vbteam.models.Command;
 import com.vbteam.models.User;
@@ -11,7 +11,7 @@ import com.vbteam.services.authenticate.AuthService;
 import com.vbteam.services.mail.MailService;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+
 import java.util.List;
 import com.vbteam.models.Mail;
 import com.vbteam.services.UserManagement.UserManagementService;
@@ -25,7 +25,7 @@ public class CommandHandler {
     private static AuthService authService = AuthService.getInstance();
     private static MailService mailService = MailService.getInstance();
     private static UserManagementService managerService = new UserManagementService();
-    private static List<Mail> emailList;
+
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         if (cmd.getType().indexOf("auth") == 0) {
             Auth(objInput, objOutput, cmd);
@@ -48,10 +48,18 @@ public class CommandHandler {
                     cmd.setBoolResponse(isSent);
                     objOutput.writeObject(cmd);
                     break;
+                case "mail-delete":
+                    mailService.deleteMail(cmd.getMail().getId());
+                    cmd = new Command();
+                    cmd.setType("mail-delete-response");
+                    cmd.setBoolResponse(true);
+                    objOutput.writeObject(cmd);
+                    break;
                 case "mail-income":
                     int userId = cmd.getUser().getId();
                     cmd = new Command();
                     cmd.setType("mail-box-response");
+                    cmd.setCommandText("income");
                     List<Mail> incomeMails = mailService.getIncomingMails(userId);
                     for (Mail mail : incomeMails) {
                         mail.setAttachments(mailService.getMailAttachments(mail.getId()));
@@ -64,7 +72,7 @@ public class CommandHandler {
                     int outId = cmd.getUser().getId();
                     cmd = new Command();
                     cmd.setType("mail-box-response");
-
+                    cmd.setCommandText("outgoing");
                     System.out.println("Mail Size" + outId);
                     List<Mail> outgoingMails = mailService.getOutgoingMails(outId);
                     System.out.println("Mail Box Outgoing");
@@ -82,6 +90,7 @@ public class CommandHandler {
                     int draftId = cmd.getUser().getId();
                     cmd = new Command();
                     cmd.setType("mail-box-response");
+                    cmd.setCommandText("draft");
                     List<Mail> mails = mailService.getAnyMails(draftId, "Draft");
                     for (Mail mail : mails) {
                         mail.setAttachments(mailService.getMailAttachments(mail.getId()));
@@ -95,6 +104,7 @@ public class CommandHandler {
                     int deleteId = cmd.getUser().getId();
                     cmd = new Command();
                     cmd.setType("mail-box-response");
+                    cmd.setCommandText("delete");
                     List<Mail> trashMails = mailService.getAnyMails(deleteId, "Deleted");
                     for (Mail mail : trashMails) {
                         mail.setAttachments(mailService.getMailAttachments(mail.getId()));
@@ -108,7 +118,7 @@ public class CommandHandler {
                     break;
             }
         } catch (Exception ex) {
-            System.out.println(ex.getStackTrace());
+            ex.printStackTrace();
         }
     }
 
@@ -151,7 +161,7 @@ public class CommandHandler {
                     break;
             }
         } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -234,7 +244,7 @@ public class CommandHandler {
                     break;
             }
         } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
         }
     }
 }

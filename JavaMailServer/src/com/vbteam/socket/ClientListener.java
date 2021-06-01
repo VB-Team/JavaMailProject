@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.utils;
+package com.vbteam.socket;
 
 import com.vbteam.models.Command;
 import java.io.ObjectInputStream;
