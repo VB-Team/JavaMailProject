@@ -68,12 +68,18 @@ public class UserManagementService implements IUserManagementService {
     public boolean deletedUser(int userId) {
         try {
             CallableStatement statement;
+            int affectedRow =0;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "{call DeleteUser(?)}";
-            statement = connection.prepareCall(query);
+            String deleteMailQuery="Delete From Headers where RecipientId=? or SenderId=?";            
+            String deleteUserQuery = "{call DeleteUser(?)}";
+            statement = connection.prepareCall(deleteMailQuery);            
             statement.setInt(1, userId);
-            int affectedRow = statement.executeUpdate();
+            statement.setInt(2, userId);
+            affectedRow += statement.executeUpdate();
+            statement = connection.prepareCall(deleteUserQuery);
+            statement.setInt(1, userId);
+            affectedRow += statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             statement.close();
             connection.close();

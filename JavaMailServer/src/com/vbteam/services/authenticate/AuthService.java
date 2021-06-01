@@ -41,7 +41,6 @@ public class AuthService implements IAuthService {
 
             context = new DbContext();
             connection = context.getConnection();
-
             String query = "Select u.Id,u.LastLoginDate,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
                     + "From Users u join UserDetails ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id \n"
@@ -199,7 +198,7 @@ public class AuthService implements IAuthService {
                 return null;
             }
         } catch (Exception e) {
-            System.out.println("User Manager Service Exception : " + e.getMessage());
+            System.err.println("User Manager Service Exception : " + e.getMessage());
             return null;
         }
     }

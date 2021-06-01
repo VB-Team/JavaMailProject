@@ -25,9 +25,7 @@ public class CommandHandler {
     private static AuthService authService = AuthService.getInstance();
     private static MailService mailService = MailService.getInstance();
     private static UserManagementService managerService = new UserManagementService();
-
     private static List<Mail> emailList;
-
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         if (cmd.getType().indexOf("auth") == 0) {
             Auth(objInput, objOutput, cmd);
