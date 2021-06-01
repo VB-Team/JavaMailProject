@@ -5,7 +5,9 @@
  */
 package com.vbteam.services.authenticate;
 
+import com.vbteam.models.Log;
 import com.vbteam.models.User;
+import com.vbteam.services.logger.Logger;
 import com.vbteam.utils.BCrypt;
 import com.vbteam.utils.DbContext;
 /**
@@ -22,7 +24,15 @@ public class AuthService implements IAuthService {
     DbContext context;
     Connection connection;
     private static AuthService instance = null;
-
+    private Logger logger;
+    private AuthService() {
+    }
+    public static AuthService getInstance(){
+        if(instance==null)
+            instance=new AuthService();
+        
+        return instance;
+    }
 
     @Override
     public User login(String UserName, String Password) {
@@ -63,6 +73,8 @@ public class AuthService implements IAuthService {
                 return null;
             }
         } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Login Exception : "+ex.getMessage()));
             System.err.println("AuthService Exception : " + ex.getMessage());
             return null;
         }
@@ -86,8 +98,10 @@ public class AuthService implements IAuthService {
                 return false;
             }
 
-        } catch (Exception e) {
-            System.err.println("AuthService Exception : " + e.toString());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Update Last Login Date Exception : "+ex.getMessage()));
+            System.err.println("AuthService Exception : " + ex.toString());
             return false;
         }
 
@@ -122,6 +136,8 @@ public class AuthService implements IAuthService {
                 return null;
             }
         } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Register Exception : "+ex.getMessage()));
             System.err.println("AuthService Exception : " + ex.toString());
             return null;
         }

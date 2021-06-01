@@ -7,6 +7,7 @@ package com.vbteam.services.mail;
 
 import com.vbteam.models.Attachment;
 import com.vbteam.models.Header;
+import com.vbteam.models.Log;
 import com.vbteam.utils.DbContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,8 +15,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import com.vbteam.models.Mail;
-import java.util.Random;
-
+import com.vbteam.services.logger.Logger;
 /**
  *
  * @author schea
@@ -25,7 +25,15 @@ public class MailService {
     private DbContext context;
     private Connection connection;
     private static MailService instance = null;
-
+    private Logger logger;
+    private MailService() {
+    }
+    public static MailService getInstance(){
+        if(instance==null)
+            instance=new MailService();
+        
+        return instance;
+    }
     public boolean addMail(Mail mail) {
         try {
             int affectedRow = 0;
@@ -69,13 +77,16 @@ public class MailService {
             statement.close();
             connection.close();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
-            if (affectedRow > 3) {
+            if (affectedRow > 1) {
                 return true;
             } else {
                 return false;
             }
+            
         } catch (Exception ex) {
-            System.out.println("Server Sent Mail Service Exception : " + ex.toString());
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Sended Mail exception : "+ex.getMessage()));
+            System.err.println("Server Sent Mail Service Exception : " + ex.toString());
             return false;
         }
     }
@@ -118,7 +129,9 @@ public class MailService {
             headerMailIdResultSet.close();
             return mails;
         } catch (Exception ex) {
-            System.out.println("Get From Mail Exception : " + ex.getMessage());
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Outgoing Mails exception : "+ex.getMessage()));
+            System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -161,7 +174,9 @@ public class MailService {
             headerMailIdResultSet.close();
             return mails;
         } catch (Exception ex) {
-            System.out.println("Get From Mail Exception : " + ex.getMessage());
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Incoming Mails exception : "+ex.getMessage()));
+            System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -191,7 +206,9 @@ public class MailService {
             headerResultSet.close();
             return headers;
         } catch (Exception ex) {
-            System.out.println("Get From Mail Exception : " + ex.getMessage());
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Mail Headers exception : "+ex.getMessage()));
+            System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -220,7 +237,9 @@ public class MailService {
             rs.close();
             return attachments;
         } catch (Exception ex) {
-            System.out.println("Get From Mail Exception : " + ex.getMessage());
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Mail Attachments exception : "+ex.getMessage()));
+            System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -264,7 +283,9 @@ public class MailService {
             headerMailIdResultSet.close();
             return mails;
         } catch (Exception ex) {
-            System.out.println("Get From Mail Exception : " + ex.getMessage());
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Any Mails exception : "+ex.getMessage()));
+            System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         }
 
@@ -300,8 +321,10 @@ public class MailService {
             }
             connection.close();
             statement.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Delete Mail exception : "+ex.getMessage()));
+            System.err.println(ex.getMessage());
         }
     }
 }

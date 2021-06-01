@@ -22,8 +22,8 @@ import com.vbteam.services.UserManagement.UserManagementService;
  */
 public class CommandHandler {
 
-    private static AuthService authService = new AuthService();
-    private static MailService mailService = new MailService();
+    private static AuthService authService = AuthService.getInstance();
+    private static MailService mailService = MailService.getInstance();
     private static UserManagementService managerService = new UserManagementService();
 
     private static List<Mail> emailList;
@@ -42,118 +42,115 @@ public class CommandHandler {
 
     private static void Mail(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         try {
-            if (cmd.getType().equals("mail-send")) {
-                boolean isSent = mailService.addMail(cmd.getMail());
-                
-                cmd = new Command();
-                cmd.setType("mail-send-response");
-                cmd.setBoolResponse(isSent);
+            switch (cmd.getType()) {
+                case "mail-send":
+                    boolean isSent = mailService.addMail(cmd.getMail());
+                    cmd = new Command();
+                    cmd.setType("mail-send-response");
+                    cmd.setBoolResponse(isSent);
+                    objOutput.writeObject(cmd);
+                    break;
+                case "mail-income":
+                    int userId = cmd.getUser().getId();
+                    cmd = new Command();
+                    cmd.setType("mail-box-response");
+                    List<Mail> incomeMails = mailService.getIncomingMails(userId);
+                    for (Mail mail : incomeMails) {
+                        mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                        mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                    }
+                    cmd.setObject(incomeMails);
+                    objOutput.writeObject(cmd);
+                    break;
+                case "mail-outgoing":
+                    int outId = cmd.getUser().getId();
+                    cmd = new Command();
+                    cmd.setType("mail-box-response");
 
-                objOutput.writeObject(cmd);
-                
-            }
-            if (cmd.getType().equals("mail-income")) {
-                System.out.println("Income Mail Debug - ID : " + cmd.getUser().getId());
-                int userId = cmd.getUser().getId();
+                    System.out.println("Mail Size" + outId);
+                    List<Mail> outgoingMails = mailService.getOutgoingMails(outId);
+                    System.out.println("Mail Box Outgoing");
 
-                cmd = new Command();
-                cmd.setType("mail-box-response");
-                List<Mail> mails = mailService.getIncomingMails(userId);
-                for (Mail mail : mails) {
-                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
-                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
-                }
-                cmd.setObject(mails);
+                    for (Mail mail : outgoingMails) {
+                        System.out.println(mail.getId());
+                        mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                        mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                    }
+                    cmd.setObject(outgoingMails);
 
-                objOutput.writeObject(cmd);
-            }
-            if (cmd.getType().equals("mail-outgoing")) {
-                System.out.println("Outgoing Mail Debug - ID : " + cmd.getUser().getId());
-                int userId = cmd.getUser().getId();
+                    objOutput.writeObject(cmd);
+                    break;
+                case "mail-draft":
+                    int draftId = cmd.getUser().getId();
+                    cmd = new Command();
+                    cmd.setType("mail-box-response");
+                    List<Mail> mails = mailService.getAnyMails(draftId, "Draft");
+                    for (Mail mail : mails) {
+                        mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                        mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                    }
+                    cmd.setObject(mails);
 
-                cmd = new Command();
-                cmd.setType("mail-box-response");
-                List<Mail> mails = mailService.getOutgoingMails(userId);
-                for (Mail mail : mails) {
-                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
-                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
-                }
-                cmd.setObject(mails);
+                    objOutput.writeObject(cmd);
+                    break;
+                case "mail-trash":
+                    int deleteId = cmd.getUser().getId();
+                    cmd = new Command();
+                    cmd.setType("mail-box-response");
+                    List<Mail> trashMails = mailService.getAnyMails(deleteId, "Deleted");
+                    for (Mail mail : trashMails) {
+                        mail.setAttachments(mailService.getMailAttachments(mail.getId()));
+                        mail.setHeaders(mailService.getMailHeaders(mail.getId()));
+                    }
+                    cmd.setObject(trashMails);
 
-                objOutput.writeObject(cmd);
-            }
-
-            if (cmd.getType().equals("mail-draft")) {
-                System.out.println("Draft Mail Debug - ID : " + cmd.getUser().getId());
-                int userId = cmd.getUser().getId();
-
-                cmd = new Command();
-                cmd.setType("mail-box-response");
-                List<Mail> mails = mailService.getAnyMails(userId, "Draft");
-                for (Mail mail : mails) {
-                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
-                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
-                }
-                cmd.setObject(mails);
-
-                objOutput.writeObject(cmd);
-            }
-
-            if (cmd.getType().equals("mail-trash")) {
-                System.out.println("Deleted Mail Debug - ID : " + cmd.getUser().getId());
-                int userId = cmd.getUser().getId();
-
-                cmd = new Command();
-               cmd.setType("mail-box-response");
-                List<Mail> mails = mailService.getAnyMails(userId, "Deleted");
-                for (Mail mail : mails) {
-                    mail.setAttachments(mailService.getMailAttachments(mail.getId()));
-                    mail.setHeaders(mailService.getMailHeaders(mail.getId()));
-                }
-                cmd.setObject(mails);
-
-                objOutput.writeObject(cmd);
+                    objOutput.writeObject(cmd);
+                    break;
+                default:
+                    break;
             }
         } catch (Exception ex) {
-            System.out.println("Mail Delivery Service Exception : " + ex.getMessage());
+            System.out.println(ex.getStackTrace());
         }
     }
 
     private static void Auth(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         try {
-            if (cmd.getType().equals("auth-exist")) {
-                boolean bool = authService.userExist(cmd.getUser().getUserName());
+            switch (cmd.getType().toString()) {
+                case "auth-exist":
+                    boolean userExistState = authService.userExist(cmd.getUser().getUserName());
 
-                cmd = new Command();
-                cmd.setType("response-exist");
-                cmd.setBoolResponse(bool);
+                    cmd = new Command();
+                    cmd.setType("response-exist");
+                    cmd.setBoolResponse(userExistState);
 
-                objOutput.writeObject(cmd);
-            }
-            if (cmd.getType().equals("auth-register")) {
-                User _user = authService.register(cmd.getUser());
-                
-                System.out.println("register");
-
-                cmd = new Command();
-                cmd.setType("response-register");
-                cmd.setUser(_user);
-
-                objOutput.writeObject(cmd);
-            }
-            if (cmd.getType().equals("auth-login")) {
-                try {
-                    User _user = authService.login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
+                    objOutput.writeObject(cmd);
+                    break;
+                case "auth-register":
+                    User _registerUser = authService.register(cmd.getUser());
+                    System.out.println("register");
+                    cmd = new Command();
+                    cmd.setType("response-register");
+                    cmd.setUser(_registerUser);
+                    objOutput.writeObject(cmd);
+                    break;
+                case "auth-login":
+                    try {
+                    User _loginUser = authService.login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
                     System.out.println("login");
 
                     cmd = new Command();
                     cmd.setType("response-login");
-                    cmd.setUser(_user);
+                    cmd.setUser(_loginUser);
 
                     objOutput.writeObject(cmd);
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }
+                break;
+
+                default:
+                    break;
             }
         } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage());

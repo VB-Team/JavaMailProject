@@ -6,7 +6,7 @@
 package com.vbteam.models;
 
 import java.util.Date;
-
+import java.sql.Timestamp;
 /**
  *
  * @author schea
@@ -14,14 +14,14 @@ import java.util.Date;
 public class Log {
     private static final long serialVersionUID = 45087843;
     private int Id;
-    private Date createDate;
+    private Timestamp createDate;
     private String Type;
     private String ExceptionMessage;
 
     public Log() {
     }
 
-    public Log( Date createDate, String Type, String ExceptionMessage) {
+    public Log( Timestamp createDate, String Type, String ExceptionMessage) {
         this.createDate = createDate;
         this.Type = Type;
         this.ExceptionMessage = ExceptionMessage;
@@ -44,14 +44,14 @@ public class Log {
     /**
      * @return the createDate
      */
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
     /**
      * @param createDate the createDate to set
      */
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 

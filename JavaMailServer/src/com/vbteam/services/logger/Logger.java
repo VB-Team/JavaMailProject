@@ -20,6 +20,15 @@ public class Logger implements ILogger {
 
     DbContext context;
     Connection connection;
+    private static Logger instance=null;
+    private Logger() {
+    }
+    public static Logger getInstance(){
+        if(instance==null)
+            instance=new Logger();
+        
+        return instance;
+    }
 
     @Override
     public boolean addLog(Log log) {
@@ -28,10 +37,11 @@ public class Logger implements ILogger {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String insertQuery = "Insert into Logs(Type,ExceptionMessage)values(?,?)";
+            String insertQuery = "Insert into Logs(Type,ExceptionMessage,CreateDate)values(?,?,?)";
             statement = connection.prepareStatement(insertQuery);
             statement.setString(1, log.getType());
             statement.setString(2, log.getExceptionMessage());
+            statement.setTimestamp(3, log.getCreateDate());
             affectedRow += statement.executeUpdate();
             statement.close();
             connection.close();
@@ -48,7 +58,7 @@ public class Logger implements ILogger {
     }
 
     @Override
-    public List<Log> getLog() {
+    public List<Log> getLogs() {
         try {
             PreparedStatement statement;
             context = new DbContext();

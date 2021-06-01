@@ -23,5 +23,5 @@ public interface ILogger {
      *
      * @return this method return all logs 
      */
-    public List<Log> getLog();
+    public List<Log> getLogs();
 }

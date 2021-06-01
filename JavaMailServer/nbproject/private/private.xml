@@ -8,5 +8,13 @@
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/CommandHandler.java</file>
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/services/authenticate/IAuthService.java</file>
         </group>
+        <group>
+            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/services/UserManagement/UserManagementService.java</file>
+            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/services/authenticate/AuthService.java</file>
+            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/services/mail/MailService.java</file>
+            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/DbContext.java</file>
+            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/CommandHandler.java</file>
+            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/models/Command.java</file>
+        </group>
     </open-files>
 </project-private>

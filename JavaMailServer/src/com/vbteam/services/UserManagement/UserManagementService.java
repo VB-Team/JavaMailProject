@@ -5,7 +5,9 @@
  */
 package com.vbteam.services.UserManagement;
 
+import com.vbteam.models.Log;
 import com.vbteam.models.User;
+import com.vbteam.services.logger.Logger;
 import com.vbteam.utils.BCrypt;
 import com.vbteam.utils.DbContext;
 import java.sql.CallableStatement;
@@ -24,7 +26,7 @@ public class UserManagementService implements IUserManagementService {
     DbContext context;
     Connection connection;
     private static UserManagementService instance = null;
-
+    private Logger logger;
 
     @Override
     public User addUser(User user) {
@@ -49,8 +51,10 @@ public class UserManagementService implements IUserManagementService {
             } else {
                 return null;
             }
-        } catch (Exception e) {
-            System.out.println("User Manager Service Exception : " + e.getMessage());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Add User Exception : "+ex.getMessage()));
+            System.out.println("User Manager Service Exception : " + ex.getMessage());
             return null;
         }
 
@@ -78,8 +82,10 @@ public class UserManagementService implements IUserManagementService {
             } else {
                 return false;
             }
-        } catch (Exception e) {
-            System.out.println("User Manager Service Exception : " + e.getMessage());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Delete User Exception : "+ex.getMessage()));
+            System.out.println("User Manager Service Exception : " + ex.getMessage());
             return false;
         }
     }
@@ -107,8 +113,10 @@ public class UserManagementService implements IUserManagementService {
             } else {
                 return null;
             }
-        } catch (Exception e) {
-            System.out.println("User Manager Service Exception : " + e.getMessage());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Update User Exception : "+ex.getMessage()));
+            System.err.println("User Manager Service Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -141,6 +149,8 @@ public class UserManagementService implements IUserManagementService {
             rs.close();
             return users;
         } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management List User Exception : "+ex.getMessage()));
             System.err.println("User management Exception : " + ex.getMessage());
             return null;
         }
@@ -175,6 +185,8 @@ public class UserManagementService implements IUserManagementService {
             headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Incoming Mail Exception : "+ex.getMessage()));
             System.err.println("User management Exception : " + ex.getMessage());
             return 0;
         }
@@ -209,6 +221,8 @@ public class UserManagementService implements IUserManagementService {
             headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Outgoing Mail Exception : "+ex.getMessage()));
             System.err.println("User management Exception : " + ex.getMessage());
             return 0;
         }
