@@ -348,6 +348,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         yonetici_kullanici_ekle.addMouseListener(this);
 
         yonetici_user_ekle_geri.addMouseListener(this);
+        yonetici_user_edit_geri.addMouseListener(this);
+
+        yonetici_bilgi_onaylama.addMouseListener(this);
 
     }
 
@@ -394,7 +397,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     private void dosyaKaydet(Attachment _attachment) {
         try {
-            FileOutputStream fos = new FileOutputStream(_attachment.getAttachmentName() + _attachment.getAttachmentType());
+            FileOutputStream fos = new FileOutputStream(_attachment.getAttachmentName() +"."+_attachment.getAttachmentType());
             fos.write(_attachment.getAttachmentContent());
             fos.close();
         } catch (IOException ex) {
@@ -466,6 +469,15 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     }
 
+    private void setUserCredentialsToDetail(User _user) {
+        yonetici_ad_text.setText(_user.getFirstName());
+        yonetici_soyad_text.setText(_user.getLastName());
+        yonetici_username_text.setText(_user.getUserName());
+        yonetici_password_text.setText(_user.getPassword());
+        yonetici_edit_id.setText(""+_user.getId());
+        yonetici_edit_password.setText(_user.getPassword());
+    }
+
     public void dialogControl(String type) {
         if (type.equals("draft-mail-bool")) {
             saveDraft();
@@ -475,17 +487,49 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent evt) {
 
-        if (evt.getSource() == yonetici_kullanici_sil) {
-            deleteUser(getUserId((int) userTableModel.getValueAt(selectedRow, 5)));
+        if (evt.getSource() == yonetici_bilgi_onaylama) {
+            User _user = new User();
+
+            if (!(yonetici_ad_text.getText().isEmpty() || yonetici_soyad_text.getText().isEmpty() || yonetici_username_text.getText().isEmpty() || yonetici_password_text.getPassword().length == 0)) {
+                _user.setFirstName(yonetici_ad_text.getText());
+                _user.setLastName(yonetici_soyad_text.getText());
+                _user.setUserName(yonetici_username_text.getText());
+                _user.setId(Integer.parseInt(yonetici_edit_id.getText()));
+                _user.setRole((String)yonetici_edit_combo.getSelectedItem());
+
+                String password = new String(yonetici_password_text.getPassword());
+
+                if (yonetici_edit_password.equals(password)) {
+                    _user.setPassword(yonetici_edit_password.getText());
+                } else {
+                    _user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+                }
+            } else {
+                popupDialog("error", "Boşlukları doldurunuz lütfen. Onaylanmadı", null);
+            }
+
+            FrmAuth.conService.SendCommand(new Command("manager-updateuser", null, _user, null));
+
+            kullanici_bilgi_onaylama.setVisible(false);
         }
 
-        if (evt.getSource() == yonetici_user_ekle_geri) {
-            mainLayout.show(cardPanel, "yonetici");
+        if (evt.getSource() == yonetici_kullanici_sil) {
+            deleteUser(getUserId((int) userTableModel.getValueAt(userTable.getSelectedRow(), 5)));
+        }
+
+        if (evt.getSource() == yonetici_kullanici_detay) {
+            setUserCredentialsToDetail(getUserId((int) userTableModel.getValueAt(userTable.getSelectedRow(), 5)));
+            mainLayout.show(cardPanel, "yonetici_edit");
+        }
+
+        if (evt.getSource() == yonetici_user_ekle_geri || evt.getSource() == yonetici_user_edit_geri) {
+            getUsers();
         }
 
         if (evt.getSource() == yonetici_kullanici_ekle) {
             mainLayout.show(cardPanel, "kullanici_ekle");
         }
+
         if (evt.getSource() == yonetici_user_onaylama) {
             if (!(yonetici_ekle_ad_text.getText().isEmpty() || yonetici_ekle_password_text.getPassword().length == 0
                     || yonetici_ekle_soyad_text.getText().isEmpty() || yonetici_ekle_username_text.getText().isEmpty())) {
@@ -499,10 +543,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
                 FrmAuth.conService.SendCommand(new Command("manager-adduser", null, newUser, null));
 
-                yonetici_ekle_ad.setText("");
-                yonetici_ekle_soyad.setText("");
-                yonetici_ekle_username.setText("");
-                yonetici_ekle_password.setText("");
+                yonetici_ekle_ad_text.setText("");
+                yonetici_ekle_soyad_text.setText("");
+                yonetici_ekle_username_text.setText("");
+                yonetici_ekle_password_text.setText("");
 
             } else {
                 popupDialog("error", "Boşlukları doldurunuz.", null);
@@ -852,6 +896,28 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         jLabel12 = new javax.swing.JLabel();
         yonetici_user_ekle_geri = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
+        pnl_yonetici_kullanici_edit = new javax.swing.JPanel();
+        mailgonder_field_seperator9 = new javax.swing.JSeparator();
+        yonetici_bilgi_onaylama = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        yonetici_ad_text = new javax.swing.JTextField();
+        yonetici_profile_soyad = new javax.swing.JLabel();
+        yonetici_soyad_text = new javax.swing.JTextField();
+        yonetici_username = new javax.swing.JLabel();
+        yonetici_username_text = new javax.swing.JTextField();
+        mailgonder_field_seperator10 = new javax.swing.JSeparator();
+        register_seperator_password2 = new javax.swing.JSeparator();
+        profile_ad1 = new javax.swing.JLabel();
+        mailgonder_field_seperator11 = new javax.swing.JSeparator();
+        mailgonder_field_seperator12 = new javax.swing.JSeparator();
+        yonetici_password_text = new javax.swing.JPasswordField();
+        yonetici_password = new javax.swing.JLabel();
+        yonetici_edit_combo = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
+        yonetici_edit_id = new javax.swing.JLabel();
+        yonetici_user_edit_geri = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        yonetici_edit_password = new javax.swing.JLabel();
         bottomBar = new javax.swing.JPanel();
         Profile = new javax.swing.JPanel();
         profile_icon = new javax.swing.JLabel();
@@ -1689,6 +1755,108 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         cardPanel.add(pnl_yonetici_kullanici_ekle, "kullanici_ekle");
 
+        pnl_yonetici_kullanici_edit.setBackground(new java.awt.Color(20, 20, 22));
+        pnl_yonetici_kullanici_edit.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        mailgonder_field_seperator9.setBackground(new java.awt.Color(25, 25, 28));
+        mailgonder_field_seperator9.setForeground(new java.awt.Color(25, 25, 28));
+        pnl_yonetici_kullanici_edit.add(mailgonder_field_seperator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 260, 40));
+
+        yonetici_bilgi_onaylama.setBackground(new java.awt.Color(30, 29, 32));
+        yonetici_bilgi_onaylama.setOpaque(false);
+        yonetici_bilgi_onaylama.setLayout(new java.awt.BorderLayout());
+
+        jLabel14.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("Onayla");
+        yonetici_bilgi_onaylama.add(jLabel14, java.awt.BorderLayout.CENTER);
+
+        pnl_yonetici_kullanici_edit.add(yonetici_bilgi_onaylama, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 570, 400, 40));
+
+        yonetici_ad_text.setEditable(false);
+        yonetici_ad_text.setBackground(new java.awt.Color(20, 20, 22));
+        yonetici_ad_text.setForeground(new java.awt.Color(238, 217, 217));
+        yonetici_ad_text.setBorder(null);
+        pnl_yonetici_kullanici_edit.add(yonetici_ad_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 130, 260, 40));
+
+        yonetici_profile_soyad.setForeground(new java.awt.Color(254, 254, 254));
+        yonetici_profile_soyad.setText("Soyadı  : ");
+        pnl_yonetici_kullanici_edit.add(yonetici_profile_soyad, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 220, -1, -1));
+
+        yonetici_soyad_text.setEditable(false);
+        yonetici_soyad_text.setBackground(new java.awt.Color(20, 20, 22));
+        yonetici_soyad_text.setForeground(new java.awt.Color(238, 217, 217));
+        yonetici_soyad_text.setBorder(null);
+        pnl_yonetici_kullanici_edit.add(yonetici_soyad_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 210, 260, 40));
+
+        yonetici_username.setForeground(new java.awt.Color(254, 254, 254));
+        yonetici_username.setText("Kullanıcı  :");
+        pnl_yonetici_kullanici_edit.add(yonetici_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 310, -1, -1));
+
+        yonetici_username_text.setEditable(false);
+        yonetici_username_text.setBackground(new java.awt.Color(20, 20, 22));
+        yonetici_username_text.setForeground(new java.awt.Color(238, 217, 217));
+        yonetici_username_text.setBorder(null);
+        pnl_yonetici_kullanici_edit.add(yonetici_username_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 300, 260, 40));
+
+        mailgonder_field_seperator10.setBackground(new java.awt.Color(25, 25, 28));
+        mailgonder_field_seperator10.setForeground(new java.awt.Color(25, 25, 28));
+        pnl_yonetici_kullanici_edit.add(mailgonder_field_seperator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 250, 260, 40));
+
+        register_seperator_password2.setBackground(new java.awt.Color(25, 25, 28));
+        register_seperator_password2.setForeground(new java.awt.Color(25, 25, 28));
+        pnl_yonetici_kullanici_edit.add(register_seperator_password2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 260, 40));
+
+        profile_ad1.setForeground(new java.awt.Color(254, 254, 254));
+        profile_ad1.setText("Adı :");
+        pnl_yonetici_kullanici_edit.add(profile_ad1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 140, -1, -1));
+
+        mailgonder_field_seperator11.setBackground(new java.awt.Color(25, 25, 28));
+        mailgonder_field_seperator11.setForeground(new java.awt.Color(25, 25, 28));
+        pnl_yonetici_kullanici_edit.add(mailgonder_field_seperator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 250, 260, 40));
+
+        mailgonder_field_seperator12.setBackground(new java.awt.Color(25, 25, 28));
+        mailgonder_field_seperator12.setForeground(new java.awt.Color(25, 25, 28));
+        pnl_yonetici_kullanici_edit.add(mailgonder_field_seperator12, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 340, 260, 40));
+
+        yonetici_password_text.setEditable(false);
+        yonetici_password_text.setBackground(new java.awt.Color(20, 20, 22));
+        yonetici_password_text.setForeground(new java.awt.Color(238, 217, 217));
+        yonetici_password_text.setBorder(null);
+        pnl_yonetici_kullanici_edit.add(yonetici_password_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 390, 260, 40));
+
+        yonetici_password.setForeground(new java.awt.Color(254, 254, 254));
+        yonetici_password.setText("Şifre :");
+        pnl_yonetici_kullanici_edit.add(yonetici_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, -1, -1));
+
+        yonetici_edit_combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin" }));
+        pnl_yonetici_kullanici_edit.add(yonetici_edit_combo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 460, 260, -1));
+
+        jLabel15.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel15.setText("Rol :");
+        pnl_yonetici_kullanici_edit.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 470, -1, -1));
+
+        yonetici_edit_id.setForeground(new java.awt.Color(20, 20, 22));
+        yonetici_edit_id.setText("ID");
+        pnl_yonetici_kullanici_edit.add(yonetici_edit_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 80, -1, -1));
+
+        yonetici_user_edit_geri.setBackground(new java.awt.Color(30, 29, 32));
+        yonetici_user_edit_geri.setOpaque(false);
+        yonetici_user_edit_geri.setLayout(new java.awt.BorderLayout());
+
+        jLabel16.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Geri");
+        yonetici_user_edit_geri.add(jLabel16, java.awt.BorderLayout.CENTER);
+
+        pnl_yonetici_kullanici_edit.add(yonetici_user_edit_geri, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 70, 50));
+
+        yonetici_edit_password.setForeground(new java.awt.Color(20, 20, 22));
+        yonetici_edit_password.setText("jLabel17");
+        pnl_yonetici_kullanici_edit.add(yonetici_edit_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 80, -1, -1));
+
+        cardPanel.add(pnl_yonetici_kullanici_edit, "yonetici_edit");
+
         getContentPane().add(cardPanel, java.awt.BorderLayout.CENTER);
 
         bottomBar.setBackground(new java.awt.Color(0, 0, 0));
@@ -1843,6 +2011,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1880,6 +2051,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel mailgonder_field_label_kime;
     private javax.swing.JSeparator mailgonder_field_seperator;
     private javax.swing.JSeparator mailgonder_field_seperator1;
+    private javax.swing.JSeparator mailgonder_field_seperator10;
+    private javax.swing.JSeparator mailgonder_field_seperator11;
+    private javax.swing.JSeparator mailgonder_field_seperator12;
     private javax.swing.JSeparator mailgonder_field_seperator2;
     private javax.swing.JSeparator mailgonder_field_seperator3;
     private javax.swing.JSeparator mailgonder_field_seperator4;
@@ -1887,6 +2061,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JSeparator mailgonder_field_seperator6;
     private javax.swing.JSeparator mailgonder_field_seperator7;
     private javax.swing.JSeparator mailgonder_field_seperator8;
+    private javax.swing.JSeparator mailgonder_field_seperator9;
     private javax.swing.JLabel mailgonder_label_dosyaismi;
     private javax.swing.JPanel password_edit;
     private javax.swing.JLabel password_edit_text;
@@ -1918,8 +2093,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JPanel pnl_titlebuttons;
     private javax.swing.JPanel pnl_welcomer;
     private javax.swing.JPanel pnl_yonetici;
+    private javax.swing.JPanel pnl_yonetici_kullanici_edit;
     private javax.swing.JPanel pnl_yonetici_kullanici_ekle;
     private javax.swing.JLabel profile_ad;
+    private javax.swing.JLabel profile_ad1;
     private javax.swing.JTextField profile_ad_text;
     private javax.swing.JPanel profile_body;
     private javax.swing.JLabel profile_icon;
@@ -1932,6 +2109,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JTextField profile_username_text;
     private javax.swing.JSeparator register_seperator_password;
     private javax.swing.JSeparator register_seperator_password1;
+    private javax.swing.JSeparator register_seperator_password2;
     private javax.swing.JComboBox<String> rol_list_combo;
     private javax.swing.JLabel taslak_Text;
     private javax.swing.JPanel taslakpanel;
@@ -1949,6 +2127,11 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel yenimail_icon;
     private javax.swing.JLabel yenimail_text;
     private javax.swing.JPanel yenimailpanel;
+    private javax.swing.JTextField yonetici_ad_text;
+    private javax.swing.JPanel yonetici_bilgi_onaylama;
+    private javax.swing.JComboBox<String> yonetici_edit_combo;
+    private javax.swing.JLabel yonetici_edit_id;
+    private javax.swing.JLabel yonetici_edit_password;
     private javax.swing.JLabel yonetici_ekle_ad;
     private javax.swing.JTextField yonetici_ekle_ad_text;
     private javax.swing.JLabel yonetici_ekle_password;
@@ -1965,10 +2148,17 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JLabel yonetici_kullanici_sil_text;
     private javax.swing.JPanel yonetici_paneli;
     private javax.swing.JLabel yonetici_paneli_text;
+    private javax.swing.JLabel yonetici_password;
+    private javax.swing.JPasswordField yonetici_password_text;
+    private javax.swing.JLabel yonetici_profile_soyad;
     private javax.swing.JPanel yonetici_sidebar;
+    private javax.swing.JTextField yonetici_soyad_text;
     private javax.swing.JLabel yonetici_text;
+    private javax.swing.JPanel yonetici_user_edit_geri;
     private javax.swing.JPanel yonetici_user_ekle_geri;
     private javax.swing.JPanel yonetici_user_onaylama;
+    private javax.swing.JLabel yonetici_username;
+    private javax.swing.JTextField yonetici_username_text;
     // End of variables declaration//GEN-END:variables
 
 }

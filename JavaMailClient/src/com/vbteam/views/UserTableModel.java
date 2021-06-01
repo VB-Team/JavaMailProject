@@ -15,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
  * @author ubuntu
  */
 public class UserTableModel extends AbstractTableModel{
-    private String[] columnNames = {"Adı", "Soyadı","Kayıt Tarihi", "Rolü","Şifresi"};
+    private String[] columnNames = {"Adı", "Soyadı","Kayıt Tarihi", "Rolü"};
     private List<User> myList = new ArrayList();
 
     public UserTableModel(List<User> userList) {

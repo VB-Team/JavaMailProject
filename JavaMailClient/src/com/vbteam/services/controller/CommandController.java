@@ -72,6 +72,13 @@ public class CommandController {
                     authFrame.uihandler.popupMessage("error", "Kullanıcı silinemedi.");
                 }
             }
+            if(command.getType().equals("manager-updateuser")){
+                if(command.getBoolResponse()){
+                    authFrame.uihandler.popupMessage("confirm", "Kullanıcı başarıyla düzenlendi.");
+                }else{
+                    authFrame.uihandler.popupMessage("error", "Kullanıcı düzenlenemedi.");
+                }
+            }
         }catch(Exception ex){
             ex.printStackTrace();
         }
