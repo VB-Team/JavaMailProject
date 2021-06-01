@@ -15,6 +15,7 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
@@ -23,15 +24,19 @@ import javax.swing.JPanel;
  */
 public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
+    public static UIHandler uihandler = new UIHandler();
     public static ConnectionService conService;
     static FrmDialog popupPanel;
 
     public FrmDashboard dashboard;
-    public User user;
+    public User accountUser = new User();
     private int pX, pY;
+    private String pwString = "";
     private CardLayout mainLayout, registerLayout;
 
     public FrmAuth() {
+
+        uihandler.setAuthFrame(this);
         setUndecorated(true);
 
         // Popup panelimizi kullanmak için atama yapıyoruz.
@@ -56,11 +61,12 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
     }
 
     private void Connection() {
+        JFrame frame = this;
         Runnable connectServerRunnable = new Runnable() {
             @Override
             public void run() {
                 try {
-                    conService = new ConnectionService("127.0.0.1");
+                    conService = new ConnectionService("127.0.0.1", frame);
                     conService.connectServer();
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
@@ -114,9 +120,9 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent evt) {
+
         if (evt.getSource() == pnl_login) {
             if (conService.isConnected()) {
-                user = new User();
                 mainLayout.show(cardPanel, "login");
             } else {
                 popupDialog("error", "Sunucu ile bağlantı kurulmaya çalışıyor.Lütfen bekleyiniz.");
@@ -129,7 +135,6 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         if (evt.getSource() == pnl_register) {
             if (conService.isConnected()) {
-                user = new User();
                 mainLayout.show(cardPanel, "register");
             } else {
                 popupDialog("error", "Sunucu ile bağlantı kurulmaya çalışıyor.Lütfen bekleyiniz.");
@@ -138,52 +143,39 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         if (evt.getSource() == pnl_register_username_arrow) {
             popupDialog("wait", "Lütfen bekleyiniz.");
-            if (!vAuth.isUsernameExist(register_field_username.getText())) {
-                popupPanel.setVisible(false);
-                user.setUserName(register_field_username.getText());
-                registerLayout.show(register_screen, "password");
-            } else {
-                popupDialog("error", "Bu kullanıcı daha önce alınmış.Farklı kullanıcı adı deneyin");
-            }
+
+            accountUser.setUserName(register_field_username.getText());
+
+            conService.SendCommand(new Command("auth-exist", null, accountUser, null));
         }
         if (evt.getSource() == pnl_register_password_arrow) {
-            String pwString = new String(register_password_field.getPassword());
+            pwString = new String(register_password_field.getPassword());
             String controlString = new String(register_password_field_control.getPassword());
             if (vAuth.passwordControl(pwString, controlString)) {
-                user.setPassword(pwString);
+                accountUser.setPassword(pwString);
                 registerLayout.show(register_screen, "details");
             }
         }
 
         if (evt.getSource() == pnl_login_arrow) {
-            //popupDialog("wait", "Lütfen bekleyiniz.");
+            User _user = new User();
+            popupDialog("wait", "Lütfen bekleyiniz.");
             String username = login_field_username.getText();
             String password = new String(login_field_password.getPassword());
             if (!username.isEmpty() && !password.isEmpty()) {
                 try {
-                    user.setUserName(username);
-                    user.setPassword(password);
-                    user.setRole("User");
-                    conService.SendCommand(new Command("auth-login", null, user, null));
-                    
-                    System.out.println("Login işlemi " + System.currentTimeMillis());
-                    
-                    Command _command = (Command) conService.getInputStream().readObject();
-                    
-                    System.out.println("Login tamamlandı işlemi " + System.currentTimeMillis());
-                    
-                    //login control
-                    user = _command.getUser();
-                    if (!(user == null)) {
-                        dashboard = new FrmDashboard();
-                        dashboard.setUserDetails(user);
 
-                        popupPanel.setVisible(false);
-                        this.setVisible(false);
-                    } else {
-                        popupDialog("error", "Giriş başarısız");
-                    }
+                    _user.setUserName(username);
+                    _user.setPassword(password);
+                    _user.setRole("User");
+
+                    conService.SendCommand(new Command("auth-login", null, _user, null));
+
+                    System.out.println("Login işlemi " + System.currentTimeMillis());
+
+                    //Command _command = (Command) conService.getInputStream().readObject();
                 } catch (Exception ex) {
+                    popupDialog("error", "Giriş başarısız");
                     ex.printStackTrace();
                 }
             } else {
@@ -193,34 +185,79 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         }
 
         if (evt.getSource() == pnl_register_detail_arrow) {
-            popupDialog("wait", "Lütfen bekleyiniz.");
+            //popupDialog("wait", "Lütfen bekleyiniz.");
             String name = register_detail_field_name.getText();
             String surName = register_detail_field_surname.getText();
             if (!name.isEmpty() && !surName.isEmpty()) {
                 try {
-                    user.setFirstName(name);
-                    user.setLastName(surName);
-                    user.setRole("User");
+
+                    User regUser = new User();
+                    regUser.setFirstName(name);
+                    regUser.setLastName(surName);
+                    regUser.setUserName(register_field_username.getText());
+                    regUser.setPassword(pwString);
+                    regUser.setRole("User");
+
                     registerLayout.show(register_screen, "finish");
-                    conService.SendCommand(new Command("auth-register", null, user, null));
+                    conService.SendCommand(new Command("auth-register", null, regUser, null));
 
-                    Command _command = (Command) conService.getInputStream().readObject();
-                    //Register control
-                    if (!(user == null)) {
-                        dashboard = new FrmDashboard();
-                        dashboard.setUserDetails(user);
-
-                        this.setVisible(false);
-                    } else {
-                        popupDialog("error", "Kayıt başarısız");
-                        registerLayout.show(register_screen, "username");
-                    }
                 } catch (Exception ex) {
                     System.out.println(ex.getLocalizedMessage());
                 }
             } else {
                 popupDialog("error", "İsminizi ve Soy isminizi girdiğinizden emin olun.");
             }
+        }
+    }
+
+    public void userExist(Command _command) {
+        if (!_command.getBoolResponse()) {
+            popupPanel.setVisible(false);
+
+            registerLayout.show(register_screen, "password");
+        } else {
+
+            popupDialog("error", "Bu kullanıcı daha önce alınmış.Farklı kullanıcı adı deneyin");
+            popupPanel.setVisible(false);
+        }
+    }
+
+    public void loginCompleted(User _user) {
+
+        System.out.println("Login tamamlandı işlemi " + System.currentTimeMillis());
+
+        //login control
+        if (!(_user == null)) {
+            dashboard = new FrmDashboard();
+
+            uihandler.setDashboardFrame(dashboard);
+
+            accountUser = _user;
+            dashboard.setUserDetails(accountUser);
+            popupPanel.setVisible(false);
+            this.setVisible(false);
+        } else {
+
+            popupDialog("error", "Giriş başarısız");
+            popupPanel.setVisible(false);
+        }
+    }
+
+    public void registerCompleted(User _user) {
+        //Register control
+
+        if (!(_user == null)) {
+            dashboard = new FrmDashboard();
+
+            uihandler.setDashboardFrame(dashboard);
+
+            accountUser = _user;
+            dashboard.setUserDetails(accountUser);
+            popupPanel.setVisible(false);
+            this.setVisible(false);
+        } else {
+            popupDialog("error", "Kayıt başarısız");
+            registerLayout.show(register_screen, "username");
         }
     }
 
@@ -733,6 +770,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         register_password_input.add(register_password_field, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 220, 40));
 
         register_password_field_control.setBackground(new java.awt.Color(20, 20, 22));
+        register_password_field_control.setForeground(new java.awt.Color(255, 254, 255));
         register_password_field_control.setBorder(null);
         register_password_input.add(register_password_field_control, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 130, 220, 40));
 
@@ -937,11 +975,13 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jPanel20.setPreferredSize(new java.awt.Dimension(45, 45));
         jPanel20.setLayout(new java.awt.BorderLayout());
 
+        jLabel19.setForeground(new java.awt.Color(255, 254, 255));
         jLabel19.setText("Kullanıcı Adı");
         jLabel19.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanel20.add(jLabel19, java.awt.BorderLayout.CENTER);
 
         jLabel20.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 254, 255));
         jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel20.setText("01   ");
         jLabel20.setPreferredSize(new java.awt.Dimension(200, 200));
@@ -965,11 +1005,13 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jPanel22.setPreferredSize(new java.awt.Dimension(45, 45));
         jPanel22.setLayout(new java.awt.BorderLayout());
 
+        jLabel21.setForeground(new java.awt.Color(255, 254, 255));
         jLabel21.setText("Şifre");
         jLabel21.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanel22.add(jLabel21, java.awt.BorderLayout.CENTER);
 
         jLabel22.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(255, 254, 255));
         jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel22.setText("02   ");
         jLabel22.setPreferredSize(new java.awt.Dimension(200, 200));
@@ -990,11 +1032,13 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jPanel24.setPreferredSize(new java.awt.Dimension(45, 45));
         jPanel24.setLayout(new java.awt.BorderLayout());
 
+        jLabel23.setForeground(new java.awt.Color(255, 254, 255));
         jLabel23.setText("Kullanıcı Bilgileri");
         jLabel23.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanel24.add(jLabel23, java.awt.BorderLayout.CENTER);
 
         jLabel24.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(255, 254, 255));
         jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel24.setText("03   ");
         jLabel24.setPreferredSize(new java.awt.Dimension(200, 200));
@@ -1013,7 +1057,8 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         pnl_regis.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, -1, -1));
 
         jLabel26.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabel26.setText("Kayıt başarıyla tamamlandı. Mail arayüzüne yönlendiriliyorsunuz.");
+        jLabel26.setForeground(new java.awt.Color(255, 254, 255));
+        jLabel26.setText("Kayıt başarıyla tamamlandı. Sunucudan geri bildirim bekleniyor. Yönlendiriliyorsunuz.");
         pnl_regis.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 170, -1, -1));
 
         register_finished.add(pnl_regis, java.awt.BorderLayout.PAGE_END);

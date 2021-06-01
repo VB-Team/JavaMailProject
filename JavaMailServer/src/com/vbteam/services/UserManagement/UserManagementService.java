@@ -6,6 +6,7 @@
 package com.vbteam.services.UserManagement;
 
 import com.vbteam.models.User;
+import com.vbteam.utils.BCrypt;
 import com.vbteam.utils.DbContext;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -36,7 +37,7 @@ public class UserManagementService implements IUserManagementService {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getUserName());
-            statement.setString(4, user.getPassword());
+            statement.setString(4, hashPassword(user.getPassword()));
             statement.setString(5, user.getRole());
             statement.setTimestamp(6, user.getLastLogin());
             int affectedRow = statement.executeUpdate();
@@ -53,6 +54,10 @@ public class UserManagementService implements IUserManagementService {
             return null;
         }
 
+    }
+    
+    public static String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     @Override
@@ -114,8 +119,8 @@ public class UserManagementService implements IUserManagementService {
             PreparedStatement statement;
             context = new DbContext();
             connection = context.getConnection();
-            String query = "Select u.Id,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role\n"
-                    + "From Users u join UserDetail ud on ud.UserId=u.Id\n"
+            String query = "Select u.Id,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
+                    + "From Users u join UserDetails ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id ";
             statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
@@ -136,7 +141,7 @@ public class UserManagementService implements IUserManagementService {
             rs.close();
             return users;
         } catch (Exception ex) {
-            System.err.println("AuthService Exception : " + ex.getMessage());
+            System.err.println("User management Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -170,7 +175,7 @@ public class UserManagementService implements IUserManagementService {
             headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
-            System.err.println("AuthService Exception : " + ex.getMessage());
+            System.err.println("User management Exception : " + ex.getMessage());
             return 0;
         }
     }
@@ -204,7 +209,7 @@ public class UserManagementService implements IUserManagementService {
             headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
-            System.err.println("AuthService Exception : " + ex.getMessage());
+            System.err.println("User management Exception : " + ex.getMessage());
             return 0;
         }
     }

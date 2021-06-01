@@ -7,13 +7,15 @@ package com.vbteam.services.socket;
 
 import com.vbteam.models.Command;
 import com.vbteam.models.User;
+
 import com.vbteam.services.controller.ConnectionController;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Date;
+import javax.swing.JFrame;
+
 
 /**
  *
@@ -27,9 +29,13 @@ public class ConnectionService {
     private ObjectOutputStream objOutStream;
     private ObjectInputStream objInStream;
     private User user;
+    private JFrame frameReference;
 
-    public ConnectionService(String hostName) {
+
+
+    public ConnectionService(String hostName,JFrame frame) {
         this.hostName = hostName;
+        this.frameReference = frame;
     }
 
     public void connectServer() {
@@ -40,8 +46,11 @@ public class ConnectionService {
 
             objOutStream = new ObjectOutputStream(outputStream);
             objInStream = new ObjectInputStream(inputStream);
+            
+            new Thread(new ConnectionController(objInStream, objOutStream, this,frameReference)).start();
+
         } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -50,28 +59,29 @@ public class ConnectionService {
             if (clientSocket == null && clientSocket.isConnected() == false) {
                 return;
             } else {
-                Date date = new Date();
                 //user = new User(userName, hashedPassword, 0, date, date, "BATU", "San");
-                new Thread(new ConnectionController(authType, objInStream, objOutStream, this, user)).start();
+                //new Thread(new ConnectionController(objInStream, objOutStream, this)).start();
+
             }
         } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
         }
     }
-    
-    public ObjectInputStream getInputStream(){
+
+    public ObjectInputStream getInputStream() {
         return this.objInStream;
     }
-    
-    public ObjectOutputStream getOutputStream(){
+
+    public ObjectOutputStream getOutputStream() {
         return this.objOutStream;
     }
 
     public void SendCommand(Command command) {
         try {
             objOutStream.writeObject(command);
-        }catch(Exception ex){
-            System.out.println(ex.getLocalizedMessage());
+            objOutStream.flush();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
     }
@@ -86,12 +96,4 @@ public class ConnectionService {
         return returnValue;
     }
 
-    public static void main(String[] args) {
-        try {
-            ConnectionService conService = new ConnectionService("127.0.0.1");
-            conService.connectServer();
-        } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
-        }
-    }
 }

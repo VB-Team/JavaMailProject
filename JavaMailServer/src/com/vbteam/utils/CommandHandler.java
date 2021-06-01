@@ -43,21 +43,27 @@ public class CommandHandler {
     private static void Mail(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         try {
             if (cmd.getType().equals("mail-send")) {
-                emailList = new ArrayList<>();
-                mailService.addMails(cmd.getMail());
+                boolean isSent = mailService.addMail(cmd.getMail());
+                
+                cmd = new Command();
+                cmd.setType("mail-send-response");
+                cmd.setBoolResponse(isSent);
+
+                objOutput.writeObject(cmd);
+                
             }
             if (cmd.getType().equals("mail-income")) {
                 System.out.println("Income Mail Debug - ID : " + cmd.getUser().getId());
                 int userId = cmd.getUser().getId();
 
                 cmd = new Command();
-                cmd.setType("mail-income");
+                cmd.setType("mail-box-response");
                 List<Mail> mails = mailService.getIncomingMails(userId);
                 for (Mail mail : mails) {
                     mail.setAttachments(mailService.getMailAttachments(mail.getId()));
                     mail.setHeaders(mailService.getMailHeaders(mail.getId()));
                 }
-                cmd.setMailList(mails);
+                cmd.setObject(mails);
 
                 objOutput.writeObject(cmd);
             }
@@ -66,13 +72,13 @@ public class CommandHandler {
                 int userId = cmd.getUser().getId();
 
                 cmd = new Command();
-                cmd.setType("mail-outgoing");
+                cmd.setType("mail-box-response");
                 List<Mail> mails = mailService.getOutgoingMails(userId);
                 for (Mail mail : mails) {
                     mail.setAttachments(mailService.getMailAttachments(mail.getId()));
                     mail.setHeaders(mailService.getMailHeaders(mail.getId()));
                 }
-                cmd.setMailList(mails);
+                cmd.setObject(mails);
 
                 objOutput.writeObject(cmd);
             }
@@ -82,13 +88,13 @@ public class CommandHandler {
                 int userId = cmd.getUser().getId();
 
                 cmd = new Command();
-                cmd.setType("mail-draft");
+                cmd.setType("mail-box-response");
                 List<Mail> mails = mailService.getAnyMails(userId, "Draft");
                 for (Mail mail : mails) {
                     mail.setAttachments(mailService.getMailAttachments(mail.getId()));
                     mail.setHeaders(mailService.getMailHeaders(mail.getId()));
                 }
-                cmd.setMailList(mails);
+                cmd.setObject(mails);
 
                 objOutput.writeObject(cmd);
             }
@@ -98,13 +104,13 @@ public class CommandHandler {
                 int userId = cmd.getUser().getId();
 
                 cmd = new Command();
-                cmd.setType("mail-trash");
+               cmd.setType("mail-box-response");
                 List<Mail> mails = mailService.getAnyMails(userId, "Deleted");
                 for (Mail mail : mails) {
                     mail.setAttachments(mailService.getMailAttachments(mail.getId()));
                     mail.setHeaders(mailService.getMailHeaders(mail.getId()));
                 }
-                cmd.setMailList(mails);
+                cmd.setObject(mails);
 
                 objOutput.writeObject(cmd);
             }
@@ -119,21 +125,21 @@ public class CommandHandler {
                 boolean bool = authService.userExist(cmd.getUser().getUserName());
 
                 cmd = new Command();
-                cmd.setType("response");
+                cmd.setType("response-exist");
                 cmd.setBoolResponse(bool);
 
                 objOutput.writeObject(cmd);
             }
             if (cmd.getType().equals("auth-register")) {
                 User _user = authService.register(cmd.getUser());
+                
                 System.out.println("register");
 
                 cmd = new Command();
-                cmd.setType("response");
+                cmd.setType("response-register");
                 cmd.setUser(_user);
 
                 objOutput.writeObject(cmd);
-
             }
             if (cmd.getType().equals("auth-login")) {
                 try {
@@ -141,7 +147,7 @@ public class CommandHandler {
                     System.out.println("login");
 
                     cmd = new Command();
-                    cmd.setType("response");
+                    cmd.setType("response-login");
                     cmd.setUser(_user);
 
                     objOutput.writeObject(cmd);
@@ -160,11 +166,10 @@ public class CommandHandler {
                 case "manager-adduser":
                     User addUser = managerService.addUser(cmd.getUser());
                     cmd = new Command();
+                    cmd.setType("manager-adduser");
                     if (addUser == null) {
-                        cmd.setType("response-error");
                         cmd.setBoolResponse(false);
                     } else {
-                        cmd.setType("response-ok");
                         cmd.setBoolResponse(true);
                         cmd.setUser(addUser);
                     }
@@ -173,7 +178,7 @@ public class CommandHandler {
                 case "manager-deleteuser":
                     boolean bool = managerService.deletedUser(cmd.getUser().getId());
                     cmd = new Command();
-                    cmd.setType("response");
+                    cmd.setType("manager-deleteuser");
                     cmd.setBoolResponse(bool);
                     objOutput.writeObject(cmd);
                     break;
@@ -181,11 +186,10 @@ public class CommandHandler {
                     try {
                     User user = managerService.updateUser(cmd.getUser());
                     cmd = new Command();
+                    cmd.setType("manager-updateuser");
                     if (user == null) {
-                        cmd.setType("response-error");
                         cmd.setBoolResponse(false);
                     } else {
-                        cmd.setType("response-ok");
                         cmd.setBoolResponse(true);
                         cmd.setUser(user);
                     }
@@ -199,12 +203,12 @@ public class CommandHandler {
                     List<User> users;
                     users = managerService.listUser();
                     cmd = new Command();
+                    cmd.setType("manager-listuser");
                     if (users == null) {
-                        cmd.setType("response-error");
                         cmd.setBoolResponse(false);
                     } else {
-                        cmd.setType("response-ok");
                         cmd.setBoolResponse(true);
+                        cmd.setObject(users);
                     }
                     objOutput.writeObject(cmd);
                 } catch (Exception e) {
@@ -215,7 +219,7 @@ public class CommandHandler {
                     try {
                     int mailCount = managerService.IncomingMailCount(cmd.getUser().getId());
                     cmd = new Command();
-                    cmd.setType("response-ok");
+                    cmd.setType("manager-income");
                     objOutput.writeObject(cmd);
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
@@ -225,7 +229,7 @@ public class CommandHandler {
                     try {
                     int mailCount = managerService.IncomingMailCount(cmd.getUser().getId());
                     cmd = new Command();
-                    cmd.setType("response-ok");
+                    cmd.setType("manager-outgoing");
                     objOutput.writeObject(cmd);
                 } catch (Exception e) {
                     System.err.println(e.getMessage());

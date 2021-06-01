@@ -113,6 +113,9 @@ public class AuthService implements IAuthService {
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             statement.close();
             connection.close();
+            
+            user.setId(context.getUserId(user.getUserName()));
+            
             if (affectedRow > 0) {
                 return user;
             } else {

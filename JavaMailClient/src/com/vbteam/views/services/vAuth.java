@@ -18,27 +18,6 @@ import com.vbteam.utils.BCrypt;
  */
 public class vAuth {
 
-    public static boolean isUsernameExist(String username) {
-        // Username gonna checked here to is exist
-        boolean bool = true;
-        try {
-            Command sendCommand = new Command();
-            User user = new User();
-
-            user.setUserName(username);
-
-            sendCommand.setType("auth-exist");
-            sendCommand.setUser(user);
-
-            FrmAuth.conService.SendCommand(sendCommand);
-
-            sendCommand = (Command) FrmAuth.conService.getInputStream().readObject();
-            bool = sendCommand.getBoolResponse();
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        return bool;
-    }
 
     public static boolean passwordControl(String firstPw, String controlPw) {
         boolean returnValue = false;

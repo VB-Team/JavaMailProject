@@ -21,7 +21,7 @@ public class Command implements Serializable {
     private User user;
     private boolean boolResponse;
     private Mail mail;
-    private List<Mail> mailList = new ArrayList<Mail>();
+    private Object data;
 
     public Command() {
     }
@@ -33,12 +33,12 @@ public class Command implements Serializable {
         this.mail = mail;
     }
 
-    public void setMailList(List<Mail> _mailList) {
-        mailList = _mailList;
+    public void setObject(Object _object) {
+        data = _object;
     }
     
-    public List<Mail> getMailList(){
-        return mailList;
+    public Object getObject(){
+        return data;
     }
 
     public boolean getBoolResponse() {

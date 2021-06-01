@@ -6,11 +6,10 @@
 package com.vbteam.services.controller;
 
 import com.vbteam.models.Command;
-import com.vbteam.models.User;
 import com.vbteam.services.socket.ConnectionService;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.swing.JFrame;
 
 /**
  *
@@ -20,17 +19,16 @@ public class ConnectionController implements Runnable {
 
     private ObjectInputStream objInputStream;
     private ObjectOutputStream objOutputStream;
-    private String authType;
     private ConnectionService conService;
-    private User user;
     private Command command;
+    private JFrame frame;
 
-    public ConnectionController(String authType, ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, ConnectionService conService, User user) {
-        this.authType = authType;
+    public ConnectionController(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, ConnectionService conService,JFrame frame) {
         this.objInputStream = objInputStream;
         this.objOutputStream = objOutputStream;
         this.conService = conService;
-        this.user = user;
+        this.frame = frame;
+
     }
 
     @Override
@@ -39,7 +37,7 @@ public class ConnectionController implements Runnable {
             while (true) {
                 command = new Command();
                 command = (Command) objInputStream.readObject();
-                CommandController.Handler(objInputStream, objOutputStream, command);
+                CommandController.Handler(objInputStream, objOutputStream, command,frame);
             }
         } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage() + " " + ex.getMessage());

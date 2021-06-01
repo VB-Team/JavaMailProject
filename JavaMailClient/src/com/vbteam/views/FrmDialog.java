@@ -137,6 +137,7 @@ public class FrmDialog extends javax.swing.JFrame {
     private void btn_secondMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_secondMouseClicked
 
         setVisible(false);
+        dashboardFrame.mailPanelState = null;
     }//GEN-LAST:event_btn_secondMouseClicked
 
     private void btn_firstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_firstActionPerformed
