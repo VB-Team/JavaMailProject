@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import com.vbteam.models.Mail;
 import com.vbteam.services.UserManagement.UserManagementService;
+import com.vbteam.utils.ConnectionPool;
 
 /**
  *
@@ -24,9 +25,10 @@ public class CommandHandler {
 
     private static AuthService authService = AuthService.getInstance();
     private static MailService mailService = MailService.getInstance();
-    private static UserManagementService managerService = new UserManagementService();
+    public static UserManagementService managerService = new UserManagementService();
 
-    public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
+
+    public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd ) {
         if (cmd.getType().indexOf("auth") == 0) {
             Auth(objInput, objOutput, cmd);
         }

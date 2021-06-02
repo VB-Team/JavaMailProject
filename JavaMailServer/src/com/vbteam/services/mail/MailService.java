@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.vbteam.models.Mail;
 import com.vbteam.services.logger.Logger;
+import com.vbteam.socket.Server;
 
 /**
  *
@@ -41,7 +42,9 @@ public class MailService {
 
     public boolean addMail(Mail mail) {
         context = new DbContext();
-        connection = context.getConnection();
+
+        //connection = context.getConnection();
+        connection = Server.connectionPool.getConnection();
         try {
             int affectedRow = 0;
             connection.setAutoCommit(false);
@@ -105,7 +108,8 @@ public class MailService {
             return false;
         } finally {
             try {
-                connection.close();
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
             } catch (Exception e) {
             }
 
@@ -114,7 +118,9 @@ public class MailService {
 
     public boolean addDraftMail(Mail mail) {
         context = new DbContext();
-        connection = context.getConnection();
+
+        //connection = context.getConnection();
+        connection = Server.connectionPool.getConnection();
         try {
             int affectedRow = 0;
             connection.setAutoCommit(false);
@@ -160,7 +166,7 @@ public class MailService {
                 connection.rollback();
                 statement.close();
                 return false;
-            }            
+            }
         } catch (Exception ex) {
             try {
                 connection.rollback();
@@ -172,7 +178,8 @@ public class MailService {
             return false;
         } finally {
             try {
-                connection.close();
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
             } catch (Exception e) {
             }
 
@@ -183,7 +190,9 @@ public class MailService {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
 
             String headerMailIdQuery = " Select h.MailId from Headers h ,Users u where h.SenderId=? and u.Id=h.RecipientId and h.Type='Normal' and h.State=1";
             String mailSelectQuery = "Select * From Mails m where m.Id=?";
@@ -213,7 +222,7 @@ public class MailService {
                 }
             }
             statement.close();
-            connection.close();
+            //connection.close();
             headerMailIdResultSet.close();
             return mails;
         } catch (Exception ex) {
@@ -221,6 +230,13 @@ public class MailService {
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Outgoing Mails exception : " + ex.getMessage()));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
+        } finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -228,7 +244,9 @@ public class MailService {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
 
             String headerMailIdQuery = " Select h.MailId from Headers h ,Users u where h.RecipientId=? and u.Id=h.SenderId and h.Type='Normal' and h.State=1";
             String mailSelectQuery = "Select * From Mails m where m.Id=?";
@@ -258,7 +276,7 @@ public class MailService {
                 }
             }
             statement.close();
-            connection.close();
+            //connection.close();
             headerMailIdResultSet.close();
             return mails;
         } catch (Exception ex) {
@@ -266,6 +284,13 @@ public class MailService {
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Incoming Mails exception : " + ex.getMessage()));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
+        }finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -274,7 +299,9 @@ public class MailService {
             String headerSelectQuery = " Select u.UserName,h.*  from Headers h ,Users u where u.Id=RecipientId and h.MailId=? and h.State=1";
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             List<Header> headers = new ArrayList<Header>();
             statement = connection.prepareStatement(headerSelectQuery);
             statement.setInt(1, mailId);
@@ -290,7 +317,7 @@ public class MailService {
                 headers.add(header);
             }
             statement.close();
-            connection.close();
+            //connection.close();
             headerResultSet.close();
             return headers;
         } catch (Exception ex) {
@@ -298,6 +325,13 @@ public class MailService {
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Mail Headers exception : " + ex.getMessage()));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
+        }finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -305,7 +339,9 @@ public class MailService {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             String query = "Select * From Attachments a where a.MailId=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, Integer.toString(mailId));
@@ -321,7 +357,7 @@ public class MailService {
                 attachments.add(attachment);
             }
             statement.close();
-            connection.close();
+            //connection.close();
             rs.close();
             return attachments;
         } catch (Exception ex) {
@@ -329,6 +365,13 @@ public class MailService {
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Mail Attachments exception : " + ex.getMessage()));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
+        }finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -336,7 +379,9 @@ public class MailService {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
 
             String headerMailIdQuery = " Select h.MailId from Headers h  where (h.RecipientId=? or h.SenderId=?) and h.Type=?  and h.State=1";
             String mailSelectQuery = "Select * From Mails m where m.Id=?";
@@ -368,7 +413,8 @@ public class MailService {
                 }
             }
             statement.close();
-            connection.close();
+            //connection.close();
+            
             headerMailIdResultSet.close();
             return mails;
         } catch (Exception ex) {
@@ -376,15 +422,23 @@ public class MailService {
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Any Mails exception : " + ex.getMessage()));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
-        }
+        }finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
 
+        }
     }
 
     public void deleteMail(int mailId) {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             String selectQuery = "Select * From Headers h where h.MailId=?";
             String deleteQuery = "Delete From Mails where Id=?";
             String updateQuery = "Update Headers set Headers.Type='Deleted' where Headers.MailId=?";
@@ -407,12 +461,19 @@ public class MailService {
                 statement.setInt(1, mailId);
                 int affectedRow = statement.executeUpdate();
             }
-            connection.close();
+            //connection.close();
             statement.close();
         } catch (Exception ex) {
             logger = Logger.getInstance();
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Delete Mail exception : " + ex.getMessage()));
             System.err.println(ex.getMessage());
+        }finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 }

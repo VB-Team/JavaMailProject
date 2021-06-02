@@ -91,6 +91,9 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         pnl_register_username_arrow.addMouseListener(this);
         pnl_register_password_arrow.addMouseListener(this);
         pnl_register_detail_arrow.addMouseListener(this);
+        
+        anamenu_geri_login.addMouseListener(this);
+        anamenu_geri_register.addMouseListener(this);
     }
 
     public void moveTitlebar() {
@@ -129,8 +132,8 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
             }
         }
 
-        if (evt.getSource() == lbl_login_arrow) {
-
+        if (evt.getSource() == anamenu_geri_login || evt.getSource() == anamenu_geri_register) {
+            mainLayout.show(cardPanel,"home");
         }
 
         if (evt.getSource() == pnl_register) {
@@ -337,6 +340,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
+        anamenu_geri_register = new javax.swing.JLabel();
         register_username_logo = new javax.swing.JPanel();
         lbl_register_username_logo = new javax.swing.JLabel();
         register_password = new javax.swing.JPanel();
@@ -434,6 +438,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         separator_password = new javax.swing.JSeparator();
         pnl_login_arrow = new javax.swing.JPanel();
         lbl_login_arrow = new javax.swing.JLabel();
+        anamenu_geri_login = new javax.swing.JLabel();
         background3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -626,6 +631,10 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         pnl_progress.add(jPanel3, java.awt.BorderLayout.LINE_END);
 
         register_username_input.add(pnl_progress, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 1370, 70));
+
+        anamenu_geri_register.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        anamenu_geri_register.setText("Geri");
+        register_username_input.add(anamenu_geri_register, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 50));
 
         register_username.add(register_username_input, java.awt.BorderLayout.PAGE_END);
 
@@ -1149,6 +1158,10 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         login_inputs.add(pnl_login_arrow, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 110, 60, 140));
 
+        anamenu_geri_login.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        anamenu_geri_login.setText("Geri");
+        login_inputs.add(anamenu_geri_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 80, 70));
+
         login_screen.add(login_inputs, java.awt.BorderLayout.PAGE_END);
 
         login_panel.add(login_screen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1370, 770));
@@ -1204,6 +1217,8 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel anamenu_geri_login;
+    private javax.swing.JLabel anamenu_geri_register;
     private javax.swing.JLabel background1;
     private javax.swing.JLabel background2;
     private javax.swing.JLabel background3;

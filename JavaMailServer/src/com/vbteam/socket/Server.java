@@ -6,6 +6,8 @@
 package com.vbteam.socket;
 
 
+import com.vbteam.utils.BasicConnectionPool;
+import com.vbteam.utils.ConnectionPool;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,9 +27,13 @@ public class Server {
     private Socket client;
     private ObjectOutputStream objOutStream;
     private ObjectInputStream objInStream;
+    public static ConnectionPool connectionPool;
+    
 
     public void Connect() {
         try {
+            connectionPool = BasicConnectionPool.create("jdbc:sqlserver://localhost:1433;databasename=MailServer", "sa", "Password1!");
+            
             server = new ServerSocket(port);
             while (true) {
                 System.out.println("Server Açık");
@@ -43,6 +49,9 @@ public class Server {
             System.err.println(e.getMessage());
         }
     }
+    
+    
+    
     public static void main(String[] args) {
         Server server=new Server();
         server.Connect();

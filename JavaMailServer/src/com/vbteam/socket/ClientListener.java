@@ -6,6 +6,7 @@
 package com.vbteam.socket;
 
 import com.vbteam.models.Command;
+import com.vbteam.utils.ConnectionPool;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -18,7 +19,7 @@ public class ClientListener implements Runnable {
     private ObjectInputStream objInStream;
     private ObjectOutputStream objOutStream;
 
-    public ClientListener(ObjectInputStream objInStream, ObjectOutputStream objOutStream) {
+    public ClientListener(ObjectInputStream objInStream, ObjectOutputStream objOutStream ) {
         this.objInStream = objInStream;
         this.objOutStream = objOutStream;
     }

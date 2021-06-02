@@ -8,6 +8,7 @@ package com.vbteam.services.UserManagement;
 import com.vbteam.models.Log;
 import com.vbteam.models.User;
 import com.vbteam.services.logger.Logger;
+import com.vbteam.socket.Server;
 import com.vbteam.utils.BCrypt;
 import com.vbteam.utils.DbContext;
 import java.sql.CallableStatement;
@@ -33,7 +34,9 @@ public class UserManagementService implements IUserManagementService {
         try {
             CallableStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             String query = "{call AddUser(?,?,?,?,?,?)}";
             statement = connection.prepareCall(query);
             statement.setString(1, user.getFirstName());
@@ -45,21 +48,27 @@ public class UserManagementService implements IUserManagementService {
             int affectedRow = statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             statement.close();
-            connection.close();
+            //connection.close();
             if (affectedRow > 0) {
                 return user;
             } else {
                 return null;
             }
         } catch (Exception ex) {
-            logger=Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Add User Exception : "+ex.getMessage()));
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Add User Exception : " + ex.getMessage()));
             System.out.println("User Manager Service Exception : " + ex.getMessage());
             return null;
-        }
+        } finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
 
+        }
     }
-    
+
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
@@ -68,12 +77,14 @@ public class UserManagementService implements IUserManagementService {
     public boolean deletedUser(int userId) {
         try {
             CallableStatement statement;
-            int affectedRow =0;
+            int affectedRow = 0;
             context = new DbContext();
-            connection = context.getConnection();
-            String deleteMailQuery="Delete From Headers where RecipientId=? or SenderId=?";            
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
+            String deleteMailQuery = "Delete From Headers where RecipientId=? or SenderId=?";
             String deleteUserQuery = "{call DeleteUser(?)}";
-            statement = connection.prepareCall(deleteMailQuery);            
+            statement = connection.prepareCall(deleteMailQuery);
             statement.setInt(1, userId);
             statement.setInt(2, userId);
             affectedRow += statement.executeUpdate();
@@ -82,17 +93,24 @@ public class UserManagementService implements IUserManagementService {
             affectedRow += statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             statement.close();
-            connection.close();
+            //connection.close();
             if (affectedRow > 0) {
                 return true;
             } else {
                 return false;
             }
         } catch (Exception ex) {
-            logger=Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Delete User Exception : "+ex.getMessage()));
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Delete User Exception : " + ex.getMessage()));
             System.out.println("User Manager Service Exception : " + ex.getMessage());
             return false;
+        } finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -101,7 +119,9 @@ public class UserManagementService implements IUserManagementService {
         try {
             CallableStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             String query = "{call UpdateUser(?,?,?,?,?,?)}";
             statement = connection.prepareCall(query);
             statement.setInt(1, user.getId());
@@ -113,17 +133,24 @@ public class UserManagementService implements IUserManagementService {
             int affectedRow = statement.executeUpdate();
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             statement.close();
-            connection.close();
+            //connection.close();
             if (affectedRow > 0) {
                 return user;
             } else {
                 return null;
             }
         } catch (Exception ex) {
-            logger=Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Update User Exception : "+ex.getMessage()));
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Update User Exception : " + ex.getMessage()));
             System.err.println("User Manager Service Exception : " + ex.getMessage());
             return null;
+        } finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -132,7 +159,9 @@ public class UserManagementService implements IUserManagementService {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             String query = "Select u.Id,u.UserName,u.Password,ud.FirstName,ud.LastName,ur.Role,u.RegisterDate\n"
                     + "From Users u join UserDetails ud on ud.UserId=u.Id\n"
                     + "join UserRoles ur on u.RoleId=ur.Id ";
@@ -151,14 +180,21 @@ public class UserManagementService implements IUserManagementService {
                 users.add(user);
             }
             statement.close();
-            connection.close();
+            //connection.close();
             rs.close();
             return users;
         } catch (Exception ex) {
-            logger=Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management List User Exception : "+ex.getMessage()));
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management List User Exception : " + ex.getMessage()));
             System.err.println("User management Exception : " + ex.getMessage());
             return null;
+        } finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -167,7 +203,9 @@ public class UserManagementService implements IUserManagementService {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             String headerQuery = "Select h.MailId from Headers h ,Users u where h.RecipientId=? and u.Id=h.RecipientId and h.State=1";
             String mailSelectQuery = "Select * From Mails m where m.Id=?";
             statement = connection.prepareStatement(headerQuery);
@@ -187,14 +225,21 @@ public class UserManagementService implements IUserManagementService {
                 }
             }
             statement.close();
-            connection.close();
+            //connection.close();
             headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
-            logger=Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Incoming Mail Exception : "+ex.getMessage()));
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Incoming Mail Exception : " + ex.getMessage()));
             System.err.println("User management Exception : " + ex.getMessage());
             return 0;
+        } finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -203,7 +248,9 @@ public class UserManagementService implements IUserManagementService {
         try {
             PreparedStatement statement;
             context = new DbContext();
-            connection = context.getConnection();
+
+            //connection = context.getConnection();
+            connection = Server.connectionPool.getConnection();
             String headerQuery = "Select h.MailId from Headers h ,Users u where h.SenderId=? and u.Id=h.RecipientId and h.State=1";
             String mailSelectQuery = "Select * From Mails m where m.Id=?";
             statement = connection.prepareStatement(headerQuery);
@@ -223,14 +270,21 @@ public class UserManagementService implements IUserManagementService {
                 }
             }
             statement.close();
-            connection.close();
+            //connection.close();
             headerResultSet.close();
             return mailCount;
         } catch (Exception ex) {
-            logger=Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Outgoing Mail Exception : "+ex.getMessage()));
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Outgoing Mail Exception : " + ex.getMessage()));
             System.err.println("User management Exception : " + ex.getMessage());
             return 0;
+        } finally {
+            try {
+                //connection.close();
+                Server.connectionPool.releaseConnection(connection);
+            } catch (Exception e) {
+            }
+
         }
     }
 

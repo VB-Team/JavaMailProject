@@ -61,9 +61,11 @@ public class MailTableModel extends AbstractTableModel {
         switch (col) {
             case 0:
                 String recipientUser = "";
-                for (Header header : mail.getHeaders()) {
+                if(mail.getHeaders()!=null){
+                    for (Header header : mail.getHeaders()) {
                     recipientUser += header.getRecipientUser() + " , ";
-                }
+                    }
+                }               
                 return recipientUser;
             case 1:
                 return mail.getSubject();
