@@ -32,8 +32,7 @@ public class Server {
 
     public void Connect() {
         try {
-            connectionPool = BasicConnectionPool.create("jdbc:sqlserver://localhost:1433;databasename=MailServer", "sa", "Password1!");
-            
+            connectionPool = BasicConnectionPool.create("jdbc:sqlserver://localhost:1453;databasename=MailServer", "sa", "Password1!");
             server = new ServerSocket(port);
             while (true) {
                 System.out.println("Server Açık");

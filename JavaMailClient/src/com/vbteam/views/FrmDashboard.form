@@ -1189,7 +1189,6 @@
                                             <Property name="caretColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
                                             </Property>
-                                            <Property name="opaque" type="boolean" value="false"/>
                                           </Properties>
                                         </Component>
                                       </SubComponents>
@@ -1279,7 +1278,6 @@
                                             <EmptyBorder bottom="2" left="2" right="2" top="2"/>
                                           </Border>
                                         </Property>
-                                        <Property name="opaque" type="boolean" value="false"/>
                                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                           <Dimension value="[40, 40]"/>
                                         </Property>
@@ -1314,7 +1312,6 @@
                                                 <EmptyBorder bottom="2" left="2" right="2" top="2"/>
                                               </Border>
                                             </Property>
-                                            <Property name="opaque" type="boolean" value="false"/>
                                           </Properties>
                                         </Component>
                                       </SubComponents>

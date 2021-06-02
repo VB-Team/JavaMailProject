@@ -44,17 +44,18 @@ public class CommandHandler {
         try {
             switch (cmd.getType()) {
                 case "mail-send":
-                    boolean isSent = mailService.addMail(cmd.getMail());
+                    boolean isSent =mailService.addMail(cmd.getMail());
                     cmd = new Command();
                     cmd.setType("mail-send-response");
                     cmd.setBoolResponse(isSent);
                     objOutput.writeObject(cmd);
                     break;
                 case "mail-add-draft":
-                    boolean isDrafted = mailService.addDraftMail(cmd.getMail());
+                    
+                    mailService.addDraftMail(cmd.getMail());
                     cmd = new Command();
                     cmd.setType("mail-adddraft-response");
-                    cmd.setBoolResponse(isDrafted);
+                    cmd.setBoolResponse(true);
                     objOutput.writeObject(cmd);
                     break;
                 case "mail-delete":

@@ -20,8 +20,8 @@ public class DbContext {
 
     // DB Exception , Port check
     static Connection connection;
-    static String fullurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer;user=sa;password=6165";
-    static String conurl = "jdbc:sqlserver://localhost:1433;databasename=MailServer";
+    static String fullurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer;user=sa;password=6165";
+    static String conurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer";
 
     static String user = "sa";
     static String batuPass = "Password1!";
@@ -61,7 +61,7 @@ public class DbContext {
     public String getUserName(int userId) {
         try {
             PreparedStatement statement;
-            //connection = DriverManager.getConnection(conurl, user, batuPass);
+            //connection = DriverManager.getConnection(conurl, user, veyselPass);
             connection = Server.connectionPool.getConnection();
             String selectQuery = "Select u.UserName from Users u where u.Id=?";
             statement = connection.prepareStatement(selectQuery);

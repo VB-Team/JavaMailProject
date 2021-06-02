@@ -134,6 +134,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
             if (attachments.size() > 0) {
                 mail.setAttachmentState(true);
+            }else{
+                Attachment attachment = new Attachment();
+                attachments.add(attachment);
+                mail.setAttachmentState(false);
             }
 
             mail.setAttachments(attachments);
@@ -458,6 +462,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         Mail draftMail = new Mail();
         List<Header> headers = new ArrayList<Header>();
         Header header = new Header();
+        List<Attachment> attachments=new ArrayList<Attachment>();
+        Attachment attachment=new Attachment();
+        attachments.add(attachment);
+        draftMail.setAttachments(attachments);
         draftMail.setSubject(mailgonder_field_baslik.getText());
         draftMail.setBody(mailgonder_field_icerik.getText());
         header.setSenderUser(user.getUserName());

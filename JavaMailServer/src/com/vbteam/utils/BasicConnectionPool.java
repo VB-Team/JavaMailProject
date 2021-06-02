@@ -26,7 +26,7 @@ public class BasicConnectionPool implements ConnectionPool {
     private String password;
     private List<Connection> connectionPool;
     private List<Connection> usedConnections = new ArrayList<>();
-    private static int INITIAL_POOL_SIZE = 15;
+    private static int INITIAL_POOL_SIZE = 7;
     int MAX_POOL_SIZE = 50;
 
     public static BasicConnectionPool create(String url, String user, String password) throws SQLException {

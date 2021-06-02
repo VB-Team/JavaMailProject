@@ -73,8 +73,6 @@ public class AuthService implements IAuthService {
                 }
             } else {
                 statement.close();
-                //connection.close();
-
                 rs.close();
                 return null;
             }
@@ -84,12 +82,10 @@ public class AuthService implements IAuthService {
             System.err.println("AuthService Exception : " + ex.getMessage());
             return null;
         } finally {
-            try {
-                //connection.close();
+            try {                
                 Server.connectionPool.releaseConnection(connection);
             } catch (Exception e) {
             }
-
         }
     }
 
@@ -151,10 +147,9 @@ public class AuthService implements IAuthService {
             System.out.println("Etkilenen satır sayısı " + affectedRow);
             statement.close();
             //connection.close();
-
             user.setId(context.getUserId(user.getUserName()));
-
             if (affectedRow > 0) {
+                user.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
                 return user;
             } else {
                 return null;
