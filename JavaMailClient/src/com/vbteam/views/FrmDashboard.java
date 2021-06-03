@@ -270,6 +270,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
 
             FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
+            
+            clearMailSection();
 
         } else {
             popupDialog("error", "Boşlukları doldurunuz lütfen.", null);
@@ -440,8 +442,19 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     public void saveDraft() {
         Mail draftMail = new Mail();
         List<Header> headers = new ArrayList<Header>();
-        Header header = new Header();
+
         List<Attachment> attachments = new ArrayList<Attachment>();
+        
+        String[] userSplit = mailgonder_field_kime.getText().split(",");
+
+            for (int i = 0; i < userSplit.length; i++) {
+                Header header = new Header();
+                header.setSenderUser(user.getUserName());
+                header.setRecipientUser(userSplit[i]);
+                header.setState(true);
+                header.setType("Normal");
+                headers.add(header);
+            }
 
         if (attachments.size() > 0) {
             draftMail.setAttachmentState(true);
@@ -454,16 +467,12 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         draftMail.setAttachments(attachments);
         draftMail.setSubject(mailgonder_field_baslik.getText());
         draftMail.setBody(mailgonder_field_icerik.getText());
-        header.setSenderUser(user.getUserName());
-        header.setRecipientUser(mailgonder_field_kime.getText());
-        header.setType("Draft");
-
-        header.setState(true);
 
         draftMail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
-        headers.add(header);
         draftMail.setHeaders(headers);
         FrmAuth.conService.SendCommand(new Command("mail-add-draft", null, user, draftMail));
+        
+        clearMailSection();
 
     }
 
