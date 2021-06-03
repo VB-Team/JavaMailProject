@@ -5,12 +5,9 @@
  */
 package com.vbteam.views.services;
 
-import com.vbteam.models.Command;
-import com.vbteam.models.User;
 import com.vbteam.views.FrmAuth;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.vbteam.utils.BCrypt;
 
 /**
  *
@@ -52,9 +49,4 @@ public class vAuth {
 
         return m.matches();
     }
-
-    public static String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
 }

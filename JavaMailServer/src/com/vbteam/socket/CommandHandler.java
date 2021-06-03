@@ -15,7 +15,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import com.vbteam.models.Mail;
 import com.vbteam.services.UserManagement.UserManagementService;
-import com.vbteam.utils.ConnectionPool;
+import com.vbteam.utils.IConnectionPool;
 
 /**
  *

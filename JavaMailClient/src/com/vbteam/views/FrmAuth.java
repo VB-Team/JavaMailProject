@@ -5,6 +5,7 @@
  */
 package com.vbteam.views;
 
+import com.vbteam.views.visualUtils.UIHandler;
 import com.vbteam.models.Command;
 import com.vbteam.models.User;
 import com.vbteam.services.socket.ConnectionService;
@@ -39,7 +40,6 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         uihandler.setAuthFrame(this);
         setUndecorated(true);
 
-        // Popup panelimizi kullanmak için atama yapıyoruz.
         popupPanel = new FrmDialog();
 
         initComponents();
@@ -49,7 +49,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         setListeners();
 
         setLocationRelativeTo(null);
-        this.setSize(1366, 768);
+        this.setSize(1370, 819);
         pack();
 
         mainLayout = (CardLayout) cardPanel.getLayout();
@@ -79,9 +79,19 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
     }
 
     public static void popupDialog(String type, String message) {
-        popupPanel.setIcon(type);
-        popupPanel.setMessage(message);
-        popupPanel.setVisible(true);
+        try {
+
+            popupPanel.setIcon(type);
+            popupPanel.setMessage(message);
+            popupPanel.setVisible(true);
+        } catch (Exception ex) {
+            popupPanel.dispose();
+        }
+    }
+
+    public static void disposeDialog() {
+        popupPanel.setVisible(false);
+        popupPanel.dispose();
     }
 
     private void setListeners() {
@@ -91,18 +101,19 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         pnl_register_username_arrow.addMouseListener(this);
         pnl_register_password_arrow.addMouseListener(this);
         pnl_register_detail_arrow.addMouseListener(this);
-        
+
         anamenu_geri_login.addMouseListener(this);
         anamenu_geri_register.addMouseListener(this);
+        anamenu_geri_register_details.addMouseListener(this);
+        anamenu_geri_register_password.addMouseListener(this);
     }
 
     public void moveTitlebar() {
-        cardPanel.addMouseListener(new MouseAdapter() {
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2 && !evt.isConsumed()) {
                     evt.consume();
-                    //maximize();
                 }
             }
 
@@ -113,7 +124,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
             }
         });
 
-        cardPanel.addMouseMotionListener(new MouseAdapter() {
+        this.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent evt) {
                 setLocation(evt.getXOnScreen() - pX, evt.getYOnScreen() - pY);
@@ -128,28 +139,37 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
             if (conService.isConnected()) {
                 mainLayout.show(cardPanel, "login");
             } else {
-                popupDialog("error", "Sunucu ile bağlantı kurulmaya çalışıyor.Lütfen bekleyiniz.");
+                popupDialog("error", "Sunucu ile bağlantı kurulmaya çalışıyor.Lütfen tekrar deneyin.");
             }
         }
 
         if (evt.getSource() == anamenu_geri_login || evt.getSource() == anamenu_geri_register) {
-            mainLayout.show(cardPanel,"home");
+            mainLayout.show(cardPanel, "home");
+        }
+
+        if (evt.getSource() == anamenu_geri_register_details) {
+            mainLayout.show(register_card, "password");
+        }
+
+        if (evt.getSource() == anamenu_geri_register_password) {
+            mainLayout.show(register_card, "username");
         }
 
         if (evt.getSource() == pnl_register) {
             if (conService.isConnected()) {
                 mainLayout.show(cardPanel, "register");
             } else {
-                popupDialog("error", "Sunucu ile bağlantı kurulmaya çalışıyor.Lütfen bekleyiniz.");
+                popupDialog("error", "Sunucu ile bağlantı kurulmaya çalışıyor.Lütfen tekrar deneyin.");
             }
         }
 
         if (evt.getSource() == pnl_register_username_arrow) {
             popupDialog("wait", "Lütfen bekleyiniz.");
 
-            accountUser.setUserName(register_field_username.getText());
+            User nameCheck = new User();
+            nameCheck.setUserName(register_field_username.getText());
 
-            conService.SendCommand(new Command("auth-exist", null, accountUser, null));
+            conService.SendCommand(new Command("auth-exist", null, nameCheck, null));
         }
         if (evt.getSource() == pnl_register_password_arrow) {
             pwString = new String(register_password_field.getPassword());
@@ -162,7 +182,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         if (evt.getSource() == pnl_login_arrow) {
             User _user = new User();
-            popupDialog("wait", "Lütfen bekleyiniz.");
+
             String username = login_field_username.getText();
             String password = new String(login_field_password.getPassword());
             if (!username.isEmpty() && !password.isEmpty()) {
@@ -173,12 +193,10 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                     _user.setRole("User");
 
                     conService.SendCommand(new Command("auth-login", null, _user, null));
-
-                    System.out.println("Login işlemi " + System.currentTimeMillis());
+                    popupDialog("wait", "Lütfen bekleyiniz.");
 
                     //Command _command = (Command) conService.getInputStream().readObject();
                 } catch (Exception ex) {
-                    popupDialog("error", "Giriş başarısız");
                     ex.printStackTrace();
                 }
             } else {
@@ -213,50 +231,45 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         }
     }
 
-    public void userExist(Command _command) {
-        if (!_command.getBoolResponse()) {
-            popupPanel.setVisible(false);
-
-            registerLayout.show(register_screen, "password");
-        } else {
-
-            popupDialog("error", "Bu kullanıcı daha önce alınmış.Farklı kullanıcı adı deneyin");
-            popupPanel.setVisible(false);
-        }
+    public void userExist() {
+        disposeDialog();
+        registerLayout.show(register_screen, "password");
+        accountUser.setUserName(register_field_username.getText());
     }
 
     public void loginCompleted(User _user) {
+        try {
+            disposeDialog();
+            //login Process
+            if (!(_user == null)) {
 
-        System.out.println("Login tamamlandı işlemi " + System.currentTimeMillis());
+                dashboard = new FrmDashboard();
 
-        //login control
-        if (!(_user == null)) {
-            dashboard = new FrmDashboard();
+                uihandler.setDashboardFrame(dashboard);
 
-            uihandler.setDashboardFrame(dashboard);
+                accountUser = _user;
+                dashboard.setUserDetails(accountUser, "login");
 
-            accountUser = _user;
-            dashboard.setUserDetails(accountUser);
-            popupPanel.setVisible(false);
-            this.setVisible(false);
-        } else {
-
-            popupDialog("error", "Giriş başarısız");
-            popupPanel.setVisible(false);
+                this.setVisible(false);
+            } else {
+                popupDialog("error", "Giriş başarısız");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
     }
 
     public void registerCompleted(User _user) {
-        //Register control
-
+        disposeDialog();
+        //Register Process
         if (!(_user == null)) {
             dashboard = new FrmDashboard();
 
             uihandler.setDashboardFrame(dashboard);
 
             accountUser = _user;
-            dashboard.setUserDetails(accountUser);
-            popupPanel.setVisible(false);
+            dashboard.setUserDetails(accountUser, "register");
             this.setVisible(false);
         } else {
             popupDialog("error", "Kayıt başarısız");
@@ -371,6 +384,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         register_password_field_control = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
         politika = new javax.swing.JTextArea();
+        anamenu_geri_register_password = new javax.swing.JLabel();
         register_password_logo = new javax.swing.JPanel();
         lbl_register_password_logo = new javax.swing.JLabel();
         register_details = new javax.swing.JPanel();
@@ -401,6 +415,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
+        anamenu_geri_register_details = new javax.swing.JLabel();
         register_finished = new javax.swing.JPanel();
         pnl_regis = new javax.swing.JPanel();
         pnl_progress3 = new javax.swing.JPanel();
@@ -440,8 +455,18 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         lbl_login_arrow = new javax.swing.JLabel();
         anamenu_geri_login = new javax.swing.JLabel();
         background3 = new javax.swing.JLabel();
+        topBar = new javax.swing.JPanel();
+        buttons = new javax.swing.JPanel();
+        pnl_titlebuttons = new javax.swing.JPanel();
+        pnl_btnclose = new javax.swing.JPanel();
+        btn_minimize = new javax.swing.JButton();
+        pnl_btnminimize = new javax.swing.JPanel();
+        btn_close = new javax.swing.JButton();
+        titlebar = new javax.swing.JPanel();
+        title = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1370, 819));
 
         cardPanel.setLayout(new java.awt.CardLayout());
 
@@ -632,6 +657,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         register_username_input.add(pnl_progress, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 1370, 70));
 
+        anamenu_geri_register.setForeground(new java.awt.Color(254, 254, 254));
         anamenu_geri_register.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         anamenu_geri_register.setText("Geri");
         register_username_input.add(anamenu_geri_register, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 50));
@@ -801,6 +827,11 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         register_password_input.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 270, 290, 130));
 
+        anamenu_geri_register_password.setForeground(new java.awt.Color(254, 254, 254));
+        anamenu_geri_register_password.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        anamenu_geri_register_password.setText("Geri");
+        register_password_input.add(anamenu_geri_register_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 50));
+
         register_password.add(register_password_input, java.awt.BorderLayout.PAGE_END);
 
         register_password_logo.setOpaque(false);
@@ -960,6 +991,11 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         pnl_progress2.add(jPanel17, java.awt.BorderLayout.LINE_END);
 
         register_password_input1.add(pnl_progress2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 1370, 70));
+
+        anamenu_geri_register_details.setForeground(new java.awt.Color(254, 254, 254));
+        anamenu_geri_register_details.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        anamenu_geri_register_details.setText("Geri");
+        register_password_input1.add(anamenu_geri_register_details, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 50));
 
         register_details.add(register_password_input1, java.awt.BorderLayout.PAGE_END);
 
@@ -1158,6 +1194,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         login_inputs.add(pnl_login_arrow, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 110, 60, 140));
 
+        anamenu_geri_login.setForeground(new java.awt.Color(254, 254, 254));
         anamenu_geri_login.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         anamenu_geri_login.setText("Geri");
         login_inputs.add(anamenu_geri_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 80, 70));
@@ -1177,8 +1214,82 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         getContentPane().add(cardPanel, java.awt.BorderLayout.CENTER);
 
+        topBar.setBackground(new java.awt.Color(20, 20, 22));
+        topBar.setPreferredSize(new java.awt.Dimension(50, 50));
+        topBar.setLayout(new java.awt.BorderLayout());
+
+        buttons.setPreferredSize(new java.awt.Dimension(150, 150));
+        buttons.setLayout(new java.awt.BorderLayout());
+
+        pnl_titlebuttons.setBackground(new java.awt.Color(43, 49, 68));
+        pnl_titlebuttons.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnl_titlebuttons.setLayout(new java.awt.BorderLayout());
+
+        pnl_btnclose.setBackground(new java.awt.Color(20, 20, 22));
+        pnl_btnclose.setToolTipText("");
+        pnl_btnclose.setPreferredSize(new java.awt.Dimension(10, 10));
+        pnl_btnclose.setLayout(new java.awt.BorderLayout());
+
+        btn_minimize.setBackground(new java.awt.Color(51, 53, 65));
+        btn_minimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/dry-clean-green.png"))); // NOI18N
+        btn_minimize.setBorderPainted(false);
+        btn_minimize.setContentAreaFilled(false);
+        btn_minimize.setPreferredSize(new java.awt.Dimension(20, 20));
+        btn_minimize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_minimizeMouseClicked(evt);
+            }
+        });
+        pnl_btnclose.add(btn_minimize, java.awt.BorderLayout.CENTER);
+
+        pnl_titlebuttons.add(pnl_btnclose, java.awt.BorderLayout.CENTER);
+
+        pnl_btnminimize.setBackground(new java.awt.Color(20, 20, 22));
+        pnl_btnminimize.setPreferredSize(new java.awt.Dimension(70, 70));
+        pnl_btnminimize.setLayout(new java.awt.BorderLayout());
+
+        btn_close.setBackground(new java.awt.Color(51, 53, 65));
+        btn_close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/dry-clean.png"))); // NOI18N
+        btn_close.setBorder(null);
+        btn_close.setBorderPainted(false);
+        btn_close.setContentAreaFilled(false);
+        btn_close.setPreferredSize(new java.awt.Dimension(32, 32));
+        btn_close.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_closeMouseClicked(evt);
+            }
+        });
+        pnl_btnminimize.add(btn_close, java.awt.BorderLayout.CENTER);
+
+        pnl_titlebuttons.add(pnl_btnminimize, java.awt.BorderLayout.LINE_END);
+
+        buttons.add(pnl_titlebuttons, java.awt.BorderLayout.CENTER);
+
+        topBar.add(buttons, java.awt.BorderLayout.LINE_END);
+
+        titlebar.setBackground(new java.awt.Color(20, 20, 22));
+        titlebar.setLayout(new java.awt.BorderLayout());
+
+        title.setBackground(new java.awt.Color(62, 62, 63));
+        title.setForeground(new java.awt.Color(62, 62, 63));
+        title.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        title.setText("        VBMail");
+        titlebar.add(title, java.awt.BorderLayout.CENTER);
+
+        topBar.add(titlebar, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(topBar, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_minimizeMouseClicked
+        this.setState(ICONIFIED);
+    }//GEN-LAST:event_btn_minimizeMouseClicked
+
+    private void btn_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_closeMouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_btn_closeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1219,9 +1330,14 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel anamenu_geri_login;
     private javax.swing.JLabel anamenu_geri_register;
+    private javax.swing.JLabel anamenu_geri_register_details;
+    private javax.swing.JLabel anamenu_geri_register_password;
     private javax.swing.JLabel background1;
     private javax.swing.JLabel background2;
     private javax.swing.JLabel background3;
+    private javax.swing.JButton btn_close;
+    private javax.swing.JButton btn_minimize;
+    private javax.swing.JPanel buttons;
     private javax.swing.JPanel cardPanel;
     private javax.swing.JPanel home_Buttons;
     private javax.swing.JPanel home_Logo;
@@ -1311,6 +1427,8 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JSeparator password_seperator_username;
     private javax.swing.JSeparator password_seperator_username1;
     private javax.swing.JSeparator password_seperator_username2;
+    private javax.swing.JPanel pnl_btnclose;
+    private javax.swing.JPanel pnl_btnminimize;
     private javax.swing.JPanel pnl_login;
     private javax.swing.JPanel pnl_login_arrow;
     private javax.swing.JPanel pnl_progress;
@@ -1322,6 +1440,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JPanel pnl_register_detail_arrow;
     private javax.swing.JPanel pnl_register_password_arrow;
     private javax.swing.JPanel pnl_register_username_arrow;
+    private javax.swing.JPanel pnl_titlebuttons;
     private javax.swing.JTextArea politika;
     private javax.swing.JPanel register_card;
     private javax.swing.JTextField register_detail_field_name;
@@ -1354,6 +1473,9 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
     private javax.swing.JPanel register_username_logo;
     private javax.swing.JSeparator separator_password;
     private javax.swing.JSeparator separator_username;
+    private javax.swing.JLabel title;
+    private javax.swing.JPanel titlebar;
+    private javax.swing.JPanel topBar;
     private javax.swing.JSeparator username_seperator_username;
     // End of variables declaration//GEN-END:variables
 

@@ -6,9 +6,9 @@
 package com.vbteam.socket;
 
 import com.vbteam.models.Command;
-import com.vbteam.utils.ConnectionPool;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import com.vbteam.utils.IConnectionPool;
 
 /**
  *

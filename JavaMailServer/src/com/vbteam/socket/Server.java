@@ -6,14 +6,15 @@
 package com.vbteam.socket;
 
 
-import com.vbteam.utils.BasicConnectionPool;
 import com.vbteam.utils.ConnectionPool;
+import com.vbteam.utils.DbContext;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import com.vbteam.utils.IConnectionPool;
 
 /**
  *
@@ -27,12 +28,13 @@ public class Server {
     private Socket client;
     private ObjectOutputStream objOutStream;
     private ObjectInputStream objInStream;
-    public static ConnectionPool connectionPool;
+    public static IConnectionPool connectionPool;
+    
     
 
     public void Connect() {
         try {
-            connectionPool = BasicConnectionPool.create("jdbc:sqlserver://localhost:1453;databasename=MailServer", "sa", "Password1!");
+            connectionPool = DbContext.createConnections();
             server = new ServerSocket(port);
             while (true) {
                 System.out.println("Server Açık");

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.views;
+package com.vbteam.views.visualUtils;
 
 import com.vbteam.models.Attachment;
 import com.vbteam.models.Mail;

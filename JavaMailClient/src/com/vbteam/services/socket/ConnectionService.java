@@ -28,10 +28,7 @@ public class ConnectionService {
     private int socketPort = 1443;
     private ObjectOutputStream objOutStream;
     private ObjectInputStream objInStream;
-    private User user;
     private JFrame frameReference;
-
-
 
     public ConnectionService(String hostName,JFrame frame) {
         this.hostName = hostName;
@@ -54,28 +51,6 @@ public class ConnectionService {
         }
     }
 
-    public void Auth(String authType) {
-        try {
-            if (clientSocket == null && clientSocket.isConnected() == false) {
-                return;
-            } else {
-                //user = new User(userName, hashedPassword, 0, date, date, "BATU", "San");
-                //new Thread(new ConnectionController(objInStream, objOutStream, this)).start();
-
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public ObjectInputStream getInputStream() {
-        return this.objInStream;
-    }
-
-    public ObjectOutputStream getOutputStream() {
-        return this.objOutStream;
-    }
-
     public void SendCommand(Command command) {
         try {
             objOutStream.writeObject(command);
@@ -83,7 +58,6 @@ public class ConnectionService {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     public boolean isConnected() {

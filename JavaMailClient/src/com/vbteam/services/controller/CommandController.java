@@ -17,25 +17,25 @@ import javax.swing.JFrame;
  * @author BatuPC
  */
 public class CommandController {
-    
-    private static FrmAuth authFrame;
 
-    public static void Handler(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, Command command, JFrame frame) {
+    private FrmAuth authFrame;
+
+    public void Handler(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, Command command, JFrame frame) {
         System.out.println(command.getType());
-        authFrame = (FrmAuth)frame;
+        authFrame = (FrmAuth) frame;
         if (command.getType().indexOf("response") == 0) {
             Auth(command, frame);
         }
         if (command.getType().indexOf("mail") == 0) {
             Mail(command, frame);
         }
-        if(command.getType().indexOf("manager")== 0){
+        if (command.getType().indexOf("manager") == 0) {
             System.out.println("manager");
-            Manager(command,frame);
+            Manager(command, frame);
         }
     }
 
-    private static void Auth(Command command, JFrame frame) {
+    private void Auth(Command command, JFrame frame) {
         try {
             if (command.getType().equals("response-login")) {
                 authFrame.uihandler.loginComplete(command.getUser());
@@ -44,58 +44,68 @@ public class CommandController {
                 authFrame.uihandler.registerComplete(command.getUser());
             }
             if (command.getType().equals("response-exist")) {
-                authFrame.uihandler.userExist(command);
+                if (!command.getBoolResponse()) {
+                    authFrame.uihandler.userExist();
+                } else {
+                    authFrame.uihandler.popupMessage("error", "Kullanıcı ismi daha önce alınmış.");
+                }
             }
         } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
-        }
-    }
-    
-    private static void Manager(Command command,JFrame frame){
-        try{
-            if(command.getType().equals("manager-listuser")){
-                authFrame.uihandler.showManagementPanel(command);
-            }
-            if(command.getType().equals("manager-adduser")){
-                if(command.getBoolResponse()){
-                    authFrame.uihandler.popupMessage("confirm", "Kullanıcı başarıyla eklendi.");
-                }else{
-                    authFrame.uihandler.popupMessage("error", "Kullanıcı eklenemedi.");
-                }                
-            }
-            if(command.getType().equals("manager-deleteuser")){
-                if(command.getBoolResponse()){
-                    authFrame.uihandler.popupMessage("confirm", "Kullanıcı başarıyla silindi.");
-                }else{
-                    authFrame.uihandler.popupMessage("error", "Kullanıcı silinemedi.");
-                }
-            }
-            if(command.getType().equals("manager-updateuser")){
-                if(command.getBoolResponse()){
-                    authFrame.uihandler.popupMessage("confirm", "Kullanıcı başarıyla düzenlendi.");
-                }else{
-                    authFrame.uihandler.popupMessage("error", "Kullanıcı düzenlenemedi.");
-                }
-            }
-        }catch(Exception ex){
             ex.printStackTrace();
         }
     }
 
-    private static void Mail(Command command, JFrame frame) {
+    private void Manager(Command command, JFrame frame) {
+        try {
+            if (command.getType().equals("manager-listuser")) {
+                authFrame.uihandler.showManagementPanel(command);
+            }
+            if (command.getType().equals("manager-adduser")) {
+                if (command.getBoolResponse()) {
+                    authFrame.uihandler.popupMessage("confirm", "Kullanıcı başarıyla eklendi.");
+                } else {
+                    authFrame.uihandler.popupMessage("error", "Kullanıcı eklenemedi.");
+                }
+            }
+            if (command.getType().equals("manager-deleteuser")) {
+                if (command.getBoolResponse()) {
+                    authFrame.uihandler.popupMessage("confirm", "Kullanıcı başarıyla silindi.");
+                } else {
+                    authFrame.uihandler.popupMessage("error", "Kullanıcı silinemedi.");
+                }
+            }
+            if (command.getType().equals("manager-updateuser")) {
+                if (command.getBoolResponse()) {
+                    authFrame.uihandler.popupMessage("confirm", "Kullanıcı başarıyla düzenlendi.");
+                } else {
+                    authFrame.uihandler.popupMessage("error", "Kullanıcı düzenlenemedi.");
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void Mail(Command command, JFrame frame) {
         try {
             if (command.getType().equals("mail-send-response")) {
-                authFrame.uihandler.mailSentResponse(command.getBoolResponse());
-            }if (command.getType().equals("mail-box-response")) {
+                if (command.getBoolResponse()) {
+                    authFrame.uihandler.popupMessage("confirm", "Mail başarıyla gönderildi.");
+                } else {
+                    authFrame.uihandler.popupMessage("error", "Mail gönderilemedi.");
+                }
+            }
+            if (command.getType().equals("mail-box-response")) {
                 authFrame.uihandler.setMailResponse(command);
-            }if(command.getType().equals("mail-delete-response")){
-                if(command.getBoolResponse()){
+            }
+            if (command.getType().equals("mail-delete-response")) {
+                if (command.getBoolResponse()) {
                     authFrame.uihandler.popupMessage("confirm", "Mail başarıyla silindi.");
-                }else{
+                } else {
                     authFrame.uihandler.popupMessage("error", "Mail silinemedi.");
                 }
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

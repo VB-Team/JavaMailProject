@@ -10,10 +10,10 @@ import com.vbteam.models.Header;
 import com.vbteam.models.Mail;
 import com.vbteam.services.mail.MailService;
 import static com.vbteam.socket.Server.connectionPool;
-import com.vbteam.utils.BasicConnectionPool;
 import com.vbteam.utils.ConnectionPool;
 import java.util.ArrayList;
 import java.util.List;
+import com.vbteam.utils.IConnectionPool;
 
 /**
  *
@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class ConsoleUI {
 
-    public static ConnectionPool connectionPool;
+    public static IConnectionPool connectionPool;
 
     public static void main(String[] args) {
         try {
-            connectionPool = BasicConnectionPool.create("jdbc:sqlserver://localhost:1453;databasename=MailServer", "sa", "Password1!");
+            connectionPool = ConnectionPool.create("jdbc:sqlserver://localhost:1453;databasename=MailServer", "sa", "Password1!");
         } catch (Exception e) {
         }
         MailService mailser = MailService.getInstance();

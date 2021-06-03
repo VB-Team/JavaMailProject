@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.views;
+package com.vbteam.views.visualUtils;
 
 import com.vbteam.models.Command;
 import com.vbteam.models.User;
+import com.vbteam.views.FrmAuth;
+import com.vbteam.views.FrmDashboard;
 
 /**
  *
@@ -54,12 +56,8 @@ public class UIHandler {
         authFrame.loginCompleted(_user);
     }
     
-    public void userExist(Command _command){
-        authFrame.userExist(_command);
-    }
-    
-    public void mailSentResponse(boolean bool){
-        dashboardFrame.mailSent(bool);
+    public void userExist(){
+        authFrame.userExist();
     }
     
     public void setMailResponse(Command _command){
@@ -71,6 +69,6 @@ public class UIHandler {
     }
     
     public void popupMessage(String type,String message){
-        dashboardFrame.popupDialog(type, message, null);
+        authFrame.popupDialog(type, message);
     }
 }

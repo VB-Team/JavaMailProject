@@ -6,6 +6,8 @@
 package com.vbteam.views;
 
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -13,16 +15,37 @@ import java.awt.Color;
  */
 public class FrmDialog extends javax.swing.JFrame {
 
+    int pX, pY;
     FrmDashboard dashboardFrame;
     String actionType;
 
     public FrmDialog() {
         initComponents();
+        move();
         this.setLocationRelativeTo(null);
-        this.setBackground(new Color(0, 0, 0, 0));
-        this.setAlwaysOnTop(true);
 
+        this.setBackground(new Color(0, 0, 0, 0));
+
+        //this.setAlwaysOnTop(true);
         btn_first.setVisible(false);
+    }
+
+    public void move() {
+        this.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pX = e.getX();
+                pY = e.getY();
+            }
+        });
+
+        this.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent evt) {
+                setLocation(evt.getXOnScreen() - pX, evt.getYOnScreen() - pY);
+            }
+        });
     }
 
     public void attachDialogToFrame(FrmDashboard _dashboardFrame) {
@@ -62,8 +85,7 @@ public class FrmDialog extends javax.swing.JFrame {
         }
     }
 
-    
-    public void setActionType(String text){
+    public void setActionType(String text) {
         actionType = text;
     }
 
@@ -128,16 +150,18 @@ public class FrmDialog extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_firstMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_firstMouseClicked
+        setVisible(false);
         if (dashboardFrame != null) {
             dashboardFrame.dialogControl(actionType);
+            dashboardFrame.mailPanelState = null;
         }
-        setVisible(false);
     }//GEN-LAST:event_btn_firstMouseClicked
 
     private void btn_secondMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_secondMouseClicked
-
         setVisible(false);
-        dashboardFrame.mailPanelState = null;
+        if (dashboardFrame != null) {
+            dashboardFrame.mailPanelState = null;
+        }
     }//GEN-LAST:event_btn_secondMouseClicked
 
     private void btn_firstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_firstActionPerformed

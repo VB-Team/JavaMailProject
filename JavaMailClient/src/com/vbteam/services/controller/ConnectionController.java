@@ -21,6 +21,7 @@ public class ConnectionController implements Runnable {
     private ObjectOutputStream objOutputStream;
     private ConnectionService conService;
     private Command command;
+    private CommandController controller;
     private JFrame frame;
 
     public ConnectionController(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, ConnectionService conService,JFrame frame) {
@@ -28,7 +29,6 @@ public class ConnectionController implements Runnable {
         this.objOutputStream = objOutputStream;
         this.conService = conService;
         this.frame = frame;
-
     }
 
     @Override
@@ -36,8 +36,12 @@ public class ConnectionController implements Runnable {
         try {
             while (true) {
                 command = new Command();
+                
+                controller = new CommandController();
+                
                 command = (Command) objInputStream.readObject();
-                CommandController.Handler(objInputStream, objOutputStream, command,frame);
+                
+                controller.Handler(objInputStream, objOutputStream, command,frame);
             }
         } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage() + " " + ex.getMessage());

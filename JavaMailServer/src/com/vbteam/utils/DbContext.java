@@ -19,6 +19,7 @@ import java.sql.SQLException;
 public class DbContext {
 
     // DB Exception , Port check
+    static IConnectionPool connectionPool;
     static Connection connection;
     static String fullurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer;user=sa;password=6165";
     static String conurl = "jdbc:sqlserver://localhost:1453;databasename=MailServer";
@@ -27,6 +28,7 @@ public class DbContext {
     static String batuPass = "Password1!";
     static String veyselPass = "6165";
 
+    /*
     public Connection getConnection() {
         try {
             connection = DriverManager.getConnection(conurl, user, batuPass);
@@ -34,6 +36,17 @@ public class DbContext {
             System.out.println("DbContext Exception : " + e.getMessage());
         }
         return connection;
+    }
+     */
+    
+    public static IConnectionPool createConnections() {
+        try {
+            connectionPool = ConnectionPool.create("jdbc:sqlserver://localhost:1433;databasename=MailServer", user, batuPass);
+            return connectionPool;
+        } catch (Exception ex) {
+            System.out.println("Dbcontext Connection Pool Exception : " + ex.getMessage());
+            return null;
+        }
     }
 
     public int getUserId(String userName) {

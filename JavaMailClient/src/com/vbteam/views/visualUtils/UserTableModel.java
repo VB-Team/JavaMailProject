@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.views;
+package com.vbteam.views.visualUtils;
 
 import com.vbteam.models.User;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
  * @author ubuntu
  */
 public class UserTableModel extends AbstractTableModel{
-    private String[] columnNames = {"Adı", "Soyadı","Kayıt Tarihi", "Rolü"};
+    private String[] columnNames = {"Adı", "Soyadı","Kullanıcı Adı","Kayıt Tarihi", "Rolü"};
     private List<User> myList = new ArrayList();
 
     public UserTableModel(List<User> userList) {
@@ -56,12 +56,14 @@ public class UserTableModel extends AbstractTableModel{
             case 1:
                 return user.getLastName();
             case 2:
-                return user.getRegisterDate();
+                return user.getUserName();
             case 3:
-                return user.getRole();
+                return user.getRegisterDate();
             case 4:
-                return user.getPassword();
+                return user.getRole();
             case 5:
+                return user.getPassword();
+            case 6:
                 return user.getId();
             default:
                 break;

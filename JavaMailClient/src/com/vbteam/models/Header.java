@@ -6,7 +6,6 @@
 package com.vbteam.models;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  *

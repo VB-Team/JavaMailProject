@@ -82,7 +82,7 @@ public class AuthService implements IAuthService {
             System.err.println("AuthService Exception : " + ex.getMessage());
             return null;
         } finally {
-            try {                
+            try {
                 Server.connectionPool.releaseConnection(connection);
             } catch (Exception e) {
             }
@@ -188,7 +188,6 @@ public class AuthService implements IAuthService {
             }
             statement.close();
             //connection.close();
-
             if (UserId > 0) {
                 return true;
             } else {
