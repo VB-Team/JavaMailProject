@@ -1098,7 +1098,6 @@
                                 </Property>
                                 <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
                                 <Property name="verticalScrollBarPolicy" type="int" value="21"/>
-                                <Property name="opaque" type="boolean" value="false"/>
                               </Properties>
                               <AuxValues>
                                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -1123,7 +1122,6 @@
                                     </Property>
                                     <Property name="rows" type="int" value="5"/>
                                     <Property name="text" type="java.lang.String" value="&#x15e;ifre Politikas&#x131; &#xa;-  En az 9  karakter uzunlu&#x11f;unda olmal&#x131;d&#x131;r,&#xa;-  En az 1 b&#xfc;y&#xfc;k harf, 1 k&#xfc;&#xe7;&#xfc;k harf, 1 rakam &#xa;-  1 &#xf6;zel (&#xd6;rn; @#$% )karakter"/>
-                                    <Property name="opaque" type="boolean" value="false"/>
                                   </Properties>
                                 </Component>
                               </SubComponents>
@@ -2359,9 +2357,6 @@
                       <Color blue="16" green="14" red="14" type="rgb"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[10, 10]"/>
-                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

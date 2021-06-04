@@ -218,6 +218,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                     regUser.setUserName(register_field_username.getText());
                     regUser.setPassword(pwString);
                     regUser.setRole("User");
+                    regUser.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
 
                     registerLayout.show(register_screen, "finish");
                     conService.SendCommand(new Command("auth-register", null, regUser, null));
@@ -814,7 +815,6 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         jScrollPane1.setForeground(new java.awt.Color(20, 20, 22));
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane1.setOpaque(false);
 
         politika.setEditable(false);
         politika.setBackground(new java.awt.Color(20, 20, 22));
@@ -822,7 +822,6 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         politika.setForeground(new java.awt.Color(51, 51, 55));
         politika.setRows(5);
         politika.setText("Şifre Politikası \n-  En az 9  karakter uzunluğunda olmalıdır,\n-  En az 1 büyük harf, 1 küçük harf, 1 rakam \n-  1 özel (Örn; @#$% )karakter");
-        politika.setOpaque(false);
         jScrollPane1.setViewportView(politika);
 
         register_password_input.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 270, 290, 130));
@@ -1227,7 +1226,6 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         pnl_btnclose.setBackground(new java.awt.Color(20, 20, 22));
         pnl_btnclose.setToolTipText("");
-        pnl_btnclose.setPreferredSize(new java.awt.Dimension(10, 10));
         pnl_btnclose.setLayout(new java.awt.BorderLayout());
 
         btn_minimize.setBackground(new java.awt.Color(51, 53, 65));

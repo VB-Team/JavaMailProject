@@ -6,7 +6,8 @@
 package com.vbteam.socket;
 
 
-import com.vbteam.utils.ConnectionPool;
+import com.vbteam.models.Log;
+import com.vbteam.services.logger.*;
 import com.vbteam.utils.DbContext;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -29,7 +30,7 @@ public class Server {
     private ObjectOutputStream objOutStream;
     private ObjectInputStream objInStream;
     public static IConnectionPool connectionPool;
-    
+    private ILogger logger;
     
 
     public void Connect() {
@@ -46,8 +47,10 @@ public class Server {
                 System.out.println("Bağlanan Client "+client.getChannel());
                 new Thread(new ClientListener(objInStream, objOutStream)).start();
             }
-        } catch (Exception e) {
-            System.err.println("Socket Exception : "+e.getMessage());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Connect exception : " + ex.getMessage()));
+            System.err.println("Socket Exception : "+ex.getMessage());
         }
     }
     

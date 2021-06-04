@@ -5,12 +5,12 @@
  */
 package com.vbteam.utils;
 
+import com.vbteam.models.Log;
+import com.vbteam.services.logger.*;
 import com.vbteam.socket.Server;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  *
@@ -27,6 +27,7 @@ public class DbContext {
     static String user = "sa";
     static String batuPass = "Password1!";
     static String veyselPass = "6165";
+    private static ILogger logger;
 
     /*
     public Connection getConnection() {
@@ -44,7 +45,9 @@ public class DbContext {
             connectionPool = ConnectionPool.create("jdbc:sqlserver://localhost:1433;databasename=MailServer", user, batuPass);
             return connectionPool;
         } catch (Exception ex) {
-            System.out.println("Dbcontext Connection Pool Exception : " + ex.getMessage());
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "DbContext Create Connection exception : " + ex.getMessage()));
+            System.err.println("Dbcontext Connection Pool Exception : " + ex.getMessage());
             return null;
         }
     }
@@ -63,8 +66,10 @@ public class DbContext {
             } else {
                 return -1;
             }
-        } catch (Exception e) {
-            System.out.println("DbContext Exception : " + e.getMessage());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "DbContext Get User Id exception : " + ex.getMessage()));
+            System.err.println("DbContext Exception : " + ex.getMessage());
             return -1;
         } finally {
             Server.connectionPool.releaseConnection(connection);
@@ -85,8 +90,10 @@ public class DbContext {
             } else {
                 return null;
             }
-        } catch (Exception e) {
-            System.out.println("DbContext Exception : " + e.getMessage());
+        } catch (Exception ex) {
+            logger=Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "DbContext Get Username exception : " + ex.getMessage()));
+            System.err.println("DbContext Exception : " + ex.getMessage());
             return null;
         } finally {
             Server.connectionPool.releaseConnection(connection);

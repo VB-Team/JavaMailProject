@@ -6,16 +6,16 @@
 package com.vbteam.socket;
 
 import com.vbteam.models.Command;
+import com.vbteam.models.Log;
 import com.vbteam.models.User;
 import com.vbteam.services.authenticate.AuthService;
 import com.vbteam.services.mail.MailService;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import java.util.List;
 import com.vbteam.models.Mail;
 import com.vbteam.services.UserManagement.UserManagementService;
-import com.vbteam.utils.IConnectionPool;
+import com.vbteam.services.logger.*;
 
 /**
  *
@@ -26,9 +26,9 @@ public class CommandHandler {
     private static AuthService authService = AuthService.getInstance();
     private static MailService mailService = MailService.getInstance();
     public static UserManagementService managerService = new UserManagementService();
+    private static ILogger logger;
 
-
-    public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd ) {
+    public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         if (cmd.getType().indexOf("auth") == 0) {
             Auth(objInput, objOutput, cmd);
         }
@@ -38,20 +38,23 @@ public class CommandHandler {
         if (cmd.getType().indexOf("manager") == 0) {
             Manager(objInput, objOutput, cmd);
         }
+        if (cmd.getType().indexOf("log") == 0) {
+            Log(objInput, objOutput, cmd);
+        }
     }
 
     private static void Mail(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         try {
             switch (cmd.getType()) {
                 case "mail-send":
-                    boolean isSent =mailService.addMail(cmd.getMail());
+                    boolean isSent = mailService.addMail(cmd.getMail());
                     cmd = new Command();
                     cmd.setType("mail-send-response");
                     cmd.setBoolResponse(isSent);
                     objOutput.writeObject(cmd);
                     break;
                 case "mail-add-draft":
-                    
+
                     mailService.addDraftMail(cmd.getMail());
                     cmd = new Command();
                     cmd.setType("mail-adddraft-response");
@@ -124,6 +127,8 @@ public class CommandHandler {
                     break;
             }
         } catch (Exception ex) {
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler Mail exception : " + ex.getMessage()));
             ex.printStackTrace();
         }
     }
@@ -137,7 +142,6 @@ public class CommandHandler {
                     cmd = new Command();
                     cmd.setType("response-exist");
                     cmd.setBoolResponse(userExistState);
-
                     objOutput.writeObject(cmd);
                     break;
                 case "auth-register":
@@ -152,7 +156,6 @@ public class CommandHandler {
                     try {
                     User _loginUser = authService.login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
                     System.out.println("login");
-
                     cmd = new Command();
                     cmd.setType("response-login");
                     cmd.setUser(_loginUser);
@@ -167,6 +170,8 @@ public class CommandHandler {
                     break;
             }
         } catch (Exception ex) {
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler Auth exception : " + ex.getMessage()));
             ex.printStackTrace();
         }
     }
@@ -250,6 +255,35 @@ public class CommandHandler {
                     break;
             }
         } catch (Exception ex) {
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler Manager exception : " + ex.getMessage()));
+            ex.printStackTrace();
+        }
+    }
+
+    private static void Log(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
+        try {
+            logger = Logger.getInstance();
+            switch (cmd.getType().toString()) {
+                case "log-add":
+                    logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler exception : "));//Log
+                    cmd = new Command();
+                    cmd.setType("log-add-response");
+                    objOutput.writeObject(cmd);
+                    break;
+                case "log-get":
+                    List<Log> logs;
+                    logs = logger.getLogs();//Log
+                    cmd = new Command();
+                    cmd.setType("log-list-response");
+                    objOutput.writeObject(cmd);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception ex) {
+            logger = Logger.getInstance();
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler Log exception : " + ex.getMessage()));
             ex.printStackTrace();
         }
     }
