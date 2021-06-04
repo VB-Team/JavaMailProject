@@ -83,12 +83,8 @@ public class CommandHandler {
                     cmd = new Command();
                     cmd.setType("mail-box-response");
                     cmd.setCommandText("outgoing");
-                    System.out.println("Mail Size" + outId);
                     List<Mail> outgoingMails = mailService.getOutgoingMails(outId);
-                    System.out.println("Mail Box Outgoing");
-
                     for (Mail mail : outgoingMails) {
-                        System.out.println(mail.getId());
                         mail.setAttachments(mailService.getMailAttachments(mail.getId()));
                         mail.setHeaders(mailService.getMailHeaders(mail.getId()));
                     }

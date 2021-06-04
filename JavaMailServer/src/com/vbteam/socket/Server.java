@@ -37,17 +37,17 @@ public class Server {
             connectionPool = DbContext.createConnections();
             server = new ServerSocket(port);
             while (true) {
-                System.out.println("Server Açık");
+                
                 client = server.accept();
                 OutputStream outputStream = client.getOutputStream();
                 objOutStream = new ObjectOutputStream(outputStream);
                 InputStream inputStream = client.getInputStream();
                 objInStream = new ObjectInputStream(inputStream);
-                System.out.println("Client Server'a Başarıyla bağlandı!");
+                System.out.println("Bağlanan Client "+client.getChannel());
                 new Thread(new ClientListener(objInStream, objOutStream)).start();
             }
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println("Socket Exception : "+e.getMessage());
         }
     }
     

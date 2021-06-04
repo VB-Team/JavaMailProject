@@ -237,7 +237,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         *********************************************************************
         
      */
+    boolean isSent=false;
     public void sendMail() {
+        isSent=false;
         Mail mail = new Mail();
         List<Header> headers = new ArrayList<Header>();
 
@@ -268,9 +270,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             mail.setHeaders(headers);
             mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 
-
+            System.out.println("Sent Mail Debug : "+mail.getAttachments().size());            
             FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
-            
+            attachments.clear();
             clearMailSection();
 
         } else {
@@ -441,6 +443,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     public void saveDraft() {
         Mail draftMail = new Mail();
+        System.out.println("Attachment Size : "+attachments.size());
         List<Header> headers = new ArrayList<Header>();
 
         List<Attachment> attachments = new ArrayList<Attachment>();
@@ -452,9 +455,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 header.setSenderUser(user.getUserName());
                 header.setRecipientUser(userSplit[i]);
                 header.setState(true);
-                header.setType("Normal");
+                header.setType("Draft");
                 headers.add(header);
             }
+            
 
         if (attachments.size() > 0) {
             draftMail.setAttachmentState(true);
@@ -470,9 +474,10 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         draftMail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
         draftMail.setHeaders(headers);
+        System.out.println("Draft Mail Debug : "+draftMail.getAttachments().size());
         FrmAuth.conService.SendCommand(new Command("mail-add-draft", null, user, draftMail));
-        
         clearMailSection();
+        attachments.clear();
 
     }
 
@@ -703,6 +708,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         }
 
         if (evt.getSource() == yenimailpanel) {
+            isSent=true;
+            attachments.clear();
+            System.out.println("Send Mail Debug : "+isSent);
             mainLayout.show(cardPanel, "mailgonder");
             mailPanelState = pnl_mail_gonder;
         }
@@ -738,7 +746,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         }
         if (evt.getSource() == btn_pnl_anasayfa) {
             if (mailPanelState == pnl_mail_gonder) {
-                popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+                if (isSent) {
+                    popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+                }                
             }
             mainLayout.show(cardPanel, "anasayfa");
             mailPanelState = pnl_anasayfa;
@@ -746,12 +756,16 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         if (evt.getSource() == btn_pnl_mail) {
             mainLayout.show(cardPanel, "mailcategory");
             if (mailPanelState == pnl_mail_gonder) {
-                popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+                if (isSent) {
+                    popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+                }
             }
         }
         if (evt.getSource() == Profile) {
             if (mailPanelState == pnl_mail_gonder) {
-                popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+                if (isSent) {
+                    popupDialog("boolean", "Taslak olarak kaydetmek istiyor musunuz ?", "draft-mail-bool");
+                }                
             }
 
             mainLayout.show(cardPanel, "profil");

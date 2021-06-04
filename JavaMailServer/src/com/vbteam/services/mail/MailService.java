@@ -44,7 +44,6 @@ public class MailService {
         connection = Server.connectionPool.getConnection();
         try {
             int affectedRow = 0;
-            System.out.println("Connection : " + connection.getAutoCommit());
             PreparedStatement statement;
             int recipientId, senderId;
             String mailInsertQuery = "Insert into Mails (Subject,Body,AttachmentState,CreateDate) values(?,?,?,?);";
@@ -72,14 +71,14 @@ public class MailService {
                 }
             }
             if (affectedRow > 1) {
-                for (Attachment attachment : mail.getAttachments()) {
-
+                for (Attachment attachment : mail.getAttachments()) {  
                     String attachmentInsertQuery = "Insert INTO Attachments(MailId,AttachmentName,AttachmentType,AttachmentSize,AttachmentContent) values ((Select IDENT_CURRENT('Mails')),?,?,?,?)";
                     statement = connection.prepareStatement(attachmentInsertQuery);
                     statement.setString(1, attachment.getAttachmentName());
                     statement.setString(2, attachment.getAttachmentType());
                     statement.setInt(3, attachment.getAttachmentSize());
                     statement.setBytes(4, attachment.getAttachmentContent());
+                    
                     affectedRow += statement.executeUpdate();
                 }
             }
@@ -111,14 +110,6 @@ public class MailService {
             int affectedRow = 0;
             PreparedStatement statement;
             int recipientId, senderId;
-            System.out.println("Debug :" + mail.getSubject());
-            System.out.println("Debug :" + mail.isAttachmentState());
-            System.out.println("Debug :" + mail.getBody());
-            System.out.println("Debug :" + mail.getCreateDate());
-            System.out.println("Debug :" + mail.getAttachments().size());
-            System.out.println("Debug :" + mail.getHeaders().size());
-            System.out.println("Debug :" + mail.getHeaders().get(0).getType());
-
             String mailInsertQuery = "Insert into Mails (Subject,Body,AttachmentState,CreateDate) values(?,?,?,?);";
             statement = connection.prepareStatement(mailInsertQuery);
             statement.setString(1, mail.getSubject());
@@ -156,7 +147,7 @@ public class MailService {
             statement.close();
         } catch (Exception ex) {
             logger = Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Sended Mail exception : " + ex.getMessage()));
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Sended Mail exception : " + ex.getMessage()+"User Id : "+mail.getHeaders().get(0).getSenderUser()));
             ex.printStackTrace();
         } finally {
             try {
@@ -207,7 +198,7 @@ public class MailService {
             return mails;
         } catch (Exception ex) {
             logger = Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Outgoing Mails exception : " + ex.getMessage()));
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Outgoing Mails exception : " + ex.getMessage()+"User Id : "+userId));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         } finally {
@@ -261,7 +252,7 @@ public class MailService {
             return mails;
         } catch (Exception ex) {
             logger = Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Incoming Mails exception : " + ex.getMessage()));
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Incoming Mails exception : " + ex.getMessage()+"User Id : "+userId));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         } finally {
@@ -399,7 +390,7 @@ public class MailService {
             return mails;
         } catch (Exception ex) {
             logger = Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Any Mails exception : " + ex.getMessage()));
+            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server Any Mails exception : " + ex.getMessage()+"User Id : "+userId));
             System.err.println("Get From Mail Exception : " + ex.getMessage());
             return null;
         } finally {
@@ -434,9 +425,7 @@ public class MailService {
                 statement = connection.prepareStatement(deleteQuery);
                 statement.setInt(1, mailId);
                 int affectedRow = statement.executeUpdate();
-                System.out.println(affectedRow);
             } else {
-                System.out.println("asd");
                 statement = connection.prepareStatement(updateQuery);
                 statement.setInt(1, mailId);
                 int affectedRow = statement.executeUpdate();
