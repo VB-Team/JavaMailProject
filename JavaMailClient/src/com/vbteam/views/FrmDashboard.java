@@ -443,10 +443,8 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     public void saveDraft() {
         Mail draftMail = new Mail();
-        System.out.println("Attachment Size : "+attachments.size());
-        List<Header> headers = new ArrayList<Header>();
 
-        List<Attachment> attachments = new ArrayList<Attachment>();
+        List<Header> headers = new ArrayList<Header>();
         
         String[] userSplit = mailgonder_field_kime.getText().split(",");
 
@@ -459,7 +457,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 headers.add(header);
             }
             
-
+            System.out.println("sjsj "+attachments.size());
         if (attachments.size() > 0) {
             draftMail.setAttachmentState(true);
         } else {
