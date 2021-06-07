@@ -14,7 +14,6 @@ import java.util.List;
 import com.vbteam.models.*;
 import com.vbteam.controller.logger.Logger;
 import com.vbteam.socket.Server;
-
 /**
  *
  * @author schea
@@ -355,13 +354,12 @@ public class MailController {
             //connection = context.getConnection();
             connection = Server.connectionPool.getConnection();
 
-            String headerMailIdQuery = " Select h.MailId from Headers h  where (h.RecipientId=? or h.SenderId=?) and h.Type=?  and h.State=1";
+            String headerMailIdQuery = " Select h.MailId from Headers h  where h.SenderId=? and h.Type=?  and h.State=1";
             String mailSelectQuery = "Select * From Mails m where m.Id=?";
 
             statement = connection.prepareStatement(headerMailIdQuery);
             statement.setString(1, Integer.toString(userId));
-            statement.setString(2, Integer.toString(userId));
-            statement.setString(3, mailType);
+            statement.setString(2, mailType);
             ResultSet headerMailIdResultSet = statement.executeQuery();
             List<Mail> mails = new ArrayList<Mail>();
             int mailId = 0;

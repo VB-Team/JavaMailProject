@@ -21,21 +21,20 @@
             <file>file:/home/ubuntu/Desktop/Mail/JavaMailServer/src/com/vbteam/utils/IConnectionPool.java</file>
         </group>
         <group>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/socket/ConsoleUI.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/UserManagement/UserManagementController.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/models/User.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/DbContext.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/ConnectionPool.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/mail/MailController.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/logger/Logger.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/socket/CommandHandler.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/socket/ClientListener.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/authenticate/AuthController.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/models/Command.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/logger/ILogger.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/models/Log.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/socket/Server.java</file>
-            <file>file:/E:/Veysel/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/models/Mail.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/IConnectionPool.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/BCrypt.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/mail/MailController.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/UserManagement/UserManagementController.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/logger/Logger.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/AddUserScript.sql</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/DbContext.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/socket/Server.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/socket/CommandHandler.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/authenticate/AuthController.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/authenticate/IAuthController.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/controller/UserManagement/IUserManagementController.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/utils/ConnectionPool.java</file>
+            <file>file:/E:/Veysel/Okul/2.Sınıf2.Dönem/Görsel/JavaMailProject/JavaMailServer/src/com/vbteam/socket/ClientListener.java</file>
         </group>
     </open-files>
 </project-private>
