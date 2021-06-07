@@ -8,7 +8,7 @@ package com.vbteam.socket;
 import com.vbteam.models.Attachment;
 import com.vbteam.models.Header;
 import com.vbteam.models.Mail;
-import com.vbteam.services.mail.MailService;
+import com.vbteam.controller.mail.MailController;
 import static com.vbteam.socket.Server.connectionPool;
 import com.vbteam.utils.ConnectionPool;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class ConsoleUI {
             connectionPool = ConnectionPool.create("jdbc:sqlserver://localhost:1453;databasename=MailServer", "sa", "Password1!");
         } catch (Exception e) {
         }
-        MailService mailser = MailService.getInstance();
+        MailController mailser = MailController.getInstance();
         Mail mail = new Mail();
         mail.setBody("asd");
         mail.setSubject("asdad");

@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.services.UserManagement;
+package com.vbteam.controller.UserManagement;
 
 import com.vbteam.models.Log;
 import com.vbteam.models.User;
-import com.vbteam.services.logger.Logger;
+import com.vbteam.controller.logger.Logger;
 import com.vbteam.socket.Server;
 import com.vbteam.utils.BCrypt;
 import com.vbteam.utils.DbContext;
@@ -22,11 +22,11 @@ import java.util.List;
  *
  * @author schea
  */
-public class UserManagementService implements IUserManagementService {
+public class UserManagementController implements IUserManagementController {
 
     DbContext context;
     Connection connection;
-    private static UserManagementService instance = null;
+    private static UserManagementController instance = null;
     private Logger logger;
 
     @Override

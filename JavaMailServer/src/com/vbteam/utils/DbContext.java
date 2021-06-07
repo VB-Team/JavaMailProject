@@ -5,8 +5,9 @@
  */
 package com.vbteam.utils;
 
+import com.vbteam.controller.logger.Logger;
+import com.vbteam.controller.logger.ILogger;
 import com.vbteam.models.Log;
-import com.vbteam.services.logger.*;
 import com.vbteam.socket.Server;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

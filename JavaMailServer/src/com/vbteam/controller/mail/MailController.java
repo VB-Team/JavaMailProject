@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.services.mail;
+package com.vbteam.controller.mail;
 
 import com.vbteam.utils.DbContext;
 import java.sql.Connection;
@@ -12,26 +12,26 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import com.vbteam.models.*;
-import com.vbteam.services.logger.Logger;
+import com.vbteam.controller.logger.Logger;
 import com.vbteam.socket.Server;
 
 /**
  *
  * @author schea
  */
-public class MailService {
+public class MailController {
 
     private DbContext context;
     private Connection connection;
-    private static MailService instance = null;
+    private static MailController instance = null;
     private Logger logger;
 
-    private MailService() {
+    private MailController() {
     }
 
-    public static MailService getInstance() {
+    public static MailController getInstance() {
         if (instance == null) {
-            instance = new MailService();
+            instance = new MailController();
         }
 
         return instance;

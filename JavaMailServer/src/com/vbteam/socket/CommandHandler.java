@@ -5,17 +5,18 @@
  */
 package com.vbteam.socket;
 
+import com.vbteam.controller.logger.ILogger;
+import com.vbteam.controller.logger.Logger;
 import com.vbteam.models.Command;
 import com.vbteam.models.Log;
 import com.vbteam.models.User;
-import com.vbteam.services.authenticate.AuthService;
-import com.vbteam.services.mail.MailService;
+import com.vbteam.controller.authenticate.AuthController;
+import com.vbteam.controller.mail.MailController;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 import com.vbteam.models.Mail;
-import com.vbteam.services.UserManagement.UserManagementService;
-import com.vbteam.services.logger.*;
+import com.vbteam.controller.UserManagement.UserManagementController;
 
 /**
  *
@@ -23,9 +24,9 @@ import com.vbteam.services.logger.*;
  */
 public class CommandHandler {
 
-    private static AuthService authService = AuthService.getInstance();
-    private static MailService mailService = MailService.getInstance();
-    public static UserManagementService managerService = new UserManagementService();
+    private static AuthController authService = AuthController.getInstance();
+    private static MailController mailService = MailController.getInstance();
+    public static UserManagementController managerService = new UserManagementController();
     private static ILogger logger;
 
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {

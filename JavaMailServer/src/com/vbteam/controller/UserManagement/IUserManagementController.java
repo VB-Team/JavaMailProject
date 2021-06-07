@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.services.UserManagement;
+package com.vbteam.controller.UserManagement;
 
 import com.vbteam.models.User;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author schea
  */
-public interface IUserManagementService {
+public interface IUserManagementController {
     public User addUser(User user);
     public boolean deletedUser(int userId);
     public User updateUser(User user);

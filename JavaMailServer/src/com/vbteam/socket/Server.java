@@ -6,8 +6,9 @@
 package com.vbteam.socket;
 
 
+import com.vbteam.controller.logger.Logger;
+import com.vbteam.controller.logger.ILogger;
 import com.vbteam.models.Log;
-import com.vbteam.services.logger.*;
 import com.vbteam.utils.DbContext;
 import java.io.InputStream;
 import java.io.ObjectInputStream;

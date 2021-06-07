@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.services.logger;
+package com.vbteam.controller.logger;
 
 import com.vbteam.models.Log;
 import com.vbteam.socket.Server;
