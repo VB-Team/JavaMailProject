@@ -44,7 +44,7 @@ public class ConnectionController implements Runnable {
                 controller.Handler(objInputStream, objOutputStream, command,frame);
             }
         } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage() + " " + ex.getMessage());
+            System.err.println(ex.getLocalizedMessage() + " " + ex.getMessage());
         }
     }
 

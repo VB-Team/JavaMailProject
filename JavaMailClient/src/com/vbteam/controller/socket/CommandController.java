@@ -21,7 +21,6 @@ public class CommandController {
     private FrmAuth authFrame;
 
     public void Handler(ObjectInputStream objInputStream, ObjectOutputStream objOutputStream, Command command, JFrame frame) {
-        System.out.println(command.getType());
         authFrame = (FrmAuth) frame;
         if (command.getType().indexOf("response") == 0) {
             Auth(command, frame);
@@ -30,7 +29,6 @@ public class CommandController {
             Mail(command, frame);
         }
         if (command.getType().indexOf("manager") == 0) {
-            System.out.println("manager");
             Manager(command, frame);
         }
     }
@@ -99,8 +97,9 @@ public class CommandController {
                 authFrame.uihandler.setMailResponse(command);
             }
             if (command.getType().equals("mail-delete-response")) {
-                if (command.getBoolResponse()) {
-                    authFrame.uihandler.popupMessage("confirm", "Mail başarıyla silindi.");
+                if (command.getBoolResponse()) {                           
+                    authFrame.uihandler.popupMessage("confirm", "Mail başarıyla silindi.");    
+                    authFrame.uihandler.refreshMailBox();
                 } else {
                     authFrame.uihandler.popupMessage("error", "Mail silinemedi.");
                 }

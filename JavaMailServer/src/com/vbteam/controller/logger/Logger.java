@@ -51,15 +51,14 @@ public class Logger implements ILogger {
             statement.setTimestamp(3, log.getCreateDate());
             affectedRow += statement.executeUpdate();
             statement.close();
-            //connection.close();
-            System.out.println("Etkilenen satır sayısı : " + affectedRow);
+            System.out.println("Affected Row : " + affectedRow);
             if (affectedRow > 0) {
                 return true;
             } else {
                 return false;
             }
         } catch (Exception e) {
-            System.out.println("Logger Service Exception : " + e.getMessage());
+            System.err.println("Logger Service Exception : " + e.getMessage());
             return false;
         } finally {
             try {
@@ -92,7 +91,7 @@ public class Logger implements ILogger {
 
             return logs;
         } catch (Exception e) {
-            System.out.println("Logger Service Exception : " + e.getMessage());
+            System.err.println("Logger Service Exception : " + e.getMessage());
             return null;
         } finally {
             try {

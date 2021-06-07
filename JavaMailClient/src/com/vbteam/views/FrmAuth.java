@@ -69,7 +69,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                     conService = new ConnectionService("127.0.0.1", frame);
                     conService.connectServer();
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 }
             }
         };
@@ -224,7 +224,7 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
                     conService.SendCommand(new Command("auth-register", null, regUser, null));
 
                 } catch (Exception ex) {
-                    System.out.println(ex.getLocalizedMessage());
+                    System.err.println(ex.getLocalizedMessage());
                 }
             } else {
                 popupDialog("error", "İsminizi ve Soy isminizi girdiğinizden emin olun.");

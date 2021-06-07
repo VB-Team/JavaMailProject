@@ -34,6 +34,8 @@ import com.vbteam.utils.BCrypt;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -252,7 +254,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             for (int i = 0; i < userSplit.length; i++) {
                 Header header = new Header();
                 header.setSenderUser(user.getUserName());
-                header.setRecipientUser(userSplit[i]);
+                header.setRecipientUser(userSplit[i].trim());
                 header.setState(true);
                 header.setType("Normal");
                 headers.add(header);
@@ -268,9 +270,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
             mail.setAttachments(attachments);
             mail.setHeaders(headers);
-            mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
-
-            System.out.println("Sent Mail Debug : "+mail.getAttachments().size());            
+            mail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));   
             FrmAuth.conService.SendCommand(new Command("mail-send", null, user, mail));
             attachments.clear();
             clearMailSection();
@@ -297,7 +297,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             }
             //popupDialog("wait", "Lütfen bekleyin.", "null");
         } catch (Exception ex) {
-            System.out.println("Client Get Mail Exception : " + ex.getLocalizedMessage());
+            System.err.println("Client Get Mail Exception : " + ex.getLocalizedMessage());
         }
     }
 
@@ -333,9 +333,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         return null;
     }
 
-    public String mailHeaderChooser(Mail mail) {
+    public String mailHeaderChooser(Mail mail,String mailType) {
         String User = "";
-        if (mail.getHeaders().get(0).getType().equals("outgoing")) {
+        if (mailType.equals("outgoing")) {
             User += mail.getHeaders().get(0).getRecipientUser();
             if (mail.getHeaders().size() > 1) {
                 for (int i = 1; i < mail.getHeaders().size(); i++) {
@@ -343,29 +343,18 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 }
             }
         } else {
-            /*
-            for (Header header : mail.getHeaders()) {
-            recipientUser += header.getRecipientUser() + " , ";
-            }
-             */
-            User += mail.getHeaders().get(0).getRecipientUser();
-            if (mail.getHeaders().size() > 1) {
-                for (int i = 1; i < mail.getHeaders().size(); i++) {
-                    User += " , " + mail.getHeaders().get(i).getSenderUser();
-                }
-            }
+            User += mail.getHeaders().get(0).getSenderUser();
         }
         return User;
     }
 
     private void setMailCredentials(Mail mail) {
         String recipientUsers = "";
-        recipientUsers = mailHeaderChooser(mail);
+        recipientUsers = mailHeaderChooser(mail,getMailTable().getType());
         mail_author_text.setText(recipientUsers);
         pnl_mail_body_text.setText(mail.getBody());
         mail_time_text.setText(mail.getCreateDate().toString());
         pnl_mail_detail_header_text.setText(mail.getSubject());
-
         if (mail.isAttachmentState() != false) {
             pnl_mail_detail_attachment.setVisible(true);
         } else {
@@ -374,7 +363,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     }
 
     public void setMails(Command _command) {
-        mailList = (List<Mail>) _command.getObject();
+        mailList = (List<Mail>) _command.getObject();        
         mailTableModel = (AbstractTableModel) new MailTableModel(mailList, _command.getCommandText());
         mailTable.setModel(mailTableModel);
         popupPanel.setVisible(false);
@@ -436,7 +425,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
             }
 
         } catch (Exception ex) {
-            System.out.println("File Transfer Exception : " + ex.getMessage());
+            System.err.println("File Transfer Exception : " + ex.getMessage());
         }
 
     }
@@ -456,8 +445,6 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 header.setType("Draft");
                 headers.add(header);
             }
-            
-            System.out.println("sjsj "+attachments.size());
         if (attachments.size() > 0) {
             draftMail.setAttachmentState(true);
         } else {
@@ -472,7 +459,6 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
         draftMail.setCreateDate(new java.sql.Timestamp(new java.util.Date().getTime()));
         draftMail.setHeaders(headers);
-        System.out.println("Draft Mail Debug : "+draftMail.getAttachments().size());
         FrmAuth.conService.SendCommand(new Command("mail-add-draft", null, user, draftMail));
         clearMailSection();
         attachments.clear();
@@ -481,6 +467,9 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
 
     public void deleteMail(Mail mailFromId) {
         conService.SendCommand(new Command("mail-delete", null, user, mailFromId));
+    }
+    public void refreshMailBox(){
+            getMails(getMailTable().getType());
     }
 
     /*
@@ -581,12 +570,12 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
     public void mouseClicked(MouseEvent evt) {
 
         if (evt.getSource() == btn_mail_3) {
+            
             deleteMail(getMailFromId(getMailTable().getList(), (int) mailTableModel.getValueAt(selectedRow, 4)));
-
-            MailTableModel model = (MailTableModel) mailTableModel;
-            getMails(model.getType());
+            //MailTableModel model = (MailTableModel) mailTableModel;
+            
         }
-
+        
         if (evt.getSource() == yonetici_bilgi_onaylama) {
             User _user = new User();
 
@@ -641,7 +630,7 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
                 newUser.setUserName(yonetici_ekle_username_text.getText());
                 newUser.setPassword(new String(yonetici_ekle_password_text.getPassword()));
                 newUser.setRole((String) rol_list_combo.getSelectedItem());
-
+                newUser.setLastLogin(new java.sql.Timestamp(new java.util.Date().getTime()));
                 FrmAuth.conService.SendCommand(new Command("manager-adduser", null, newUser, null));
 
                 yonetici_ekle_ad_text.setText("");
@@ -708,7 +697,6 @@ public class FrmDashboard extends javax.swing.JFrame implements MouseListener {
         if (evt.getSource() == yenimailpanel) {
             isSent=true;
             attachments.clear();
-            System.out.println("Send Mail Debug : "+isSent);
             mainLayout.show(cardPanel, "mailgonder");
             mailPanelState = pnl_mail_gonder;
         }

@@ -45,7 +45,6 @@ public class Server {
                 objOutStream = new ObjectOutputStream(outputStream);
                 InputStream inputStream = client.getInputStream();
                 objInStream = new ObjectInputStream(inputStream);
-                System.out.println("Bağlanan Client "+client.getChannel());
                 new Thread(new ClientListener(objInStream, objOutStream)).start();
             }
         } catch (Exception ex) {

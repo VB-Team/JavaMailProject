@@ -46,7 +46,6 @@ public class MailController {
             PreparedStatement statement;
             int recipientId, senderId;
             String mailInsertQuery = "Insert into Mails (Subject,Body,AttachmentState,CreateDate) values(?,?,?,?);";
-            System.out.println("mail Body " + mail.getBody());
             statement = connection.prepareStatement(mailInsertQuery);
             statement.setString(1, mail.getSubject());
             statement.setString(2, mail.getBody());

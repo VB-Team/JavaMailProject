@@ -56,7 +56,7 @@ public class UserManagementController implements IUserManagementController {
             statement.setString(5, user.getRole());
             statement.setTimestamp(6, user.getLastLogin());
             int affectedRow = statement.executeUpdate();
-            System.out.println("Etkilenen satır sayısı " + affectedRow);
+            System.out.println("Affected Row " + affectedRow);
             statement.close();
             //connection.close();
             if (affectedRow > 0) {
@@ -67,7 +67,7 @@ public class UserManagementController implements IUserManagementController {
         } catch (Exception ex) {
             logger = Logger.getInstance();
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Server User Management Add User Exception : " + ex.getMessage()));
-            System.out.println("User Manager Service Exception : " + ex.getMessage());
+            System.err.println("User Manager Service Exception : " + ex.getMessage());
             return null;
         } finally {
             try {
@@ -101,7 +101,7 @@ public class UserManagementController implements IUserManagementController {
             statement = connection.prepareCall(deleteUserQuery);
             statement.setInt(1, userId);
             affectedRow += statement.executeUpdate();
-            System.out.println("Etkilenen satır sayısı " + affectedRow);
+            System.out.println("Affected Row " + affectedRow);
             statement.close();
             //connection.close();
             if (affectedRow > 0) {

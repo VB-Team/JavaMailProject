@@ -144,7 +144,7 @@ public class AuthController implements IAuthController {
             statement.setTimestamp(6, user.getLastLogin());
 
             int affectedRow = statement.executeUpdate();
-            System.out.println("Etkilenen satır sayısı " + affectedRow);
+            System.out.println("Affected Row " + affectedRow);
             statement.close();
             //connection.close();
             user.setId(context.getUserId(user.getUserName()));

@@ -113,7 +113,7 @@ public class CommandHandler {
                     int deleteId = cmd.getUser().getId();
                     cmd = new Command();
                     cmd.setType("mail-box-response");
-                    cmd.setCommandText("delete");
+                    cmd.setCommandText("trash");
                     List<Mail> trashMails = mailService.getAnyMails(deleteId, "Deleted");
                     for (Mail mail : trashMails) {
                         mail.setAttachments(mailService.getMailAttachments(mail.getId()));
@@ -146,7 +146,6 @@ public class CommandHandler {
                     break;
                 case "auth-register":
                     User _registerUser = authService.register(cmd.getUser());
-                    System.out.println("register");
                     cmd = new Command();
                     cmd.setType("response-register");
                     cmd.setUser(_registerUser);
@@ -155,7 +154,6 @@ public class CommandHandler {
                 case "auth-login":
                     try {
                     User _loginUser = authService.login(cmd.getUser().getUserName(), cmd.getUser().getPassword());
-                    System.out.println("login");
                     cmd = new Command();
                     cmd.setType("response-login");
                     cmd.setUser(_loginUser);

@@ -45,18 +45,8 @@ public class MailTableModel extends AbstractTableModel {
                     User += " , " + mail.getHeaders().get(i).getRecipientUser();
                 }
             }
-        }else{            
-            /*
-            for (Header header : mail.getHeaders()) {
-            recipientUser += header.getRecipientUser() + " , ";
-            }
-             */
-            User += mail.getHeaders().get(0).getRecipientUser();
-            if (mail.getHeaders().size() > 1) {
-                for (int i = 1; i < mail.getHeaders().size(); i++) {
-                    User += " , " + mail.getHeaders().get(i).getSenderUser();
-                }
-            }
+        }else{
+            User += mail.getHeaders().get(0).getSenderUser();
         }        
         return User;
     }

@@ -71,4 +71,7 @@ public class UIHandler {
     public void popupMessage(String type,String message){
         authFrame.popupDialog(type, message);
     }
+    public void refreshMailBox(){
+        dashboardFrame.refreshMailBox();
+    }
 }
