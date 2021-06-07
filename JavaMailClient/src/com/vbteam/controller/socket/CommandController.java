@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.services.controller;
+package com.vbteam.controller.socket;
 
 import com.vbteam.models.Command;
 import com.vbteam.views.FrmAuth;

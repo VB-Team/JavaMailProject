@@ -8,7 +8,7 @@ package com.vbteam.views;
 import com.vbteam.views.visualUtils.UIHandler;
 import com.vbteam.models.Command;
 import com.vbteam.models.User;
-import com.vbteam.services.socket.ConnectionService;
+import com.vbteam.controller.socket.ConnectionService;
 import com.vbteam.views.services.vAuth;
 import java.awt.CardLayout;
 import java.awt.Color;

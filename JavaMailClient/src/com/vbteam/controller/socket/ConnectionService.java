@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vbteam.services.socket;
+package com.vbteam.controller.socket;
 
 import com.vbteam.models.Command;
 import com.vbteam.models.User;
 
-import com.vbteam.services.controller.ConnectionController;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
