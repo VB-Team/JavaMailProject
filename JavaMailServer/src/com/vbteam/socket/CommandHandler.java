@@ -5,7 +5,7 @@
  */
 package com.vbteam.socket;
 
-import com.vbteam.controller.logger.ILogger;
+import com.vbteam.controller.UserManagement.IUserManagementController;
 import com.vbteam.controller.logger.Logger;
 import com.vbteam.models.Command;
 import com.vbteam.models.Log;
@@ -17,6 +17,8 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import com.vbteam.models.Mail;
 import com.vbteam.controller.UserManagement.UserManagementController;
+import com.vbteam.controller.authenticate.IAuthController;
+import com.vbteam.controller.logger.ILogger;
 
 /**
  *
@@ -24,10 +26,10 @@ import com.vbteam.controller.UserManagement.UserManagementController;
  */
 public class CommandHandler {
 
-    private static AuthController authService = AuthController.getInstance();
+    private static IAuthController authService = AuthController.getInstance();
     private static MailController mailService = MailController.getInstance();
-    public static UserManagementController managerService = new UserManagementController();
-    private static ILogger logger;
+    private static IUserManagementController managerService = UserManagementController.getInstance();
+    private static ILogger logger=Logger.getInstance();
 
     public static void Handler(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
         if (cmd.getType().indexOf("auth") == 0) {
@@ -38,9 +40,6 @@ public class CommandHandler {
         }
         if (cmd.getType().indexOf("manager") == 0) {
             Manager(objInput, objOutput, cmd);
-        }
-        if (cmd.getType().indexOf("log") == 0) {
-            Log(objInput, objOutput, cmd);
         }
     }
 
@@ -258,33 +257,6 @@ public class CommandHandler {
         } catch (Exception ex) {
             logger = Logger.getInstance();
             logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler Manager exception : " + ex.getMessage()));
-            ex.printStackTrace();
-        }
-    }
-
-    private static void Log(ObjectInputStream objInput, ObjectOutputStream objOutput, Command cmd) {
-        try {
-            logger = Logger.getInstance();
-            switch (cmd.getType().toString()) {
-                case "log-add":
-                    logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler exception : "));//Log
-                    cmd = new Command();
-                    cmd.setType("log-add-response");
-                    objOutput.writeObject(cmd);
-                    break;
-                case "log-get":
-                    List<Log> logs;
-                    logs = logger.getLogs();//Log
-                    cmd = new Command();
-                    cmd.setType("log-list-response");
-                    objOutput.writeObject(cmd);
-                    break;
-                default:
-                    break;
-            }
-        } catch (Exception ex) {
-            logger = Logger.getInstance();
-            logger.addLog(new Log(new java.sql.Timestamp(new java.util.Date().getTime()), "Exception", "Command Handler Log exception : " + ex.getMessage()));
             ex.printStackTrace();
         }
     }

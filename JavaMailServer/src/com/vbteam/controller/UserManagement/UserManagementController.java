@@ -29,6 +29,16 @@ public class UserManagementController implements IUserManagementController {
     private static UserManagementController instance = null;
     private Logger logger;
 
+    private UserManagementController() {
+    }
+
+    public static UserManagementController getInstance() {
+        if (instance == null) {
+            instance = new UserManagementController();
+        }
+
+        return instance;
+    }
     @Override
     public User addUser(User user) {
         try {
