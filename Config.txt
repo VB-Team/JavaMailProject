@@ -1,0 +1,5 @@
+Sunucu = localhost
+Port = 1433
+Database = MailServer
+User = sa
+Password = 6165

@@ -13,11 +13,14 @@ import com.vbteam.views.services.vAuth;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -37,6 +40,8 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
     public FrmAuth() {
 
+
+
         uihandler.setAuthFrame(this);
         setUndecorated(true);
 
@@ -48,8 +53,24 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         setListeners();
 
-        setLocationRelativeTo(null);
-        this.setSize(1370, 819);
+        
+        
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+
+        int width = (int) size.getWidth();
+
+        int height = (int) size.getHeight();
+
+        
+        if (height <= 768) {
+            this.setPreferredSize(new Dimension(1366, 750));
+            lbl_register.setVerticalAlignment(SwingConstants.TOP);
+            lbl_login.setVerticalAlignment(SwingConstants.TOP);
+        }else{
+            this.setPreferredSize(new Dimension(1370, 819));
+            setLocationRelativeTo(null);
+        }
+        
         pack();
 
         mainLayout = (CardLayout) cardPanel.getLayout();
@@ -480,33 +501,33 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
 
         home_Buttons.setBackground(new java.awt.Color(31, 31, 31));
         home_Buttons.setOpaque(false);
-        home_Buttons.setPreferredSize(new java.awt.Dimension(1370, 70));
+        home_Buttons.setPreferredSize(new java.awt.Dimension(1370, 130));
         home_Buttons.setLayout(new java.awt.BorderLayout());
 
         pnl_login.setBackground(new java.awt.Color(30, 29, 32));
         pnl_login.setOpaque(false);
-        pnl_login.setPreferredSize(new java.awt.Dimension(690, 15));
+        pnl_login.setPreferredSize(new java.awt.Dimension(690, 35));
         pnl_login.setLayout(new java.awt.BorderLayout());
 
         lbl_login.setBackground(new java.awt.Color(31, 31, 31));
         lbl_login.setForeground(new java.awt.Color(165, 165, 172));
         lbl_login.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_login.setText("Giriş Yap");
-        lbl_login.setPreferredSize(new java.awt.Dimension(700, 15));
+        lbl_login.setPreferredSize(new java.awt.Dimension(700, 35));
         pnl_login.add(lbl_login, java.awt.BorderLayout.LINE_START);
 
         home_Buttons.add(pnl_login, java.awt.BorderLayout.LINE_START);
 
         pnl_register.setBackground(new java.awt.Color(30, 29, 32));
         pnl_register.setOpaque(false);
-        pnl_register.setPreferredSize(new java.awt.Dimension(680, 15));
+        pnl_register.setPreferredSize(new java.awt.Dimension(680, 35));
         pnl_register.setLayout(new java.awt.BorderLayout());
 
         lbl_register.setBackground(new java.awt.Color(30, 29, 32));
         lbl_register.setForeground(new java.awt.Color(165, 165, 172));
         lbl_register.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_register.setText("Kayıt Ol");
-        lbl_register.setPreferredSize(new java.awt.Dimension(690, 15));
+        lbl_register.setPreferredSize(new java.awt.Dimension(690, 35));
         pnl_register.add(lbl_register, java.awt.BorderLayout.LINE_END);
 
         home_Buttons.add(pnl_register, java.awt.BorderLayout.LINE_END);
@@ -522,6 +543,9 @@ public class FrmAuth extends javax.swing.JFrame implements MouseListener {
         home_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/vbteam/views/images/vblogowhite.png"))); // NOI18N
         home_logo.setText("Veysel ve Batu Mail Projesi");
         home_logo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        home_logo.setMaximumSize(new java.awt.Dimension(600, 600));
+        home_logo.setMinimumSize(new java.awt.Dimension(600, 600));
+        home_logo.setPreferredSize(new java.awt.Dimension(600, 600));
         home_logo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         home_Logo.add(home_logo, java.awt.BorderLayout.CENTER);
 

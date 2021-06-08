@@ -1,0 +1,5 @@
+1. Database Klasörü içersindeki MailServerDBGenerateScript.sql isimli dosyayı SQL server üzerinde çalıştırın.
+2. Yine MSSQL --> proc Klasöründeki Strored Procedürleri (AddUser,DeleteUser,UpdateUser) SQL server üzerinde çalıştırın
+3. JavaMailServer\src\com\vbteam\utils yer alan DB.java classındaki SQL server username ve password değerleri yerine 
+   Kendi SQL server sunucunuza ait kullanıcı adı ve şifresi yazın ya da JavaMailServer klasörü içerisindeki Config.txt
+   dosyasının içindeki değerleri değiştirerek de yapabilirsiniz. 

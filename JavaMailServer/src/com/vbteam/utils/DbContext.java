@@ -43,7 +43,8 @@ public class DbContext {
     
     public static IConnectionPool createConnections() {
         try {
-            connectionPool = ConnectionPool.create("jdbc:sqlserver://localhost:1453;databasename=MailServer", user, batuPass);
+            DbUtil util=new DbUtil();    
+            connectionPool = ConnectionPool.create("jdbc:sqlserver://"+util.sunucu+":"+util.port+";databasename="+util.database, util.user, util.pass);
             return connectionPool;
         } catch (Exception ex) {
             logger=Logger.getInstance();
@@ -56,7 +57,7 @@ public class DbContext {
     public int getUserId(String userName) {
         try {
             PreparedStatement statement;
-            //connection = DriverManager.getConnection(conurl, user, batuPass);
+            //connection = DriverManager.getConnection(conurl, user, veyselPass);
             connection = Server.connectionPool.getConnection();
             String selectQuery = "Select u.Id from Users u where u.UserName=?";
             statement = connection.prepareStatement(selectQuery);
